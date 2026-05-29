@@ -83,7 +83,7 @@ export default function TherapistProntuario() {
   const [customDesc, setCustomDesc] = useState('Exercício pélvico personalizado prescrito especificamente para suas necessidades.')
 
   // Standard exercises list for addition
-  const standardExercisesList = [
+  const standardExercisesList: PrescribedExercise[] = [
     {
       id: 'ponte_pelvica',
       name: 'Ponte Pélvica',
