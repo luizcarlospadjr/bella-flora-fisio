@@ -1,0 +1,267 @@
+<!DOCTYPE html><html class="light" lang="es"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Pacientes - Bella Flora Fisio</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Google Fonts: Manrope -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "tertiary-container": "#c7c76d",
+                        "on-secondary-fixed-variant": "#5f3c4d",
+                        "on-error": "#ffffff",
+                        "on-background": "#1d1b1f",
+                        "on-surface-variant": "#4b454e",
+                        "on-surface": "#1d1b1f",
+                        "primary": "#70518d",
+                        "on-tertiary-container": "#525300",
+                        "error-container": "#ffdad6",
+                        "outline": "#7c747f",
+                        "surface-container-high": "#ede6ec",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary-fixed-variant": "#494900",
+                        "tertiary": "#616211",
+                        "secondary": "#795465",
+                        "tertiary-fixed-dim": "#cbcb71",
+                        "background": "#fff7fd",
+                        "surface-bright": "#fff7fd",
+                        "surface-dim": "#dfd8de",
+                        "tertiary-fixed": "#e8e78a",
+                        "surface-variant": "#e7e0e6",
+                        "on-tertiary-fixed": "#1d1d00",
+                        "primary-fixed": "#f0dbff",
+                        "secondary-fixed": "#ffd8e7",
+                        "surface-tint": "#70518d",
+                        "inverse-on-surface": "#f6eff5",
+                        "surface-container-low": "#f9f1f7",
+                        "surface-container": "#f3ecf2",
+                        "on-primary-fixed": "#290a45",
+                        "on-tertiary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "on-primary": "#ffffff",
+                        "inverse-surface": "#322f34",
+                        "on-secondary-fixed": "#2e1221",
+                        "inverse-primary": "#dcb8fc",
+                        "on-secondary-container": "#795465",
+                        "secondary-fixed-dim": "#e9bacd",
+                        "primary-fixed-dim": "#dcb8fc",
+                        "on-primary-fixed-variant": "#573974",
+                        "on-error-container": "#93000a",
+                        "surface": "#fff7fd",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-highest": "#e7e0e6",
+                        "secondary-container": "#fdcde1",
+                        "primary-container": "#d8b4f8",
+                        "on-primary-container": "#60427d",
+                        "outline-variant": "#cdc3cf"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "inset-card": "16px",
+                        "gutter": "16px",
+                        "stack-md": "16px",
+                        "margin-mobile": "16px",
+                        "base": "8px",
+                        "stack-sm": "8px",
+                        "stack-lg": "24px"
+                    },
+                    fontFamily: {
+                        "subtitle-md": ["Manrope"],
+                        "subtitle-lg": ["Manrope"],
+                        "label-md": ["Manrope"],
+                        "label-lg": ["Manrope"],
+                        "body-md": ["Manrope"],
+                        "body-lg": ["Manrope"],
+                        "title-lg": ["Manrope"],
+                        "title-md": ["Manrope"]
+                    },
+                    fontSize: {
+                        "subtitle-md": ["18px", { lineHeight: "26px", fontWeight: "500" }],
+                        "subtitle-lg": ["20px", { lineHeight: "28px", fontWeight: "500" }],
+                        "label-md": ["12px", { lineHeight: "16px", fontWeight: "500" }],
+                        "label-lg": ["13px", { lineHeight: "18px", fontWeight: "500" }],
+                        "body-md": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+                        "body-lg": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+                        "title-lg": ["28px", { lineHeight: "36px", fontWeight: "600" }],
+                        "title-md": ["24px", { lineHeight: "32px", fontWeight: "600" }]
+                    }
+                }
+            }
+        };
+    </script>
+<style>
+        body {
+            font-family: 'Manrope', sans-serif;
+            background-color: theme('colors.background');
+            color: theme('colors.on-background');
+            padding-bottom: 96px; /* Space for BottomNav */
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+
+    <!-- Firebase CDN SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <!-- Bella Flora Custom Modules -->
+    <script src="navigation.js" defer></script>
+    <script src="sync.js" defer></script>
+</head>
+
+<body class="bg-background min-h-screen">
+<!-- TopAppBar -->
+<header class="h-[64px] w-full top-0 sticky z-40 bg-surface dark:bg-surface-container-high shadow-sm flex items-center justify-between px-margin-mobile transition-all shadow-[0px_4px_12px_rgba(0,0,0,0.08)]">
+<button class="text-on-surface-variant hover:bg-primary-container/20 transition-colors rounded-full p-2 active:scale-95 duration-200" id="reset-search-btn">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="font-title-md text-title-md text-primary dark:text-primary-fixed-dim">Pacientes</h1>
+<button class="text-on-surface-variant hover:bg-primary-container/20 transition-colors rounded-full p-2 active:scale-95 duration-200">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</header>
+<main class="w-full max-w-2xl mx-auto">
+<!-- Search Bar -->
+<div class="px-margin-mobile py-stack-md sticky top-[64px] z-30 bg-background">
+<div class="relative w-full h-[48px]">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center cursor-pointer pointer-events-auto" id="search-trigger-btn">
+<span class="material-symbols-outlined text-outline">search</span>
+</div>
+<input class="w-full h-full pl-10 pr-4 rounded-lg border border-outline-variant bg-surface focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary font-body-md text-body-md text-on-surface placeholder:text-outline-variant transition-shadow shadow-sm" id="patient-search-input" placeholder="Buscar paciente..." type="text">
+</div>
+</div>
+<!-- Patients List -->
+<div class="px-margin-mobile flex flex-col gap-base" id="patients-list">
+<!-- Patient Card 1 -->
+<button class="w-full bg-surface-container-lowest rounded-xl p-inset-card flex items-center gap-stack-md shadow-[0px_4px_12px_rgba(0,0,0,0.08)] hover:bg-surface-container-low transition-colors active:scale-[0.98] text-left border border-outline-variant/30">
+<img alt="Patient avatar" class="w-12 h-12 rounded-full object-cover shrink-0 bg-surface-variant" data-alt="A clean, professional portrait of a relaxed young woman with a soft smile. The lighting is soft and natural, emphasizing a modern healthcare aesthetic. The background is a highly blurred, bright, and airy clinical setting in very light lavender and white tones. The image conveys calm, wellness, and professional care." src="assets/img/mariana_silva.png">
+<div class="flex-1 min-w-0">
+<h2 class="font-subtitle-md text-subtitle-md text-on-surface truncate">Maria Gonzalez</h2>
+<p class="font-body-md text-body-md text-secondary truncate">Recuperación post-operatoria</p>
+</div>
+<div class="shrink-0 flex items-center justify-center text-primary bg-primary-container/20 p-2 rounded-full">
+<span class="material-symbols-outlined text-lg">arrow_forward</span>
+</div>
+</button>
+<!-- Patient Card 2 (using placeholder avatar styling since we only have 1 image) -->
+<button class="w-full bg-surface-container-lowest rounded-xl p-inset-card flex items-center gap-stack-md shadow-[0px_4px_12px_rgba(0,0,0,0.08)] hover:bg-surface-container-low transition-colors active:scale-[0.98] text-left border border-outline-variant/30">
+<div class="w-12 h-12 rounded-full bg-secondary-container flex items-center justify-center shrink-0">
+<span class="font-subtitle-md text-subtitle-md text-on-secondary-container">JP</span>
+</div>
+<div class="flex-1 min-w-0">
+<h2 class="font-subtitle-md text-subtitle-md text-on-surface truncate">Juan Perez</h2>
+<p class="font-body-md text-body-md text-secondary truncate">Lesión deportiva - Rodilla</p>
+</div>
+<div class="shrink-0 flex items-center justify-center text-primary bg-primary-container/20 p-2 rounded-full">
+<span class="material-symbols-outlined text-lg">arrow_forward</span>
+</div>
+</button>
+<!-- Patient Card 3 -->
+<button class="w-full bg-surface-container-lowest rounded-xl p-inset-card flex items-center gap-stack-md shadow-[0px_4px_12px_rgba(0,0,0,0.08)] hover:bg-surface-container-low transition-colors active:scale-[0.98] text-left border border-outline-variant/30">
+<div class="w-12 h-12 rounded-full bg-tertiary-container flex items-center justify-center shrink-0">
+<span class="font-subtitle-md text-subtitle-md text-on-tertiary-container">AR</span>
+</div>
+<div class="flex-1 min-w-0">
+<h2 class="font-subtitle-md text-subtitle-md text-on-surface truncate">Ana Ramirez</h2>
+<p class="font-body-md text-body-md text-secondary truncate">Dolor cervical crónico</p>
+</div>
+<div class="shrink-0 flex items-center justify-center text-primary bg-primary-container/20 p-2 rounded-full">
+<span class="material-symbols-outlined text-lg">arrow_forward</span>
+</div>
+</button>
+<!-- Patient Card 4 -->
+<button class="w-full bg-surface-container-lowest rounded-xl p-inset-card flex items-center gap-stack-md shadow-[0px_4px_12px_rgba(0,0,0,0.08)] hover:bg-surface-container-low transition-colors active:scale-[0.98] text-left border border-outline-variant/30">
+<div class="w-12 h-12 rounded-full bg-primary-container flex items-center justify-center shrink-0">
+<span class="font-subtitle-md text-subtitle-md text-on-primary-container">LM</span>
+</div>
+<div class="flex-1 min-w-0">
+<h2 class="font-subtitle-md text-subtitle-md text-on-surface truncate">Luis Martinez</h2>
+<p class="font-body-md text-body-md text-secondary truncate">Rehabilitación lumbar</p>
+</div>
+<div class="shrink-0 flex items-center justify-center text-primary bg-primary-container/20 p-2 rounded-full">
+<span class="material-symbols-outlined text-lg">arrow_forward</span>
+</div>
+</button>
+</div>
+</main>
+<!-- BottomNavBar -->
+<!-- Displayed on mobile, hidden on md and above per rules -->
+<nav class="h-[72px] fixed bottom-0 w-full z-50 bg-surface dark:bg-inverse-surface shadow-lg shadow-[0px_-2px_10px_rgba(0,0,0,0.05)] flex justify-around items-center px-4 pb-safe md:hidden">
+<!-- Home (Inactive) -->
+<a class="flex flex-col items-center justify-center text-secondary hover:bg-secondary-container/30 rounded-lg p-2 transition-colors active:scale-95" href="#">
+<span class="material-symbols-outlined mb-1">home</span>
+<span class="font-label-lg text-label-lg">Início</span>
+</a>
+<!-- Schedule (Inactive) -->
+<a class="flex flex-col items-center justify-center text-secondary hover:bg-secondary-container/30 rounded-lg p-2 transition-colors active:scale-95" href="#">
+<span class="material-symbols-outlined mb-1">calendar_today</span>
+<span class="font-label-lg text-label-lg">Atendimento</span>
+</a>
+<!-- Patients (Active) -->
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-2xl px-4 py-1 hover:bg-secondary-container/30 transition-colors active:scale-95" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: &quot;FILL&quot; 1;">groups</span>
+<span class="font-label-lg text-label-lg">Paciente</span>
+</a>
+<!-- Profile (Inactive) -->
+<a class="flex flex-col items-center justify-center text-secondary hover:bg-secondary-container/30 rounded-lg p-2 transition-colors active:scale-95" href="#">
+<span class="material-symbols-outlined mb-1">person</span>
+<span class="font-label-lg text-label-lg">Perfil</span>
+</a>
+</nav>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById('patient-search-input');
+    const searchBtn = document.getElementById('search-trigger-btn');
+    const resetBtn = document.getElementById('reset-search-btn');
+    const patientsList = document.getElementById('patients-list');
+    const patientCards = patientsList.querySelectorAll('button');
+
+    const performSearch = () => {
+        const query = searchInput.value.trim().toLowerCase();
+        patientCards.forEach(card => {
+            const name = card.querySelector('h2').textContent.toLowerCase();
+            if (name.includes(query)) {
+                card.style.display = 'flex';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    };
+
+    const resetSearch = () => {
+        searchInput.value = '';
+        patientCards.forEach(card => {
+            card.style.display = 'flex';
+        });
+    };
+
+    searchBtn.addEventListener('click', performSearch);
+    
+    searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            performSearch();
+        }
+    });
+
+    resetBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        resetSearch();
+    });
+});
+</script></body></html>

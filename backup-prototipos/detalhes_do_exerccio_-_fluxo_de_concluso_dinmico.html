@@ -1,0 +1,301 @@
+<!DOCTYPE html><html lang="pt-BR" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#70518d",
+                        "tertiary-fixed-dim": "#cbcb71",
+                        "on-secondary-fixed": "#2e1221",
+                        "tertiary-fixed": "#e8e78a",
+                        "secondary-fixed-dim": "#e9bacd",
+                        "outline": "#7c747f",
+                        "error": "#ba1a1a",
+                        "outline-variant": "#cdc3cf",
+                        "secondary-fixed": "#ffd8e7",
+                        "primary-container": "#d8b4f8",
+                        "on-background": "#1d1b1f",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-on-surface": "#f6eff5",
+                        "on-tertiary-container": "#525300",
+                        "primary-fixed": "#f0dbff",
+                        "surface-container": "#f3ecf2",
+                        "tertiary": "#616211",
+                        "surface-dim": "#dfd8de",
+                        "surface-container-high": "#ede6ec",
+                        "on-surface": "#1d1b1f",
+                        "surface-variant": "#e7e0e6",
+                        "surface-tint": "#70518d",
+                        "on-tertiary-fixed": "#1d1d00",
+                        "on-primary-fixed-variant": "#573974",
+                        "on-primary-container": "#60427d",
+                        "background": "#fff7fd",
+                        "tertiary-container": "#c7c76d",
+                        "on-error-container": "#93000a",
+                        "surface-container-highest": "#e7e0e6",
+                        "on-secondary-fixed-variant": "#5f3c4d",
+                        "on-primary-fixed": "#290a45",
+                        "inverse-surface": "#322f34",
+                        "on-tertiary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "on-secondary-container": "#795465",
+                        "on-error": "#ffffff",
+                        "primary-fixed-dim": "#dcb8fc",
+                        "secondary-container": "#fdcde1",
+                        "on-surface-variant": "#4b454e",
+                        "on-secondary": "#ffffff",
+                        "inverse-primary": "#dcb8fc",
+                        "surface-bright": "#fff7fd",
+                        "surface-container-low": "#f9f1f7",
+                        "on-tertiary-fixed-variant": "#494900",
+                        "on-primary": "#ffffff",
+                        "surface": "#fff7fd",
+                        "secondary": "#795465"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "margin-mobile": "16px",
+                        "base": "8px",
+                        "stack-lg": "24px",
+                        "stack-sm": "8px",
+                        "stack-md": "16px",
+                        "inset-card": "16px"
+                    },
+                    "fontFamily": {
+                        "subtitle-lg": ["Manrope"],
+                        "title-lg": ["Manrope"],
+                        "label-md": ["Manrope"],
+                        "body-md": ["Manrope"],
+                        "label-lg": ["Manrope"],
+                        "title-md": ["Manrope"],
+                        "subtitle-md": ["Manrope"],
+                        "body-lg": ["Manrope"]
+                    },
+                    "fontSize": {
+                        "subtitle-lg": ["20px", {"lineHeight": "28px", "fontWeight": "500"}],
+                        "title-lg": ["28px", {"lineHeight": "36px", "fontWeight": "600"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "label-lg": ["13px", {"lineHeight": "18px", "fontWeight": "500"}],
+                        "title-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "subtitle-md": ["18px", {"lineHeight": "26px", "fontWeight": "500"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Manrope', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-player {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .modal-overlay {
+            background-color: rgba(29, 27, 31, 0.4);
+            backdrop-filter: blur(4px);
+        }
+    </style>
+
+    <!-- Firebase CDN SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <!-- Bella Flora Custom Modules -->
+    <script src="navigation.js" defer></script>
+    <script src="sync.js" defer></script>
+</head>
+
+<body class="bg-background text-on-background min-h-screen pb-32">
+<!-- TopAppBar Navigation Shell -->
+<header class="flex justify-between items-center px-4 h-16 w-full z-50 bg-surface/80 backdrop-blur-md fixed top-0 shadow-sm">
+<button class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-surface-variant transition-colors active:scale-95 duration-150">
+<span class="material-symbols-outlined text-primary">arrow_back</span>
+</button>
+<h1 class="font-title-lg text-title-lg text-primary font-bold">Bella Flora Fisio</h1>
+<button class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-surface-variant transition-colors active:scale-95 duration-150">
+<span class="material-symbols-outlined text-primary">notifications</span>
+</button>
+</header>
+<main class="mt-16 px-gutter max-w-2xl mx-auto space-y-stack-lg pt-4">
+<!-- Large Media Video Player -->
+<section class="relative aspect-video w-full rounded-[24px] overflow-hidden shadow-[0_8px_32px_rgba(112,81,141,0.15)] group">
+<img class="w-full h-full object-cover grayscale-[20%] group-hover:scale-105 transition-transform duration-700" data-alt="A professional physical therapy setting with soft natural light coming from a large window. A woman is performing a pelvic bridge exercise on a lavender-colored yoga mat. The atmosphere is serene and clinical, utilizing a soft lavender and white color palette to evoke healing and tranquility. High-end, clean minimalist aesthetic." src="assets/img/pelvic_bridge_exercise.png">
+<div class="absolute inset-0 bg-black/20 flex items-center justify-center">
+<button class="glass-player w-20 h-20 rounded-full flex items-center justify-center text-white active:scale-90 transition-transform duration-200">
+<span class="material-symbols-outlined text-[48px]" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+</div>
+<!-- Video Controls Overlay -->
+<div class="absolute bottom-4 left-4 right-4 h-1 bg-white/30 rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[45%]"></div>
+</div>
+</section>
+<!-- Exercise Title & Description -->
+<div class="space-y-2">
+<h2 class="font-title-md text-title-md text-on-surface">Ponte Pélvica</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
+                Trabalho de fortalecimento e estabilização para o assoalho pélvico e glúteos, essencial para a recuperação postural.
+            </p>
+</div>
+<!-- Exercise Metrics Grid -->
+<div class="grid grid-cols-4 gap-2">
+<div class="bg-surface border border-outline-variant/30 p-2 py-inset-card rounded-[20px] shadow-sm flex flex-col items-center justify-center space-y-1 text-center">
+<span class="material-symbols-outlined text-primary text-[24px]">rebase_edit</span>
+<span class="font-title-md text-[20px] text-primary">3</span>
+<span class="font-label-md text-[10px] text-on-surface-variant uppercase tracking-tighter">Séries</span>
+</div>
+<div class="bg-surface border border-outline-variant/30 p-2 py-inset-card rounded-[20px] shadow-sm flex flex-col items-center justify-center space-y-1 text-center">
+<span class="material-symbols-outlined text-primary text-[24px]">repeat</span>
+<span class="font-title-md text-[20px] text-primary">12</span>
+<span class="font-label-md text-[10px] text-on-surface-variant uppercase tracking-tighter">Reps</span>
+</div>
+<div class="bg-surface border border-outline-variant/30 p-2 py-inset-card rounded-[20px] shadow-sm flex flex-col items-center justify-center space-y-1 text-center">
+<span class="material-symbols-outlined text-primary text-[24px]">timer</span>
+<span class="font-title-md text-[20px] text-primary">30s</span>
+<span class="font-label-md text-[10px] text-on-surface-variant uppercase tracking-tighter">Pausas</span>
+</div>
+<div class="bg-surface border border-outline-variant/30 p-2 py-inset-card rounded-[20px] shadow-sm flex flex-col items-center justify-center space-y-1 text-center">
+<span class="material-symbols-outlined text-primary text-[24px]">calendar_today</span>
+<span class="font-title-md text-[20px] text-primary">3x</span>
+<span class="font-label-md text-[10px] text-on-surface-variant uppercase tracking-tighter">Freq</span>
+</div>
+</div>
+<!-- Professional Notes Section -->
+<section class="bg-primary-fixed/30 rounded-[24px] p-6 space-y-3 relative overflow-hidden">
+<div class="absolute top-0 right-0 p-4 opacity-10">
+<span class="material-symbols-outlined text-[64px]">clinical_notes</span>
+</div>
+<div class="flex items-center gap-2 text-on-primary-fixed-variant">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+<h3 class="font-label-lg text-label-lg uppercase tracking-wider font-bold">Instruções do Profissional</h3>
+</div>
+<ul class="space-y-3 font-body-md text-body-md text-on-primary-fixed-variant/90">
+<li class="flex gap-3">
+<span class="text-primary mt-1">•</span>
+                    Mantenha a respiração fluida, evitando bloquear o ar durante a subida.
+                </li>
+<li class="flex gap-3">
+<span class="text-primary mt-1">•</span>
+                    Mantenha o abdômen contraído para proteger a lombar.
+                </li>
+<li class="flex gap-3">
+<span class="text-primary mt-1">•</span>
+                    Pressione os calcanhares contra o chão para ativar os glúteos corretamente.
+                </li>
+</ul>
+</section>
+<!-- Status Tag -->
+<div class="flex justify-center">
+<span class="h-[32px] px-4 rounded-full bg-secondary/15 text-on-secondary-container font-label-md flex items-center gap-2" id="status-tag">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+<span id="status-text">Sessão 1 de 3</span>
+</span>
+</div>
+</main>
+<!-- Bottom Action Button Container -->
+<div class="fixed bottom-0 left-0 w-full p-gutter bg-surface/80 backdrop-blur-lg flex justify-center items-center z-50">
+<button class="w-full max-w-md h-[52px] bg-primary text-on-primary rounded-[16px] font-title-md flex items-center justify-center gap-3 shadow-lg active:scale-[0.98] transition-all hover:brightness-110" id="completeBtn">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">task_alt</span>
+            Concluir Exercício
+        </button>
+</div>
+<!-- Congratulations Modal -->
+<div class="fixed inset-0 z-[100] hidden flex items-center justify-center p-6 modal-overlay" id="congratsModal">
+<div class="bg-surface w-full max-w-sm rounded-[28px] p-8 shadow-2xl flex flex-col items-center text-center space-y-6 transform scale-95 transition-transform duration-300" id="modalContent">
+<div class="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-[48px]" style="font-variation-settings: 'FILL' 1;">celebration</span>
+</div>
+<div class="space-y-2">
+<h3 class="font-title-lg text-title-lg text-primary">Parabéns!</h3>
+<p class="font-body-lg text-on-surface-variant">Você concluiu esse exercício diário (Ponte Pélvica)</p>
+</div>
+<button class="w-full h-[48px] bg-primary text-on-primary rounded-full font-subtitle-md shadow-md active:scale-95 transition-all" id="closeModalBtn">
+            Continuar
+        </button>
+</div>
+</div>
+<script>
+        // Progress Logic
+        const TOTAL_FREQUENCY = 3;
+        const EXERCISE_KEY = 'ponte_pelvica_progress';
+        
+        // Initialize or update progress display
+        function updateDisplay() {
+            const currentProgress = parseInt(sessionStorage.getItem(EXERCISE_KEY) || "1");
+            const statusText = document.getElementById('status-text');
+            if (currentProgress <= TOTAL_FREQUENCY) {
+                statusText.innerText = `Sessão ${currentProgress} de ${TOTAL_FREQUENCY}`;
+            } else {
+                statusText.innerText = `Concluído ${TOTAL_FREQUENCY} de ${TOTAL_FREQUENCY}`;
+            }
+        }
+
+        // Run on load
+        updateDisplay();
+
+        const completeBtn = document.getElementById('completeBtn');
+        const congratsModal = document.getElementById('congratsModal');
+        const modalContent = document.getElementById('modalContent');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+
+        completeBtn.addEventListener('click', function() {
+            let currentCount = parseInt(sessionStorage.getItem(EXERCISE_KEY) || "1");
+            
+            this.innerHTML = '<span class="material-symbols-outlined animate-spin">refresh</span> Processando...';
+            this.disabled = true;
+            this.classList.add('opacity-80');
+
+            setTimeout(() => {
+                if (currentCount >= TOTAL_FREQUENCY) {
+                    // Show Celebratory Message
+                    congratsModal.classList.remove('hidden');
+                    congratsModal.classList.add('flex');
+                    setTimeout(() => modalContent.classList.remove('scale-95'), 10);
+                } else {
+                    // Increment and simulate transition back
+                    sessionStorage.setItem(EXERCISE_KEY, currentCount + 1);
+                    this.innerHTML = '<span class="material-symbols-outlined">check_circle</span> Sessão Registrada!';
+                    this.classList.remove('bg-primary');
+                    this.classList.add('bg-green-600');
+                    
+                    setTimeout(() => {
+                        // Simulate transition back to Treatment Plan
+                        window.history.back();
+                    }, 800);
+                }
+            }, 1000);
+        });
+
+        closeModalBtn.addEventListener('click', () => {
+            // Reset for demo purposes or proceed
+            sessionStorage.setItem(EXERCISE_KEY, "1");
+            congratsModal.classList.add('hidden');
+            window.history.back();
+        });
+
+        // Simple parallax effect for media area
+        window.addEventListener('scroll', () => {
+            const media = document.querySelector('section.relative');
+            const scroll = window.pageYOffset;
+            if (media) {
+                media.style.transform = `translateY(${scroll * 0.05}px)`;
+            }
+        });
+    </script>
+</body></html>

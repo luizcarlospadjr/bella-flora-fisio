@@ -1,0 +1,235 @@
+<!DOCTYPE html><html lang="pt-BR" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Perfil do Profissional - Bella Flora Fisio</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface": "#1d1b1f",
+                        "on-error-container": "#93000a",
+                        "surface-bright": "#fff7fd",
+                        "on-secondary-container": "#795465",
+                        "inverse-on-surface": "#f6eff5",
+                        "secondary-fixed-dim": "#e9bacd",
+                        "secondary-container": "#fdcde1",
+                        "secondary-fixed": "#ffd8e7",
+                        "primary": "#70518d",
+                        "on-secondary-fixed": "#2e1221",
+                        "surface-container-highest": "#e7e0e6",
+                        "tertiary": "#616211",
+                        "error": "#ba1a1a",
+                        "on-primary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "on-primary-fixed-variant": "#573974",
+                        "surface-container": "#f3ecf2",
+                        "on-background": "#1d1b1f",
+                        "surface-dim": "#dfd8de",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-primary": "#dcb8fc",
+                        "on-tertiary-container": "#525300",
+                        "error-container": "#ffdad6",
+                        "outline": "#7c747f",
+                        "on-secondary": "#ffffff",
+                        "surface-container-high": "#ede6ec",
+                        "background": "#fff7fd",
+                        "primary-fixed": "#f0dbff",
+                        "outline-variant": "#cdc3cf",
+                        "surface-variant": "#e7e0e6",
+                        "surface-container-low": "#f9f1f7",
+                        "tertiary-fixed": "#e8e78a",
+                        "surface-tint": "#70518d",
+                        "on-surface-variant": "#4b454e",
+                        "secondary": "#795465",
+                        "inverse-surface": "#322f34",
+                        "tertiary-container": "#c7c76d",
+                        "on-primary-fixed": "#290a45",
+                        "surface": "#fff7fd",
+                        "primary-fixed-dim": "#dcb8fc",
+                        "on-tertiary-fixed": "#1d1d00",
+                        "tertiary-fixed-dim": "#cbcb71",
+                        "primary-container": "#d8b4f8",
+                        "on-primary-container": "#60427d",
+                        "on-secondary-fixed-variant": "#5f3c4d",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-fixed-variant": "#494900"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-md": "16px",
+                        "inset-card": "16px",
+                        "base": "8px",
+                        "stack-sm": "8px",
+                        "margin-mobile": "16px",
+                        "gutter": "16px",
+                        "stack-lg": "24px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Manrope"],
+                        "title-md": ["Manrope"],
+                        "title-lg": ["Manrope"],
+                        "subtitle-md": ["Manrope"],
+                        "subtitle-lg": ["Manrope"],
+                        "label-lg": ["Manrope"],
+                        "body-lg": ["Manrope"],
+                        "body-md": ["Manrope"]
+                    },
+                    "fontSize": {
+                        "label-md": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "title-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "title-lg": ["28px", { "lineHeight": "36px", "fontWeight": "600" }],
+                        "subtitle-md": ["18px", { "lineHeight": "26px", "fontWeight": "500" }],
+                        "subtitle-lg": ["20px", { "lineHeight": "28px", "fontWeight": "500" }],
+                        "label-lg": ["13px", { "lineHeight": "18px", "fontWeight": "500" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+
+    <!-- Firebase CDN SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <!-- Bella Flora Custom Modules -->
+    <script src="navigation.js" defer></script>
+    <script src="sync.js" defer></script>
+</head>
+
+<body class="bg-background text-on-surface font-sans min-h-screen md:pb-0 pb-[90px]">
+<!-- TopAppBar -->
+<header class="bg-surface shadow-sm h-[64px] w-full top-0 sticky flex items-center justify-between px-margin-mobile z-40">
+<button class="text-primary hover:bg-primary-container/20 transition-colors active:scale-95 duration-200 p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="font-title-lg text-title-lg text-primary font-extrabold tracking-tight">Perfil do Profissional</h1>
+
+</header>
+<!-- Main Canvas -->
+<main class="px-margin-mobile py-stack-lg max-w-md mx-auto flex flex-col gap-stack-lg">
+<!-- Hero Section -->
+<section class="flex flex-col items-center text-center gap-stack-sm">
+<div class="relative">
+<div class="w-32 h-32 rounded-full border-4 border-primary-container overflow-hidden custom-shadow-l1">
+<img alt="Dra. Beatriz Silva" class="w-full h-full object-cover" data-alt="A highly detailed portrait of a professional female physiotherapist in her late 30s, smiling warmly. She is wearing a pristine white clinical coat over a soft lavender scrub top, standing in a brightly lit, modern wellness clinic. The lighting is soft and diffused, creating a calm, high-key light mode aesthetic. The color palette emphasizes clean whites, gentle lavenders, and soft grey tones, projecting a sense of professional care, tranquility, and healing." src="assets/img/dra_beatriz_silva.png">
+</div>
+<div class="absolute bottom-0 right-0 bg-primary text-on-primary p-1.5 rounded-full border-2 border-surface">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+</div>
+<div class="mt-stack-sm">
+<h2 class="font-title-lg text-title-lg text-on-background">Dra. Beatriz Silva</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Fisioterapia Pélvica &amp; Obstetrícia</p>
+</div>
+</section>
+<!-- Action Buttons -->
+<section class="grid grid-cols-1 gap-stack-md">
+<button class="h-[52px] rounded-[16px] border border-outline-variant/30 text-on-surface font-label-lg text-label-lg hover:bg-surface-variant/50 transition-colors shadow-sm flex items-center justify-center gap-2 bg-surface">
+<span class="material-symbols-outlined text-[20px] text-secondary">calendar_month</span>
+        Ver Agenda
+      </button>
+</section>
+<!-- Bio Section -->
+<section class="bg-surface rounded-[16px] p-inset-card shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border border-outline-variant/30">
+<div class="flex items-center gap-2 mb-stack-sm text-primary">
+<span class="material-symbols-outlined">person_pin</span>
+<h3 class="font-subtitle-md text-subtitle-md text-on-surface">Sobre mim</h3>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+        Especialista em reabilitação postural e fortalecimento de core focado em saúde da mulher, com 8 anos de experiência clínica. Comprometida em oferecer um cuidado acolhedor e integrativo para o bem-estar físico e emocional das pacientes.
+      </p>
+</section>
+<!-- Specialties Section -->
+<section>
+<div class="flex items-center gap-2 mb-stack-md text-primary">
+<span class="material-symbols-outlined">workspace_premium</span>
+<h3 class="font-subtitle-md text-subtitle-md text-on-surface">Especialidades</h3>
+</div>
+<div class="flex flex-wrap gap-2">
+<span class="h-8 px-4 rounded-full bg-surface-container-low text-on-surface-variant border border-outline-variant/30 font-label-md text-label-md flex items-center gap-1 shadow-sm">
+          Pilates Clínico
+        </span>
+<span class="h-8 px-4 rounded-full bg-surface-container-low text-on-surface-variant border border-outline-variant/30 font-label-md text-label-md flex items-center gap-1 shadow-sm">
+          Reabilitação Postural
+        </span>
+<span class="h-8 px-4 rounded-full bg-surface-container-low text-on-surface-variant border border-outline-variant/30 font-label-md text-label-md flex items-center gap-1 shadow-sm">
+          Saúde da Mulher
+        </span>
+</div>
+</section>
+<!-- Academic Section -->
+<section>
+<div class="flex items-center gap-2 mb-stack-md text-primary">
+<span class="material-symbols-outlined">school</span>
+<h3 class="font-subtitle-md text-subtitle-md text-on-surface">Formação</h3>
+</div>
+<div class="grid grid-cols-1 gap-stack-sm">
+<div class="p-4 rounded-[16px] bg-surface border border-outline-variant/30 flex gap-4 items-start shadow-[0px_4px_12px_rgba(0,0,0,0.05)]">
+<div class="bg-primary-container p-2 rounded-lg text-on-primary-container">
+<span class="material-symbols-outlined">history_edu</span>
+</div>
+<div>
+<h4 class="font-label-lg text-label-lg text-on-surface font-semibold">Graduação em Fisioterapia</h4>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Universidade de São Paulo (USP)</p>
+</div>
+</div>
+<div class="p-4 rounded-[16px] bg-surface border border-outline-variant/30 flex gap-4 items-start shadow-[0px_4px_12px_rgba(0,0,0,0.05)]">
+<div class="bg-primary-container p-2 rounded-lg text-on-primary-container">
+<span class="material-symbols-outlined">military_tech</span>
+</div>
+<div>
+<h4 class="font-label-lg text-label-lg text-on-surface font-semibold">Pós-graduação em Pilates Clínico</h4>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Instituto de Pesquisa e Ensino em Saúde (IPEA)</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="bg-surface h-[80px] fixed bottom-0 w-full z-50 shadow-lg border-t border-outline-variant/10 flex justify-around items-center px-4 pb-safe md:hidden">
+  <button class="flex flex-col items-center justify-center transition-transform active:scale-95">
+    <span class="material-symbols-outlined mb-1 text-on-surface-variant">home</span>
+    <span class="font-label-md text-[10px] text-on-surface-variant">Incio</span>
+  </button>
+  <button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-secondary-container/30 rounded-2xl px-4 py-1 active:scale-95 transition-transform">
+    <span class="material-symbols-outlined mb-1">medical_services</span>
+    <span class="font-label-md text-[10px]">Tratamento</span>
+  </button>
+  <button class="flex flex-col items-center justify-center transition-transform active:scale-95">
+    <div class="bg-primary-container text-on-primary-container rounded-full px-5 py-1 mb-1">
+      <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person_search</span>
+    </div>
+    <span class="font-label-md text-[10px] text-on-surface">Profissional</span>
+  </button>
+  <button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-secondary-container/30 rounded-2xl px-4 py-1 active:scale-95 transition-transform">
+    <span class="material-symbols-outlined mb-1">person</span>
+    <span class="font-label-md text-[10px]">Perfil</span>
+  </button>
+</nav>
+
+
+
+
+</body></html>

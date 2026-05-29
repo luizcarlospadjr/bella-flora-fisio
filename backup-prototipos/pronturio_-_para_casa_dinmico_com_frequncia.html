@@ -1,0 +1,340 @@
+<!DOCTYPE html><html class="light" lang="pt-BR" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Para Casa - Mariana Silva</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-fixed-variant": "#494900",
+                        "on-tertiary-fixed": "#1d1d00",
+                        "inverse-surface": "#322f34",
+                        "on-primary-fixed-variant": "#573974",
+                        "surface-container-highest": "#e7e0e6",
+                        "on-error-container": "#93000a",
+                        "on-secondary-container": "#795465",
+                        "surface": "#fff7fd",
+                        "on-surface-variant": "#4b454e",
+                        "primary-fixed": "#f0dbff",
+                        "surface-container-low": "#f9f1f7",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary": "#795465",
+                        "surface-variant": "#e7e0e6",
+                        "primary": "#70518d",
+                        "inverse-primary": "#dcb8fc",
+                        "error-container": "#ffdad6",
+                        "surface-container-high": "#ede6ec",
+                        "on-secondary-fixed-variant": "#5f3c4d",
+                        "secondary-fixed": "#ffd8e7",
+                        "outline-variant": "#cdc3cf",
+                        "on-secondary": "#ffffff",
+                        "inverse-on-surface": "#f6eff5",
+                        "on-tertiary-container": "#525300",
+                        "on-surface": "#1d1b1f",
+                        "secondary-fixed-dim": "#e9bacd",
+                        "tertiary-container": "#c7c76d",
+                        "tertiary": "#616211",
+                        "primary-fixed-dim": "#dcb8fc",
+                        "error": "#ba1a1a",
+                        "surface-dim": "#dfd8de",
+                        "outline": "#7c747f",
+                        "on-primary-container": "#60427d",
+                        "background": "#fff7fd",
+                        "on-primary": "#ffffff",
+                        "on-primary-fixed": "#290a45",
+                        "surface-bright": "#fff7fd",
+                        "secondary-container": "#fdcde1",
+                        "on-background": "#1d1b1f",
+                        "surface-container": "#f3ecf2",
+                        "on-error": "#ffffff",
+                        "primary-container": "#d8b4f8",
+                        "on-secondary-fixed": "#2e1221",
+                        "tertiary-fixed-dim": "#cbcb71",
+                        "tertiary-fixed": "#e8e78a",
+                        "surface-tint": "#70518d",
+                        "on-tertiary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-lg": "24px",
+                        "stack-sm": "8px",
+                        "margin-mobile": "16px",
+                        "stack-md": "16px",
+                        "gutter": "16px",
+                        "base": "8px",
+                        "inset-card": "16px"
+                    },
+                    "fontFamily": {
+                        "title-md": ["Manrope", "sans-serif"],
+                        "subtitle-lg": ["Manrope", "sans-serif"],
+                        "label-md": ["Manrope", "sans-serif"],
+                        "body-md": ["Manrope", "sans-serif"],
+                        "label-lg": ["Manrope", "sans-serif"],
+                        "subtitle-md": ["Manrope", "sans-serif"],
+                        "body-lg": ["Manrope", "sans-serif"],
+                        "title-lg": ["Manrope", "sans-serif"]
+                    },
+                    "fontSize": {
+                        "title-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "subtitle-lg": ["20px", {"lineHeight": "28px", "fontWeight": "500"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "label-lg": ["13px", {"lineHeight": "18px", "fontWeight": "500"}],
+                        "subtitle-md": ["18px", {"lineHeight": "26px", "fontWeight": "500"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "title-lg": ["28px", {"lineHeight": "36px", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+
+    <!-- Firebase CDN SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <!-- Bella Flora Custom Modules -->
+    <script src="navigation.js" defer></script>
+    <script src="sync.js" defer></script>
+</head>
+
+<body class="bg-surface-container font-body-md text-on-surface antialiased pb-32">
+<!-- TopAppBar -->
+<header class="bg-surface shadow-sm h-[64px] w-full top-0 sticky z-50 flex items-center justify-between px-margin-mobile">
+<button class="text-primary hover:bg-primary-container/20 transition-colors active:scale-95 duration-200 p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="font-title-md text-title-md text-primary tracking-tight">Prontuário</h1>
+<button class="text-primary hover:bg-primary-container/20 transition-colors active:scale-95 duration-200 p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button></header>
+<main class="px-margin-mobile pt-stack-md pb-stack-lg max-w-3xl mx-auto space-y-stack-lg">
+<!-- Patient Info Sub-header -->
+<section class="bg-surface-container-low rounded-xl p-inset-card flex items-center space-x-gutter shadow-[0px_4px_12px_rgba(0,0,0,0.08)] justify-between">
+<div class="relative">
+<img alt="Mariana Silva" class="w-[64px] h-[64px] rounded-full object-cover border-2 border-primary-container" src="assets/img/mariana_silva.png">
+</div>
+<div class="flex-1">
+<h2 class="font-subtitle-lg text-subtitle-lg text-on-surface">Mariana Silva</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">32 anos • ID: 8492-A</p>
+</div>
+<button class="text-primary hover:bg-primary-container/20 transition-colors active:scale-95 duration-200 p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="chat">chat</span>
+</button>
+</section>
+<!-- Tabs -->
+<nav class="flex border-b border-surface-variant overflow-x-auto hide-scrollbar"><button class="flex-1 py-stack-sm text-center border-b-2 border-transparent font-subtitle-md text-subtitle-md text-on-surface-variant hover:bg-surface-container/50 transition-colors px-4 whitespace-nowrap">Histórico</button><button class="flex-1 py-stack-sm text-center border-b-2 border-transparent font-subtitle-md text-subtitle-md text-on-surface-variant hover:bg-surface-container/50 transition-colors px-4 whitespace-nowrap">Documentos</button>
+<button class="flex-1 py-stack-sm text-center border-b-2 border-transparent font-subtitle-md text-subtitle-md text-on-surface-variant hover:bg-surface-container/50 transition-colors px-4 whitespace-nowrap">Evolução</button>
+<button class="flex-1 py-stack-sm text-center border-b-2 border-primary font-subtitle-md text-subtitle-md text-primary px-4 whitespace-nowrap font-bold">
+                Para Casa
+</button></nav>
+<!-- Content Area -->
+<section class="py-stack-lg">
+<!-- Section Header -->
+<div class="flex items-center justify-between mb-stack-md">
+<h3 class="font-subtitle-md text-subtitle-md text-on-surface">Prescrição Domiciliar</h3>
+<button class="flex items-center gap-1 text-primary font-label-lg text-label-lg py-1 px-3 rounded-full hover:bg-primary-fixed transition-colors active:scale-95" id="add-exercise-btn">
+<span class="material-symbols-outlined text-[18px]" data-icon="add">add</span>
+                    Novo
+                </button>
+</div>
+<!-- Exercises List -->
+<div class="flex flex-col gap-stack-md" id="exercise-list">
+<!-- Exercise Card 1 -->
+<div class="bg-surface-container-lowest p-inset-card rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.04)] border border-outline-variant/20">
+<div class="flex justify-between items-start mb-4">
+<h4 class="font-subtitle-lg text-subtitle-lg text-on-surface max-w-[85%]">Alongamento de Isquiotibiais</h4>
+<button class="text-on-surface-variant hover:text-error transition-colors p-1 -mr-1 -mt-1 active:scale-95 delete-exercise">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</button>
+</div>
+<!-- Media Section -->
+<div class="mb-4 flex flex-col gap-2">
+<label class="font-label-lg text-label-lg text-on-surface">Média de Demonstração</label>
+<div class="flex gap-3 overflow-x-auto pb-1 hide-scrollbar">
+<button class="flex-shrink-0 h-[72px] w-[72px] rounded-lg border-2 border-dashed border-primary/40 text-primary hover:bg-primary-container/20 flex flex-col items-center justify-center gap-1 transition-colors active:scale-95">
+<span class="material-symbols-outlined text-[24px]" data-icon="add_photo_alternate">add_photo_alternate</span>
+<span class="text-[10px] font-label-md text-center leading-tight">Anexar<br>Mídia</span>
+</button>
+<div class="relative flex-shrink-0 h-[72px] w-[72px] rounded-lg overflow-hidden border border-outline-variant/40 bg-surface-container">
+<img alt="Demonstração" class="absolute inset-0 w-full h-full object-cover" src="assets/img/mariana_silva.png">
+<div class="absolute inset-0 bg-black/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-[24px]" data-icon="play_circle">play_circle</span>
+</div>
+<button class="absolute top-1 right-1 bg-surface-container-highest/80 text-on-surface hover:text-error rounded-full p-0.5 backdrop-blur-sm transition-colors active:scale-95">
+<span class="material-symbols-outlined text-[14px]" data-icon="close">close</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Parameters Grid 2x2 -->
+<div class="grid grid-cols-2 gap-3 mb-4">
+<div class="flex flex-col gap-1">
+<label class="font-label-lg text-label-lg text-on-surface">Séries</label>
+<input class="h-[48px] px-3 rounded-lg border border-outline-variant/60 bg-transparent text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-shadow text-center" type="number" value="3">
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-lg text-label-lg text-on-surface">Repetições</label>
+<input class="h-[48px] px-3 rounded-lg border border-outline-variant/60 bg-transparent text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-shadow text-center" type="number" value="15">
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-lg text-label-lg text-on-surface">Pausa</label>
+<input class="h-[48px] px-3 rounded-lg border border-outline-variant/60 bg-transparent text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-shadow text-center" type="text" value="60s">
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-lg text-label-lg text-on-surface">Frequência</label>
+<input class="h-[48px] px-3 rounded-lg border border-outline-variant/60 bg-transparent text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-shadow text-center" placeholder="Ex: 3 vezes/dia" type="text" value="2 vezes/dia">
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-lg text-label-lg text-on-surface">Observações</label>
+<textarea class="w-full px-3 py-3 rounded-lg border border-outline-variant/60 bg-transparent text-on-surface font-body-md placeholder:text-on-surface-variant/50 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-shadow resize-none" placeholder="Ex: Manter a coluna reta..." rows="2">Sustentar a posição no limite do conforto.</textarea>
+</div>
+</div>
+<!-- Exercise Card 2 -->
+<div class="bg-surface-container-lowest p-inset-card rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.04)] border border-outline-variant/20">
+<div class="flex justify-between items-start mb-4">
+<h4 class="font-subtitle-lg text-subtitle-lg text-on-surface max-w-[85%]">Ponte Pélvica</h4>
+<button class="text-on-surface-variant hover:text-error transition-colors p-1 -mr-1 -mt-1 active:scale-95 delete-exercise">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</button>
+</div>
+<!-- Media Section -->
+<div class="mb-4 flex flex-col gap-2">
+<label class="font-label-lg text-label-lg text-on-surface">Média de Demonstração</label>
+<div class="flex gap-3 overflow-x-auto pb-1 hide-scrollbar">
+<button class="flex-shrink-0 h-[72px] w-[72px] rounded-lg border-2 border-dashed border-primary/40 text-primary hover:bg-primary-container/20 flex flex-col items-center justify-center gap-1 transition-colors active:scale-95">
+<span class="material-symbols-outlined text-[24px]" data-icon="add_photo_alternate">add_photo_alternate</span>
+<span class="text-[10px] font-label-md text-center leading-tight">Anexar<br>Mídia</span>
+</button>
+</div>
+</div>
+<!-- Parameters Grid 2x2 -->
+<div class="grid grid-cols-2 gap-3 mb-4">
+<div class="flex flex-col gap-1">
+<label class="font-label-lg text-label-lg text-on-surface">Séries</label>
+<input class="h-[48px] px-3 rounded-lg border border-outline-variant/60 bg-transparent text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-shadow text-center" type="number" value="3">
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-lg text-label-lg text-on-surface">Repetições</label>
+<input class="h-[48px] px-3 rounded-lg border border-outline-variant/60 bg-transparent text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-shadow text-center" type="number" value="12">
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-lg text-label-lg text-on-surface">Pausa</label>
+<input class="h-[48px] px-3 rounded-lg border border-outline-variant/60 bg-transparent text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-shadow text-center" type="text" value="30s">
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-lg text-label-lg text-on-surface">Frequência</label>
+<input class="h-[48px] px-3 rounded-lg border border-outline-variant/60 bg-transparent text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-shadow text-center" placeholder="Ex: 3 vezes/dia" type="text" value="1 vez/dia">
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-lg text-label-lg text-on-surface">Observações</label>
+<textarea class="w-full px-3 py-3 rounded-lg border border-outline-variant/60 bg-transparent text-on-surface font-body-md placeholder:text-on-surface-variant/50 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-shadow resize-none" placeholder="Adicionar notas..." rows="2">Concentrar na contração dos glúteos.</textarea>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Fixed Footer Action -->
+<div class="fixed bottom-[80px] left-0 w-full px-margin-mobile py-4 bg-gradient-to-t from-surface-container via-surface-container to-transparent z-40">
+<button class="w-full h-[52px] bg-primary text-on-primary font-subtitle-lg text-subtitle-lg rounded-xl shadow-[0px_4px_12px_rgba(112,81,141,0.2)] flex items-center justify-center gap-2 active:scale-[0.98] transition-transform" onclick="const btn = this; const originalContent = btn.innerHTML; btn.disabled = true; btn.innerHTML = '&lt;span class=&quot;material-symbols-outlined text-[20px]&quot; data-icon=&quot;check_circle&quot;&gt;check_circle&lt;/span&gt; Sucesso! Enviado'; setTimeout(() =&gt; { btn.innerHTML = originalContent; btn.disabled = false; }, 3000);">
+<span class="material-symbols-outlined text-[20px]" data-icon="send">send</span>
+            Salvar e Enviar
+        </button>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const addBtn = document.getElementById('add-exercise-btn');
+        const list = document.getElementById('exercise-list');
+
+        function setupDeleteButtons() {
+            document.querySelectorAll('.delete-exercise').forEach(btn => {
+                btn.onclick = (e) => {
+                    const card = e.target.closest('.bg-surface-container-lowest');
+                    if (card) card.remove();
+                };
+            });
+        }
+
+        if (addBtn && list) {
+            addBtn.addEventListener('click', () => {
+                const newCard = document.createElement('div');
+                newCard.className = 'bg-surface-container-lowest p-inset-card rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.04)] border border-outline-variant/20 transition-all duration-300';
+                newCard.innerHTML = `
+                    <div class="flex justify-between items-start mb-4">
+                        <input type="text" placeholder="Nome do Exercício" class="font-subtitle-lg text-subtitle-lg text-on-surface bg-transparent border-none p-0 focus:ring-0 w-full" />
+                        <button class="text-on-surface-variant hover:text-error transition-colors p-1 -mr-1 -mt-1 active:scale-95 delete-exercise">
+                            <span class="material-symbols-outlined" data-icon="delete">delete</span>
+                        </button>
+                    </div>
+                    <div class="mb-4 flex flex-col gap-2">
+                        <label class="font-label-lg text-label-lg text-on-surface">Média de Demonstração</label>
+                        <div class="flex gap-3 overflow-x-auto pb-1 hide-scrollbar">
+                            <button class="flex-shrink-0 h-[72px] w-[72px] rounded-lg border-2 border-dashed border-primary/40 text-primary hover:bg-primary-container/20 flex flex-col items-center justify-center gap-1 transition-colors active:scale-95">
+                                <span class="material-symbols-outlined text-[24px]" data-icon="add_photo_alternate">add_photo_alternate</span>
+                                <span class="text-[10px] font-label-md text-center leading-tight">Anexar<br>Mídia</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3 mb-4">
+                        <div class="flex flex-col gap-1">
+                            <label class="font-label-lg text-label-lg text-on-surface">Séries</label>
+                            <input class="h-[48px] px-3 rounded-lg border border-outline-variant/60 bg-transparent text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-shadow text-center" type="number" placeholder="Ex: 3">
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label class="font-label-lg text-label-lg text-on-surface">Repetições</label>
+                            <input class="h-[48px] px-3 rounded-lg border border-outline-variant/60 bg-transparent text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-shadow text-center" type="number" placeholder="Ex: 10">
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label class="font-label-lg text-label-lg text-on-surface">Pausa</label>
+                            <input class="h-[48px] px-3 rounded-lg border border-outline-variant/60 bg-transparent text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-shadow text-center" type="text" placeholder="30s">
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label class="font-label-lg text-label-lg text-on-surface">Frequência</label>
+                            <input class="h-[48px] px-3 rounded-lg border border-outline-variant/60 bg-transparent text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-shadow text-center" type="text" placeholder="Ex: 3 vezes/dia">
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="font-label-lg text-label-lg text-on-surface">Observações</label>
+                        <textarea class="w-full px-3 py-3 rounded-lg border border-outline-variant/60 bg-transparent text-on-surface font-body-md placeholder:text-on-surface-variant/50 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-shadow resize-none" placeholder="Adicionar notas..." rows="2"></textarea>
+                    </div>
+                `;
+
+                list.prepend(newCard);
+                setupDeleteButtons();
+                newCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            });
+        }
+        setupDeleteButtons();
+    });
+</script>
+</body></html>

@@ -1,0 +1,252 @@
+<!DOCTYPE html><html lang="pt-BR"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Edição do Plano de Tratamento</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "tertiary-fixed-dim": "#cbcb71",
+                        "secondary": "#795465",
+                        "on-surface": "#1d1b1f",
+                        "on-primary": "#ffffff",
+                        "surface-container-low": "#f9f1f7",
+                        "tertiary": "#616211",
+                        "primary-fixed-dim": "#dcb8fc",
+                        "error": "#ba1a1a",
+                        "surface-container": "#f3ecf2",
+                        "on-tertiary-container": "#525300",
+                        "on-secondary-fixed": "#2e1221",
+                        "surface-container-highest": "#e7e0e6",
+                        "on-primary-fixed": "#290a45",
+                        "secondary-fixed-dim": "#e9bacd",
+                        "surface-container-high": "#ede6ec",
+                        "tertiary-fixed": "#e8e78a",
+                        "error-container": "#ffdad6",
+                        "on-surface-variant": "#4b454e",
+                        "tertiary-container": "#c7c76d",
+                        "surface-variant": "#e7e0e6",
+                        "surface": "#fff7fd",
+                        "outline": "#7c747f",
+                        "on-primary-container": "#60427d",
+                        "primary-fixed": "#f0dbff",
+                        "outline-variant": "#cdc3cf",
+                        "surface-bright": "#fff7fd",
+                        "on-secondary": "#ffffff",
+                        "inverse-on-surface": "#f6eff5",
+                        "on-tertiary-fixed-variant": "#494900",
+                        "on-tertiary": "#ffffff",
+                        "primary-container": "#d8b4f8",
+                        "surface-tint": "#70518d",
+                        "on-error-container": "#93000a",
+                        "secondary-container": "#fdcde1",
+                        "secondary-fixed": "#ffd8e7",
+                        "primary": "#70518d",
+                        "on-primary-fixed-variant": "#573974",
+                        "on-secondary-container": "#795465",
+                        "on-background": "#1d1b1f",
+                        "inverse-surface": "#322f34",
+                        "inverse-primary": "#dcb8fc",
+                        "background": "#fff7fd",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed": "#1d1d00",
+                        "on-error": "#ffffff",
+                        "surface-dim": "#dfd8de",
+                        "on-secondary-fixed-variant": "#5f3c4d"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "inset-card": "16px",
+                        "base": "8px",
+                        "stack-md": "16px",
+                        "stack-lg": "24px",
+                        "gutter": "16px",
+                        "margin-mobile": "16px",
+                        "stack-sm": "8px"
+                    },
+                    fontFamily: {
+                        "subtitle-lg": ["Manrope"],
+                        "label-md": ["Manrope"],
+                        "subtitle-md": ["Manrope"],
+                        "body-lg": ["Manrope"],
+                        "label-lg": ["Manrope"],
+                        "title-md": ["Manrope"],
+                        "title-lg": ["Manrope"],
+                        "body-md": ["Manrope"]
+                    },
+                    fontSize: {
+                        "subtitle-lg": ["20px", { lineHeight: "28px", fontWeight: "500" }],
+                        "label-md": ["12px", { lineHeight: "16px", fontWeight: "500" }],
+                        "subtitle-md": ["18px", { lineHeight: "26px", fontWeight: "500" }],
+                        "body-lg": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+                        "label-lg": ["13px", { lineHeight: "18px", fontWeight: "500" }],
+                        "title-md": ["24px", { lineHeight: "32px", fontWeight: "600" }],
+                        "title-lg": ["28px", { lineHeight: "36px", fontWeight: "600" }],
+                        "body-md": ["14px", { lineHeight: "20px", fontWeight: "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Custom scrollbar for horizontal scrolling lists to keep it clean */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+
+    <!-- Firebase CDN SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <!-- Bella Flora Custom Modules -->
+    <script src="navigation.js" defer></script>
+    <script src="sync.js" defer></script>
+</head>
+
+<body class="bg-surface font-body-lg text-on-surface antialiased min-h-screen pb-[160px]" data-mode="connect">
+<!-- TopAppBar -->
+<header class="h-[64px] w-full top-0 sticky bg-surface shadow-sm z-40 flex items-center justify-between px-margin-mobile">
+<button aria-label="Voltar" class="w-12 h-12 flex items-center justify-center text-primary active:scale-95 duration-200 hover:bg-primary-container/20 transition-colors rounded-full">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="font-title-lg text-title-lg text-primary tracking-tight">Bella Flora Fisio</h1>
+<button aria-label="Opções" class="w-12 h-12 flex items-center justify-center text-primary active:scale-95 duration-200 hover:bg-primary-container/20 transition-colors rounded-full">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="max-w-3xl mx-auto pt-stack-md px-margin-mobile">
+<!-- Header Section -->
+<div class="mb-stack-lg">
+<div class="flex items-center gap-2 mb-stack-sm text-secondary">
+<span class="material-symbols-outlined text-sm" data-icon="edit_note">edit_note</span>
+<span class="font-label-md text-label-md uppercase tracking-wider">EDITANDO EXERCÍCIO PARA CASA</span>
+</div>
+<div class="relative">
+<label class="font-label-lg text-label-lg text-primary block mb-1" for="plan-name">Nome do Exercício</label>
+<input class="w-full h-[48px] px-4 font-body-lg text-body-lg text-on-surface bg-surface-container-lowest border border-outline-variant rounded-lg focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all shadow-[0px_4px_12px_rgba(0,0,0,0.02)]" id="plan-name" type="text" value="Reabilitação de LCA - Fase Inicial">
+</div>
+</div>
+<!-- Objectives Bento Style -->
+<!-- Exercises Section -->
+<section class="mb-stack-lg">
+<div class="flex items-center justify-between mb-stack-md">
+<h2 class="font-title-md text-title-md text-on-surface">Detalhes da Atividade</h2>
+</div>
+<div class="space-y-4">
+<!-- Exercise Card 1 -->
+<div class="bg-surface-container-lowest p-inset-card rounded-[1.25rem] shadow-[0px_4px_12px_rgba(0,0,0,0.06)] border border-surface-variant flex flex-col md:flex-row gap-4 relative overflow-hidden">
+<!-- Subtle accent strip -->
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-secondary opacity-80"></div>
+<div class="flex justify-between items-start">
+<div class="flex gap-4 flex-1">
+<div class="w-[88px] h-[88px] rounded-xl overflow-hidden shrink-0 bg-surface-container-high border border-outline-variant/30">
+<img alt="Exercise thumbnail" class="w-full h-full object-cover" src="assets/img/knee_extension_exercise.png">
+</div>
+<div class="flex-1 flex flex-col justify-center">
+<h3 class="font-subtitle-md text-subtitle-md text-on-surface mb-1">Extensão Isométrica</h3>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-1">Focar na contração do vasto medial.</p>
+</div>
+</div>
+<button aria-label="Remover exercício" class="text-outline hover:text-error transition-colors p-1 shrink-0 ml-2">
+<span class="material-symbols-outlined" data-icon="delete_outline">delete_outline</span>
+</button>
+</div>
+<!-- Settings Row -->
+<div class="flex-1 bg-surface-container p-3 rounded-xl grid grid-cols-3 gap-2">
+<div class="flex flex-col">
+<label class="font-label-md text-label-md text-outline mb-1">Séries</label>
+<input class="w-full bg-surface-container-lowest border-none rounded-md py-1 px-2 font-body-md text-body-md text-center text-on-surface focus:ring-1 focus:ring-primary shadow-sm h-8" type="number" value="3">
+</div>
+<div class="flex flex-col">
+<label class="font-label-md text-label-md text-outline mb-1">Repetições</label>
+<input class="w-full bg-surface-container-lowest border-none rounded-md py-1 px-2 font-body-md text-body-md text-center text-on-surface focus:ring-1 focus:ring-primary shadow-sm h-8" type="text" value="10s">
+</div>
+<div class="flex flex-col">
+<label class="font-label-md text-label-md text-outline mb-1">Pausa</label>
+<input class="w-full bg-surface-container-lowest border-none rounded-md py-1 px-2 font-body-md text-body-md text-center text-on-surface focus:ring-1 focus:ring-primary shadow-sm h-8" type="text" value="30s">
+</div>
+</div>
+<!-- Obs input -->
+<div class="w-full md:col-span-full mt-2">
+<input class="w-full bg-transparent border-b border-outline-variant/50 focus:border-primary outline-none font-body-md text-body-md text-on-surface py-1 text-sm placeholder:text-outline-variant/80" placeholder="Observações adicionais..." type="text">
+</div>
+</div>
+<!-- Exercise Card 2 (No Image to show variance) -->
+<div class="bg-surface-container-lowest p-inset-card rounded-[1.25rem] shadow-[0px_4px_12px_rgba(0,0,0,0.06)] border border-surface-variant flex flex-col gap-4 relative overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-primary opacity-80"></div>
+<div class="flex justify-between items-start">
+<div class="flex-1">
+<h3 class="font-subtitle-md text-subtitle-md text-on-surface mb-1">Elevação de Perna Reta (SLR)</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Manter o joelho completamente estendido.</p>
+</div>
+<button aria-label="Remover exercício" class="text-outline hover:text-error transition-colors p-1">
+<span class="material-symbols-outlined" data-icon="delete_outline">delete_outline</span>
+</button>
+</div>
+<!-- Settings Row -->
+<div class="bg-surface-container p-3 rounded-xl grid grid-cols-3 gap-2">
+<div class="flex flex-col">
+<label class="font-label-md text-label-md text-outline mb-1">Séries</label>
+<input class="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-md py-1 px-2 font-body-md text-body-md text-center text-on-surface focus:ring-1 focus:ring-primary shadow-sm h-8" type="number" value="3">
+</div>
+<div class="flex flex-col">
+<label class="font-label-md text-label-md text-outline mb-1">Repetições</label>
+<input class="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-md py-1 px-2 font-body-md text-body-md text-center text-on-surface focus:ring-1 focus:ring-primary shadow-sm h-8" type="text" value="15">
+</div>
+<div class="flex flex-col">
+<label class="font-label-md text-label-md text-outline mb-1">Pausa</label>
+<input class="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-md py-1 px-2 font-body-md text-body-md text-center text-on-surface focus:ring-1 focus:ring-primary shadow-sm h-8" type="text" value="45s">
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Floating Action Area (Save & Publish) -->
+<div class="fixed bottom-[72px] md:bottom-0 left-0 w-full p-margin-mobile bg-gradient-to-t from-surface via-surface to-transparent pt-8 z-40 pointer-events-none flex justify-center">
+<button class="pointer-events-auto w-full max-w-sm h-[52px] bg-primary text-on-primary rounded-2xl font-label-lg text-label-lg flex items-center justify-center gap-2 shadow-[0px_8px_16px_rgba(112,81,141,0.25)] hover:bg-on-primary-fixed-variant transition-colors active:scale-95 duration-200"><span class="material-symbols-outlined" data-icon="save">save</span>Salvar Alterações</button>
+</div>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden h-[72px] fixed bottom-0 w-full z-50 bg-surface shadow-[0px_-2px_10px_rgba(0,0,0,0.05)] flex justify-around items-center px-4 pb-safe">
+<!-- Home -->
+<a class="flex flex-col items-center justify-center text-secondary hover:bg-secondary-container/30 active:scale-95 transition-transform rounded-xl px-2 py-1" href="#">
+<span class="material-symbols-outlined text-[24px] mb-1" data-icon="home">home</span>
+<span class="font-label-md text-[10px] text-center">Início</span>
+</a>
+<!-- Schedule -->
+<a class="flex flex-col items-center justify-center text-secondary hover:bg-secondary-container/30 active:scale-95 transition-transform rounded-xl px-2 py-1" href="#">
+<span class="material-symbols-outlined text-[24px] mb-1" data-icon="calendar_today">calendar_today</span>
+<span class="font-label-md text-[10px] text-center">Atendimento</span>
+</a>
+<!-- Patients (Active State - Editing a Plan implies patient context) -->
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-2xl px-4 py-1 active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined text-[24px] mb-1" data-icon="groups" style="font-variation-settings: &quot;FILL&quot; 1;">groups</span>
+<span class="font-label-md text-[10px] font-bold text-center">Paciente</span>
+</a>
+<!-- Profile -->
+<a class="flex flex-col items-center justify-center text-secondary hover:bg-secondary-container/30 active:scale-95 transition-transform rounded-xl px-2 py-1" href="#">
+<span class="material-symbols-outlined text-[24px] mb-1" data-icon="person">person</span>
+<span class="font-label-md text-[10px] text-center">Perfil</span>
+</a>
+</nav>
+
+
+</body></html>

@@ -1,0 +1,107 @@
+{
+    "chats": {
+        "mariana_ana": [
+            {
+                "sender": "therapist",
+                "text": "Olá! Como você está se sentindo após os exercícios de mobilidade de ontem? Sentiu algum desconforto no joelho?",
+                "timestamp": 1779382000000,
+                "painLevel": null,
+                "recordingUrl": null,
+                "imageUrl": null
+            },
+            {
+                "sender": "patient",
+                "text": "Bom dia, Dra. Ana! Me sinto bem melhor. O joelho não inchou hoje cedo, mas senti uma leve pontada durante a última série.",
+                "timestamp": 1779382180000,
+                "painLevel": null,
+                "recordingUrl": null,
+                "imageUrl": null
+            },
+            {
+                "sender": "therapist",
+                "text": "Tente manter esta angulação hoje para evitar a pontada. Reduza a amplitude se doer.",
+                "timestamp": 1779382300000,
+                "painLevel": null,
+                "recordingUrl": null,
+                "imageUrl": "https://lh3.googleusercontent.com/aida-public/AB6AXuBAGFuNdFivaRiG5miQi18XHXZf8KmnRFQvLVCIdDsGjXyLbdGkHrxMYg3yCZSenyAF50PBAeVCzaivquOqCPHApVRbAJ0w6MQsWoEJLvi9GtwuQJ7cCYZw5k9aQGA6Vn0evnf3mvyqbWEuS1xICI3no5Epcgl0WAKHe0cfBr8rI-8w8ZjtNntVvCMpM69pePaQ7M64RyLy18WqTTwX2dqxxqnBmMhHQGlupiQfgRi009RLwyWpgkTxg7jVbvpCdHseGNKgzfXb3Mc"
+            },
+            {
+                "sender": "patient",
+                "text": "Perfeito, vou ajustar aqui agora mesmo. Obrigado!",
+                "timestamp": 1779382420000,
+                "painLevel": null,
+                "recordingUrl": null,
+                "imageUrl": null
+            },
+            {
+                "sender": "patient",
+                "text": "Nível de dor registrado: 8/10 (Dor Intensa) 😩",
+                "timestamp": 1779383154296,
+                "painLevel": "8",
+                "recordingUrl": null
+            },
+            {
+                "sender": "therapist",
+                "text": "Perfeito, Mariana! Vi aqui que a sua dor está em 8, vamos pegar leve na sessão de amanhã.",
+                "timestamp": 1779383157916,
+                "painLevel": null,
+                "recordingUrl": null
+            },
+            {
+                "sender": "patient",
+                "text": "Nível de dor registrado: 8/10 (Dor Intensa) 😩",
+                "timestamp": 1779393345060,
+                "painLevel": "8",
+                "recordingUrl": null
+            },
+            {
+                "sender": "therapist",
+                "text": "Perfeito, Mariana! Vi aqui que a sua dor está em 8, vamos pegar leve na sessão de amanhã.",
+                "timestamp": 1779393348694,
+                "painLevel": null,
+                "recordingUrl": null
+            },
+            {
+                "sender": "patient",
+                "text": "Nível de dor registrado: 8/10 (Dor Intensa) 😩",
+                "timestamp": 1779396891592,
+                "painLevel": "8",
+                "recordingUrl": null
+            },
+            {
+                "sender": "therapist",
+                "text": "Perfeito, Mariana! Vi aqui que a sua dor está em 8, vamos pegar leve na sessão de amanhã.",
+                "timestamp": 1779396895261,
+                "painLevel": null,
+                "recordingUrl": null
+            }
+        ]
+    },
+    "patient_states": {
+        "mariana": {
+            "latestPain": "8",
+            "latestExercise": null,
+            "timestamp": 1779396891593
+        }
+    },
+    "appointments": [
+        {
+            "id": "app-1779396527939",
+            "patientName": "Mariana Costa",
+            "treatment": "Fisioterapia Pélvica",
+            "timeSlot": "14:00",
+            "date": "25/11/2023",
+            "status": "Confirmado",
+            "timestamp": 1779396527939
+        },
+        {
+            "id": "app-1780015475122",
+            "patientName": "Mariana Costa",
+            "treatment": "Fisioterapia Pélvica",
+            "timeSlot": "14:00",
+            "date": "25/11/2023",
+            "status": "Confirmado",
+            "timestamp": 1780015475122
+        }
+    ]
+}

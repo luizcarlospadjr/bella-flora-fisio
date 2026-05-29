@@ -1,0 +1,298 @@
+<!DOCTYPE html><html lang="pt-BR"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Bella Flora Fisio - Perfil do Paciente</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        .material-symbols-outlined {
+            font-family: 'Material Symbols Outlined';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            display: inline-block;
+            white-space: nowrap;
+            word-wrap: normal;
+            direction: ltr;
+            -webkit-font-feature-settings: 'liga';
+            -webkit-font-smoothing: antialiased;
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-variant": "#e7e0e6",
+                    "secondary-fixed": "#ffd8e7",
+                    "on-tertiary-fixed": "#1d1d00",
+                    "on-secondary": "#ffffff",
+                    "on-secondary-fixed-variant": "#5f3c4d",
+                    "secondary-container": "#fdcde1",
+                    "on-primary-fixed-variant": "#573974",
+                    "on-error-container": "#93000a",
+                    "tertiary-fixed-dim": "#cbcb71",
+                    "on-tertiary-fixed-variant": "#494900",
+                    "on-tertiary-container": "#525300",
+                    "primary-fixed": "#f0dbff",
+                    "tertiary": "#616211",
+                    "tertiary-container": "#c7c76d",
+                    "surface": "#fff7fd",
+                    "surface-container": "#f3ecf2",
+                    "secondary": "#795465",
+                    "on-tertiary": "#ffffff",
+                    "surface-dim": "#dfd8de",
+                    "surface-container-lowest": "#ffffff",
+                    "primary": "#70518d",
+                    "on-secondary-fixed": "#2e1221",
+                    "inverse-surface": "#322f34",
+                    "error": "#ba1a1a",
+                    "background": "#fff7fd",
+                    "surface-tint": "#70518d",
+                    "on-primary-fixed": "#290a45",
+                    "on-error": "#ffffff",
+                    "tertiary-fixed": "#e8e78a",
+                    "surface-container-high": "#ede6ec",
+                    "on-background": "#1d1b1f",
+                    "inverse-on-surface": "#f6eff5",
+                    "primary-container": "#d8b4f8",
+                    "primary-fixed-dim": "#dcb8fc",
+                    "outline-variant": "#cdc3cf",
+                    "on-surface-variant": "#4b454e",
+                    "inverse-primary": "#dcb8fc",
+                    "outline": "#7c747f",
+                    "surface-container-highest": "#e7e0e6",
+                    "on-primary-container": "#60427d",
+                    "on-primary": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "on-surface": "#1d1b1f",
+                    "surface-container-low": "#f9f1f7",
+                    "surface-bright": "#fff7fd",
+                    "secondary-fixed-dim": "#e9bacd",
+                    "on-secondary-container": "#795465"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack-lg": "24px",
+                    "margin-mobile": "16px",
+                    "gutter": "16px",
+                    "base": "8px",
+                    "stack-sm": "8px",
+                    "stack-md": "16px",
+                    "inset-card": "16px"
+            },
+            "fontFamily": {
+                    "subtitle-lg": ["Manrope"],
+                    "title-md": ["Manrope"],
+                    "body-md": ["Manrope"],
+                    "body-lg": ["Manrope"],
+                    "title-lg": ["Manrope"],
+                    "subtitle-md": ["Manrope"],
+                    "label-md": ["Manrope"],
+                    "label-lg": ["Manrope"]
+            },
+            "fontSize": {
+                    "subtitle-lg": ["20px", { "lineHeight": "28px", "fontWeight": "500" }],
+                    "title-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                    "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                    "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                    "title-lg": ["28px", { "lineHeight": "36px", "fontWeight": "600" }],
+                    "subtitle-md": ["18px", { "lineHeight": "26px", "fontWeight": "500" }],
+                    "label-md": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                    "label-lg": ["13px", { "lineHeight": "18px", "fontWeight": "500" }]
+            }
+          }
+        }
+      }
+    </script>
+
+    <!-- Firebase CDN SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <!-- Bella Flora Custom Modules -->
+    <script src="navigation.js" defer></script>
+    <script src="sync.js" defer></script>
+</head>
+
+<body class="bg-background text-on-background antialiased min-h-screen flex flex-col font-body-lg">
+<!-- TopAppBar -->
+<header class="h-[64px] w-full top-0 sticky bg-surface dark:bg-surface-container-high shadow-sm shadow-[0px_4px_12px_rgba(0,0,0,0.08)] flex items-center justify-between px-margin-mobile z-40 hidden md:flex">
+<button aria-label="Go back" class="text-on-surface-variant hover:bg-primary-container/20 transition-colors active:scale-95 duration-200 p-2 rounded-full">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="font-title-lg text-title-lg text-primary dark:text-primary-fixed-dim font-bold tracking-tight">Bella Flora Fisio</h1>
+<button aria-label="More options" class="text-on-surface-variant hover:bg-primary-container/20 transition-colors active:scale-95 duration-200 p-2 rounded-full">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</header>
+<!-- Main Content -->
+<main class="flex-grow flex flex-col max-w-3xl mx-auto w-full px-margin-mobile pt-stack-lg pb-[96px] md:pb-stack-lg gap-stack-lg">
+<!-- Mobile Header (Visible only on mobile to match TopAppBar feel if needed, but per instructions TopAppBar is generally desktop or hybrid. We'll add a simplified mobile title) -->
+<div class="md:hidden flex items-center justify-between mt-4 mb-2">
+<button aria-label="Back" class="text-on-surface-variant p-2 -ml-2">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="font-title-md text-title-md text-primary font-bold">Perfil</h1>
+<div class="w-10"></div> <!-- Spacer -->
+</div>
+<!-- Profile Header Glassmorphism Card -->
+<section class="relative overflow-hidden rounded-xl bg-white/60 backdrop-blur-md border border-white/40 shadow-[0px_4px_12px_rgba(0,0,0,0.08)] p-inset-card flex flex-col items-center text-center">
+<div class="absolute inset-0 bg-gradient-to-br from-primary-container/20 to-secondary-container/10 z-0 pointer-events-none"></div>
+<div class="relative z-10 w-24 h-24 mb-4 rounded-full overflow-hidden border-4 border-white shadow-sm">
+<img alt="Profile picture of Mariana Silva" class="w-full h-full object-cover" data-alt="A soft, professional headshot of a young woman with a calm, friendly expression. The lighting is bright, natural, and soft, highlighting her features. The background is a highly blurred, minimalist wellness clinic interior with subtle lavender and white tones. The overall aesthetic is modern, tranquil, and clean, perfectly suited for a high-end medical or physical therapy app profile picture." src="assets/img/mariana_silva.png">
+</div>
+<div class="relative z-10 flex items-center justify-center gap-2 mb-1">
+<h2 class="font-title-md text-title-md text-on-surface">Mariana Silva</h2>
+<span class="material-symbols-outlined text-primary text-[20px]" data-icon="verified" style="font-variation-settings: &quot;FILL&quot; 1;">verified</span>
+</div>
+<p class="relative z-10 font-body-md text-body-md text-on-surface-variant">Paciente desde Jan 2023</p>
+</section>
+<!-- Informações Pessoais Bento Item -->
+<section class="bg-surface-container-lowest rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.08)] p-inset-card flex flex-col gap-stack-md">
+<h3 class="font-subtitle-lg text-subtitle-lg text-primary mb-2">Informações Pessoais</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-stack-sm">
+<!-- Info Item -->
+<div class="flex items-center gap-4 p-3 rounded-lg hover:bg-surface-container-low transition-colors">
+<div class="w-10 h-10 rounded-full bg-secondary-container/30 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined" data-icon="mail">mail</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Email</p>
+<p class="font-body-lg text-body-lg text-on-surface">mariana.silva@email.com</p>
+</div>
+</div>
+<!-- Info Item -->
+<div class="flex items-center gap-4 p-3 rounded-lg hover:bg-surface-container-low transition-colors">
+<div class="w-10 h-10 rounded-full bg-secondary-container/30 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined" data-icon="phone">phone</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Telefone</p>
+<p class="font-body-lg text-body-lg text-on-surface">(11) 98765-4321</p>
+</div>
+</div>
+<!-- Info Item -->
+<div class="flex items-center gap-4 p-3 rounded-lg hover:bg-surface-container-low transition-colors md:col-span-2">
+<div class="w-10 h-10 rounded-full bg-secondary-container/30 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined" data-icon="cake">cake</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Data de Nascimento</p>
+<p class="font-body-lg text-body-lg text-on-surface">15 de Março, 1990</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Histórico de Saúde - Quick Links -->
+<section class="bg-surface-container-lowest rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.08)] overflow-hidden">
+<div class="p-inset-card border-b border-outline-variant/30">
+<h3 class="font-subtitle-lg text-subtitle-lg text-primary">Histórico de Saúde</h3>
+</div>
+<div class="flex flex-col">
+<button class="flex items-center justify-between w-full p-inset-card min-h-[56px] hover:bg-surface-container-low transition-colors text-left group">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors" data-icon="assignment">assignment</span>
+<span class="font-body-lg text-body-lg text-on-surface">Minhas Avaliações</span>
+</div>
+<span class="material-symbols-outlined text-outline" data-icon="chevron_right">chevron_right</span>
+</button>
+<div class="h-[1px] w-[calc(100%-32px)] bg-outline-variant/30 ml-margin-mobile"></div>
+<button class="flex items-center justify-between w-full p-inset-card min-h-[56px] hover:bg-surface-container-low transition-colors text-left group">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors" data-icon="medical_services">medical_services</span>
+<span class="font-body-lg text-body-lg text-on-surface">Planos de Tratamento</span>
+</div>
+<span class="material-symbols-outlined text-outline" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</section>
+<!-- Configurações -->
+<section class="bg-surface-container-lowest rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.08)] overflow-hidden">
+<div class="p-inset-card border-b border-outline-variant/30">
+<h3 class="font-subtitle-lg text-subtitle-lg text-primary">Configurações</h3>
+</div>
+<div class="flex flex-col">
+<button class="flex items-center justify-between w-full p-inset-card min-h-[56px] hover:bg-surface-container-low transition-colors text-left group">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors" data-icon="notifications">notifications</span>
+<span class="font-body-lg text-body-lg text-on-surface">Notificações</span>
+</div>
+<span class="material-symbols-outlined text-outline" data-icon="chevron_right">chevron_right</span>
+</button>
+<div class="h-[1px] w-[calc(100%-32px)] bg-outline-variant/30 ml-margin-mobile"></div>
+<button class="flex items-center justify-between w-full p-inset-card min-h-[56px] hover:bg-surface-container-low transition-colors text-left group">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors" data-icon="lock">lock</span>
+<span class="font-body-lg text-body-lg text-on-surface">Privacidade</span>
+</div>
+<span class="material-symbols-outlined text-outline" data-icon="chevron_right">chevron_right</span>
+</button>
+<div class="h-[1px] w-[calc(100%-32px)] bg-outline-variant/30 ml-margin-mobile"></div>
+<button class="flex items-center justify-between w-full p-inset-card min-h-[56px] hover:bg-surface-container-low transition-colors text-left group">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors" data-icon="language">language</span>
+<span class="font-body-lg text-body-lg text-on-surface">Idioma</span>
+</div>
+<span class="font-body-md text-body-md text-on-surface-variant mr-2">Português (BR)</span>
+</button>
+</div>
+</section>
+<!-- Sair Button -->
+<div class="mt-4 mb-8 flex justify-center">
+<button class="h-[52px] px-8 rounded-lg border border-error/50 text-error hover:bg-error/5 flex items-center justify-center gap-2 font-label-lg text-label-lg transition-colors w-full md:w-auto">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="">Sair da Conta</span>
+</button>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 h-20 bg-surface border-t border-outline-variant/30 flex items-center justify-around px-4 z-50 shadow-lg">
+  <!-- In��cio -->
+  <a href="#" class="flex flex-col items-center gap-1 group">
+    <div class="px-5 py-1 rounded-full group-hover:bg-primary-container/20 transition-all duration-200">
+      <span class="material-symbols-outlined text-on-surface-variant">home</span>
+    </div>
+    <span class="text-[12px] font-medium text-on-surface-variant">Incio</span>
+  </a>
+  <!-- Tratamento -->
+  <a href="#" class="flex flex-col items-center gap-1 group">
+    <div class="px-5 py-1 rounded-full group-hover:bg-primary-container/20 transition-all duration-200">
+      <span class="material-symbols-outlined text-on-surface-variant">medical_services</span>
+    </div>
+    <span class="text-[12px] font-medium text-on-surface-variant">Tratamento</span>
+  </a>
+  <!-- Profissional -->
+  <a href="#" class="flex flex-col items-center gap-1 group">
+    <div class="px-5 py-1 rounded-full group-hover:bg-primary-container/20 transition-all duration-200">
+      <span class="material-symbols-outlined text-on-surface-variant">group</span>
+    </div>
+    <span class="text-[12px] font-medium text-on-surface-variant">Profissional</span>
+  </a>
+  <!-- Perfil (Active) -->
+  <a href="#" class="flex flex-col items-center gap-1 group">
+    <div class="px-5 py-1 rounded-full bg-primary-container text-on-primary-container transition-all duration-200">
+      <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+    </div>
+    <span class="text-[12px] font-bold text-on-primary-container">Perfil</span>
+  </a>
+</nav>
+
+
+
+
+
+
+</body></html>

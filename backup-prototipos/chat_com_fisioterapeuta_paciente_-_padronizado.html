@@ -1,0 +1,302 @@
+<!DOCTYPE html><html lang="pt-BR"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Bella Flora Fisio - Chat</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "secondary-fixed": "#ffd8e7",
+                "surface-container-lowest": "#ffffff",
+                "tertiary-container": "#c7c76d",
+                "outline-variant": "#cdc3cf",
+                "on-tertiary": "#ffffff",
+                "secondary-container": "#fdcde1",
+                "on-primary-fixed": "#290a45",
+                "on-secondary": "#ffffff",
+                "on-primary-fixed-variant": "#573974",
+                "surface-container-low": "#f9f1f7",
+                "inverse-surface": "#322f34",
+                "on-primary-container": "#60427d",
+                "surface": "#fff7fd",
+                "primary-fixed-dim": "#dcb8fc",
+                "tertiary-fixed-dim": "#cbcb71",
+                "on-tertiary-fixed-variant": "#494900",
+                "on-secondary-fixed": "#2e1221",
+                "inverse-on-surface": "#f6eff5",
+                "surface-container-high": "#ede6ec",
+                "surface-dim": "#dfd8de",
+                "primary-fixed": "#f0dbff",
+                "primary-container": "#d8b4f8",
+                "on-background": "#1d1b1f",
+                "surface-container-highest": "#e7e0e6",
+                "on-surface": "#1d1b1f",
+                "surface-variant": "#e7e0e6",
+                "outline": "#7c747f",
+                "on-secondary-fixed-variant": "#5f3c4d",
+                "error": "#ba1a1a",
+                "background": "#fff7fd",
+                "secondary": "#795465",
+                "on-surface-variant": "#4b454e",
+                "error-container": "#ffdad6",
+                "tertiary": "#616211",
+                "surface-tint": "#70518d",
+                "on-tertiary-fixed": "#1d1d00",
+                "tertiary-fixed": "#e8e78a",
+                "secondary-fixed-dim": "#e9bacd",
+                "on-primary": "#ffffff",
+                "surface-bright": "#fff7fd",
+                "on-secondary-container": "#795465",
+                "on-tertiary-container": "#525300",
+                "on-error-container": "#93000a",
+                "primary": "#70518d",
+                "surface-container": "#f3ecf2",
+                "on-error": "#ffffff",
+                "inverse-primary": "#dcb8fc"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+        },
+        "spacing": {
+                "base": "8px",
+                "margin-mobile": "16px",
+                "stack-md": "16px",
+                "gutter": "16px",
+                "stack-sm": "8px",
+                "stack-lg": "24px",
+                "inset-card": "16px"
+        },
+        "fontFamily": {
+                "title-lg": [
+                        "Manrope"
+                ],
+                "label-lg": [
+                        "Manrope"
+                ],
+                "body-md": [
+                        "Manrope"
+                ],
+                "label-md": [
+                        "Manrope"
+                ],
+                "title-md": [
+                        "Manrope"
+                ],
+                "subtitle-md": [
+                        "Manrope"
+                ],
+                "subtitle-lg": [
+                        "Manrope"
+                ],
+                "body-lg": [
+                        "Manrope"
+                ]
+        },
+        "fontSize": {
+                "title-lg": [
+                        "28px",
+                        {
+                                "lineHeight": "36px",
+                                "fontWeight": "600"
+                        }
+                ],
+                "label-lg": [
+                        "13px",
+                        {
+                                "lineHeight": "18px",
+                                "fontWeight": "500"
+                        }
+                ],
+                "body-md": [
+                        "14px",
+                        {
+                                "lineHeight": "20px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "label-md": [
+                        "12px",
+                        {
+                                "lineHeight": "16px",
+                                "fontWeight": "500"
+                        }
+                ],
+                "title-md": [
+                        "24px",
+                        {
+                                "lineHeight": "32px",
+                                "fontWeight": "600"
+                        }
+                ],
+                "subtitle-md": [
+                        "18px",
+                        {
+                                "lineHeight": "26px",
+                                "fontWeight": "500"
+                        }
+                ],
+                "subtitle-lg": [
+                        "20px",
+                        {
+                                "lineHeight": "28px",
+                                "fontWeight": "500"
+                        }
+                ],
+                "body-lg": [
+                        "16px",
+                        {
+                                "lineHeight": "24px",
+                                "fontWeight": "400"
+                        }
+                ]
+        }
+},
+    },
+  }
+</script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .chat-container {
+            height: calc(100vh - 64px - 72px - 88px);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+
+    <!-- Firebase CDN SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <!-- Bella Flora Custom Modules -->
+    <script src="navigation.js" defer></script>
+    <script src="sync.js" defer></script>
+</head>
+
+<body class="bg-background text-on-background font-body-md min-h-screen pb-[90px] antialiased">
+<!-- TopAppBar -->
+<header class="bg-surface shadow-sm h-[64px] w-full top-0 sticky flex items-center justify-between px-margin-mobile z-40 border-b border-outline-variant/10">
+<div class="flex items-center gap-3">
+<button class="text-primary hover:bg-primary-container/20 transition-colors active:scale-95 duration-200 p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<div class="flex items-center gap-3">
+<div class="relative">
+<img alt="Dra. Ana Costa" class="w-10 h-10 rounded-full object-cover border border-surface-variant shadow-sm" data-alt="A professional portrait of a female physiotherapist in her late 30s with a kind smile. She is wearing a clean white clinical coat over a soft lavender blouse. The background is a brightly lit, modern medical office with soft-focus botanical elements. The lighting is airy and high-key, conveying a sense of professional care and tranquility in line with the Bella Flora brand." src="assets/img/dra_ana_costa.png">
+<div class="absolute bottom-0 right-0 w-3 h-3 bg-[#4ade80] border-2 border-surface rounded-full"></div>
+</div>
+<div>
+<h1 class="font-subtitle-md text-subtitle-md text-on-surface font-semibold leading-tight">Dra. Ana Costa</h1>
+<p class="font-label-md text-[11px] text-on-surface-variant">Online agora</p>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-1">
+<button class="text-primary hover:bg-primary-container/20 transition-colors active:scale-95 duration-200 p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined">videocam</span>
+</button>
+<button class="text-primary hover:bg-primary-container/20 transition-colors active:scale-95 duration-200 p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined">call</span>
+</button>
+</div>
+</header>
+<!-- Chat Canvas -->
+<main class="px-margin-mobile py-stack-md flex flex-col gap-4 overflow-y-auto chat-container max-w-md mx-auto">
+<!-- Date Divider -->
+<div class="flex justify-center my-2">
+<span class="bg-surface-container-low border border-outline-variant/30 text-on-surface-variant font-label-md text-label-md px-3 py-1 rounded-full shadow-sm">Hoje</span>
+</div>
+<!-- Recipient Message (Dra Ana) -->
+<div class="flex items-end gap-2 max-w-[85%] self-start">
+<div class="bg-surface-container text-on-surface p-inset-card rounded-[16px] rounded-bl-sm shadow-[0px_2px_8px_rgba(0,0,0,0.04)] border border-outline-variant/20">
+<p class="font-body-md text-body-md">Olá! Como você está se sentindo após os exercícios de mobilidade de ontem? Sentiu algum desconforto no joelho?</p>
+<div class="flex justify-end mt-1">
+<span class="font-label-md text-[10px] text-on-surface-variant">09:15</span>
+</div>
+</div>
+</div>
+<!-- Sender Message (Patient) -->
+<div class="flex items-end gap-2 max-w-[85%] self-end">
+<div class="bg-primary text-on-primary p-inset-card rounded-[16px] rounded-br-sm shadow-[0px_4px_12px_rgba(112,81,141,0.15)]">
+<p class="font-body-md text-body-md">Bom dia, Dra. Ana! Me sinto bem melhor. O joelho não inchou hoje cedo, mas senti uma leve pontada durante a última série.</p>
+<div class="flex justify-end mt-1 gap-1 items-center">
+<span class="font-label-md text-[10px] opacity-80">09:18</span>
+<span class="material-symbols-outlined text-[14px]">done_all</span>
+</div>
+</div>
+</div>
+<!-- Image Attachment from Dra Ana -->
+<div class="flex flex-col gap-2 max-w-[85%] self-start">
+<div class="bg-surface-container p-2 rounded-[16px] rounded-bl-sm shadow-[0px_2px_8px_rgba(0,0,0,0.04)] border border-outline-variant/20">
+<img alt="Exercise Reference" class="w-full rounded-xl object-cover mb-2" data-alt="A detailed close-up of a person performing a gentle knee rehabilitation exercise on a soft yoga mat. The lighting is soft and natural, coming from a nearby window. The environment is minimalist and clean, with soft lavender and grey tones. The visual style is therapeutic and professional, emphasizing safe physical recovery and professional guidance." src="assets/img/mariana_silva.png">
+<p class="font-body-md text-body-md px-2 pb-1 text-on-surface">Tente manter esta angulação hoje para evitar a pontada. Reduza a amplitude se doer.</p>
+<div class="flex justify-end px-2">
+<span class="font-label-md text-[10px] text-on-surface-variant">09:20</span>
+</div>
+</div>
+</div>
+<!-- Sender Message -->
+<div class="flex items-end gap-2 max-w-[85%] self-end">
+<div class="bg-primary text-on-primary p-inset-card rounded-[16px] rounded-br-sm shadow-[0px_4px_12px_rgba(112,81,141,0.15)]">
+<p class="font-body-md text-body-md">Perfeito, vou ajustar aqui agora mesmo. Obrigado!</p>
+<div class="flex justify-end mt-1 gap-1 items-center">
+<span class="font-label-md text-[10px] opacity-80">09:22</span>
+<span class="material-symbols-outlined text-[14px]">done_all</span>
+</div>
+</div>
+</div>
+</main>
+<!-- Input Area -->
+<div class="fixed bottom-[72px] left-0 w-full px-margin-mobile py-3 bg-surface/90 backdrop-blur-md z-40 border-t border-outline-variant/10">
+<div class="max-w-md mx-auto flex items-center gap-2 bg-surface-container-lowest border border-outline-variant/40 rounded-[16px] p-2 shadow-[0px_4px_12px_rgba(0,0,0,0.05)]">
+<button class="p-2 text-primary hover:bg-primary-container/20 rounded-full transition-colors">
+<span class="material-symbols-outlined">add_circle</span>
+</button>
+<input class="flex-grow bg-transparent border-none focus:ring-0 text-on-surface font-body-md px-2 py-2 placeholder:text-on-surface-variant" placeholder="Escreva sua mensagem..." type="text">
+<button class="p-2 text-primary hover:bg-primary-container/20 rounded-full transition-colors">
+<span class="material-symbols-outlined">mic</span>
+</button>
+<button class="bg-primary text-on-primary p-3 rounded-[12px] shadow-sm active:scale-95 transition-all duration-200 ml-1 hover:bg-primary/90 flex items-center justify-center">
+<span class="material-symbols-outlined">send</span>
+</button>
+</div>
+</div>
+<!-- BottomNavBar -->
+<nav class="bg-surface h-[72px] fixed bottom-0 w-full z-50 shadow-lg border-t border-outline-variant/10 flex justify-around items-center px-4 pb-safe md:hidden">
+  <button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-secondary-container/30 rounded-full px-2 py-1 active:scale-95 transition-transform">
+    <span class="material-symbols-outlined">home</span>
+    <span class="font-label-md text-[10px] mt-1">Início</span>
+  </button>
+  <button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-secondary-container/30 rounded-full px-2 py-1 active:scale-95 transition-transform">
+    <span class="material-symbols-outlined">healing</span>
+    <span class="font-label-md text-[10px] mt-1">Tratamento</span>
+  </button>
+  <button class="flex flex-col items-center justify-center text-primary active:scale-95 transition-transform">
+    <div class="bg-primary-container/40 px-5 py-1 rounded-full mb-1 flex items-center justify-center">
+      <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person_search</span>
+    </div>
+    <span class="font-label-md text-[10px] font-bold">Profissional</span>
+  </button>
+  <button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-secondary-container/30 rounded-full px-2 py-1 active:scale-95 transition-transform">
+    <span class="material-symbols-outlined">person</span>
+    <span class="font-label-md text-[10px] mt-1">Perfil</span>
+  </button>
+</nav>
+
+
+
+
+</body></html>

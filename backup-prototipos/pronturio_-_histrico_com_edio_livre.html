@@ -1,0 +1,315 @@
+<!DOCTYPE html><html class="antialiased" lang="pt-BR" style="width: 390px; height: 884px; overflow: hidden; position: relative;"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Bella Flora Fisio - Prontuário</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-container": "#c7c76d",
+                    "on-secondary-fixed-variant": "#5f3c4d",
+                    "on-error": "#ffffff",
+                    "on-background": "#1d1b1f",
+                    "on-surface-variant": "#4b454e",
+                    "on-surface": "#1d1b1f",
+                    "primary": "#70518d",
+                    "on-tertiary-container": "#525300",
+                    "error-container": "#ffdad6",
+                    "outline": "#7c747f",
+                    "surface-container-high": "#ede6ec",
+                    "on-secondary": "#ffffff",
+                    "on-tertiary-fixed-variant": "#494900",
+                    "tertiary": "#616211",
+                    "secondary": "#795465",
+                    "tertiary-fixed-dim": "#cbcb71",
+                    "background": "#fff7fd",
+                    "surface-bright": "#fff7fd",
+                    "surface-dim": "#dfd8de",
+                    "tertiary-fixed": "#e8e78a",
+                    "surface-variant": "#e7e0e6",
+                    "on-tertiary-fixed": "#1d1d00",
+                    "primary-fixed": "#f0dbff",
+                    "secondary-fixed": "#ffd8e7",
+                    "surface-tint": "#70518d",
+                    "inverse-on-surface": "#f6eff5",
+                    "surface-container-low": "#f9f1f7",
+                    "surface-container": "#f3ecf2",
+                    "on-primary-fixed": "#290a45",
+                    "on-tertiary": "#ffffff",
+                    "error": "#ba1a1a",
+                    "on-primary": "#ffffff",
+                    "inverse-surface": "#322f34",
+                    "on-secondary-fixed": "#2e1221",
+                    "inverse-primary": "#dcb8fc",
+                    "on-secondary-container": "#795465",
+                    "secondary-fixed-dim": "#e9bacd",
+                    "primary-fixed-dim": "#dcb8fc",
+                    "on-primary-fixed-variant": "#573974",
+                    "on-error-container": "#93000a",
+                    "surface": "#fff7fd",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-highest": "#e7e0e6",
+                    "secondary-container": "#fdcde1",
+                    "primary-container": "#d8b4f8",
+                    "on-primary-container": "#60427d",
+                    "outline-variant": "#cdc3cf"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "inset-card": "16px",
+                    "gutter": "16px",
+                    "stack-md": "16px",
+                    "margin-mobile": "16px",
+                    "base": "8px",
+                    "stack-sm": "8px",
+                    "stack-lg": "24px"
+            },
+            "fontFamily": {
+                    "subtitle-md": [
+                            "Manrope"
+                    ],
+                    "subtitle-lg": [
+                            "Manrope"
+                    ],
+                    "label-md": [
+                            "Manrope"
+                    ],
+                    "label-lg": [
+                            "Manrope"
+                    ],
+                    "body-md": [
+                            "Manrope"
+                    ],
+                    "body-lg": [
+                            "Manrope"
+                    ],
+                    "title-lg": [
+                            "Manrope"
+                    ],
+                    "title-md": [
+                            "Manrope"
+                    ]
+            },
+            "fontSize": {
+                    "subtitle-md": [
+                            "18px",
+                            {
+                                    "lineHeight": "26px",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "subtitle-lg": [
+                            "20px",
+                            {
+                                    "lineHeight": "28px",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "label-md": [
+                            "12px",
+                            {
+                                    "lineHeight": "16px",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "label-lg": [
+                            "13px",
+                            {
+                                    "lineHeight": "18px",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "body-md": [
+                            "14px",
+                            {
+                                    "lineHeight": "20px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "body-lg": [
+                            "16px",
+                            {
+                                    "lineHeight": "24px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "title-lg": [
+                            "28px",
+                            {
+                                    "lineHeight": "36px",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "title-md": [
+                            "24px",
+                            {
+                                    "lineHeight": "32px",
+                                    "fontWeight": "600"
+                            }
+                    ]
+            }
+    },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Manrope', sans-serif; }
+    </style>
+
+    <!-- Firebase CDN SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <!-- Bella Flora Custom Modules -->
+    <script src="navigation.js" defer></script>
+    <script src="sync.js" defer></script>
+</head>
+
+<body class="bg-surface text-on-surface min-h-screen pb-[72px]">
+<!-- TopAppBar -->
+<header class="bg-surface shadow-sm h-[64px] w-full top-0 sticky z-50 flex items-center justify-between px-margin-mobile">
+<button class="text-primary hover:bg-primary-container/20 transition-colors active:scale-95 duration-200 p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="font-title-lg text-title-lg text-primary tracking-tight" style="opacity: 0;">Prontuário</h1>
+<button class="text-primary hover:bg-primary-container/20 transition-colors active:scale-95 duration-200 p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="px-margin-mobile pt-stack-md pb-stack-lg max-w-3xl mx-auto space-y-stack-lg">
+<!-- Patient Info -->
+<section class="bg-surface-container-low rounded-xl p-inset-card flex items-center space-x-gutter shadow-[0px_4px_12px_rgba(0,0,0,0.08)] justify-between">
+<img alt="Mariana Silva" class="w-[64px] h-[64px] rounded-full object-cover border-2 border-primary-container" data-alt="A professional headshot of a young woman named Mariana Silva, smiling gently. The lighting is soft and natural, emphasizing a calm and welcoming demeanor. The background is a highly blurred, minimalist clinic setting, contributing to a modern, light-mode aesthetic with soft lavender and white tones." src="assets/img/mariana_silva.png">
+<div>
+<h2 class="font-title-md text-title-md text-on-surface">Mariana Silva</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">32 anos • ID: 8492-A</p>
+</div><button class="text-primary hover:bg-primary-container/20 transition-colors active:scale-95 duration-200 p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="chat">chat</span>
+</button>
+</section>
+<!-- Tabs -->
+<nav class="flex border-b border-surface-variant overflow-x-auto hide-scrollbar">
+<button class="flex-1 py-stack-sm text-center border-b-2 border-primary font-subtitle-md text-subtitle-md text-primary px-4 whitespace-nowrap">Histórico</button><button class="flex-1 py-stack-sm text-center border-b-2 border-transparent font-subtitle-md text-subtitle-md text-on-surface-variant hover:bg-surface-container/50 transition-colors px-4 whitespace-nowrap">Documentos</button>
+<button class="flex-1 py-stack-sm text-center border-b-2 border-transparent font-subtitle-md text-subtitle-md text-on-surface-variant hover:bg-surface-container/50 transition-colors px-4 whitespace-nowrap">Evolução</button>
+<button class="flex-1 py-stack-sm text-center border-b-2 border-transparent font-subtitle-md text-subtitle-md text-on-surface-variant hover:bg-surface-container/50 transition-colors px-4 whitespace-nowrap">Para Casa</button>
+</nav>
+<!-- Accordion Sections -->
+<div class="space-y-stack-md">
+<!-- Avaliação Inicial -->
+<details class="group bg-surface-container-lowest rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.08)] overflow-hidden" open="">
+<summary class="flex justify-between items-center p-inset-card cursor-pointer list-none hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-2"></div><h3 class="font-subtitle-lg text-subtitle-lg text-on-surface">Avaliação Inicial</h3>
+<span class="material-symbols-outlined text-on-surface-variant group-open:rotate-180 transition-transform duration-200">expand_more</span><button class="ml-auto mr-2 text-primary hover:bg-primary-container/20 p-1 rounded-full transition-colors active:scale-95">
+</button>
+</summary>
+<div class="p-inset-card pt-0 text-on-surface-variant font-body-md text-body-md space-y-4 hover:bg-surface-container-low/50 cursor-pointer h-auto" title="Clique para editar">
+<div class="bg-surface-container rounded-lg p-4 h-auto">
+<div class="h-auto" id="display-avaliacao"><p class="mt-2 text-on-surface">12/10/2023 - Paciente relata dor lombar crônica há 6 meses, irradiando para membro inferior direito. Piora ao sentar por longos períodos.</p></div>
+<textarea class="w-full bg-surface-container-highest border border-primary rounded-lg p-2 focus:ring-primary focus:border-primary font-body-md hidden" id="input-avaliacao" rows="4">12/10/2023 - Paciente relata dor lombar crônica há 6 meses, irradiando para membro inferior direito. Piora ao sentar por longos períodos.</textarea>
+</div>
+<div class="flex gap-2 flex-wrap">
+<span class="bg-secondary/15 text-secondary px-3 py-1 rounded-full font-label-md text-label-md">Lombalgia</span>
+<span class="bg-secondary/15 text-secondary px-3 py-1 rounded-full font-label-md text-label-md">Ciática</span>
+</div>
+</div>
+</details>
+<!-- Última Sessão -->
+<details class="group bg-surface-container-lowest rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.08)] overflow-hidden" open="">
+<summary class="flex justify-between items-center p-inset-card cursor-pointer list-none hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-2"></div><h3 class="font-subtitle-lg text-subtitle-lg text-on-surface">Última Sessão</h3>
+<span class="material-symbols-outlined text-on-surface-variant group-open:rotate-180 transition-transform duration-200">expand_more</span><button class="ml-auto mr-2 text-primary hover:bg-primary-container/20 p-1 rounded-full transition-colors active:scale-95">
+</button>
+</summary>
+<div class="p-inset-card pt-0 text-on-surface-variant font-body-md text-body-md hover:bg-surface-container-low/50 cursor-pointer" title="Clique para editar">
+<div class="border-l-2 border-primary pl-4 py-2">
+<div class="" id="display-sessao"><p class="mt-2 text-on-surface">26/10/2023 - Realizada liberação miofascial e exercícios de estabilização core. Paciente reporta melhora de 40% na dor irradiada.</p></div>
+<textarea class="w-full bg-surface-container-highest border border-primary rounded-lg p-2 focus:ring-primary focus:border-primary font-body-md hidden" id="input-sessao" rows="4">26/10/2023 - Realizada liberação miofascial e exercícios de estabilização core. Paciente reporta melhora de 40% na dor irradiada.</textarea>
+</div>
+</div>
+</details>
+</div>
+</main>
+<!-- Floating Action Button -->
+<button class="fixed bottom-[88px] right-margin-mobile bg-primary text-on-primary w-[56px] h-[56px] rounded-2xl shadow-lg flex items-center justify-center hover:bg-primary/90 transition-colors active:scale-95 duration-200 z-40" id="edit-fab" onclick="toggleEditMode()"><span class="material-symbols-outlined" data-icon="edit" style="font-variation-settings: &quot;FILL&quot; 1;">edit</span></button>
+<!-- Toast Notification -->
+<div class="fixed bottom-[88px] left-1/2 -translate-x-1/2 bg-inverse-surface text-inverse-on-surface px-4 py-2 rounded-lg shadow-lg font-body-md opacity-0 transition-opacity duration-300 pointer-events-none z-50" id="toast">
+    Alterações salvas
+</div>
+<!-- BottomNavBar -->
+<nav class="bg-surface h-[72px] fixed bottom-0 w-full z-50 shadow-[0px_-2px_10px_rgba(0,0,0,0.05)] flex justify-around items-center px-4 pb-safe md:hidden">
+<button class="flex flex-col items-center justify-center text-secondary hover:bg-secondary-container/30 active:scale-95 transition-transform w-16 h-14 rounded-xl">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-md text-label-md mt-1">Início</span>
+</button>
+<button class="flex flex-col items-center justify-center text-secondary hover:bg-secondary-container/30 active:scale-95 transition-transform w-16 h-14 rounded-xl">
+<span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
+<span class="font-label-md text-label-md mt-1">Atendimento</span>
+</button>
+<button class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-2xl px-4 py-1 active:scale-95 transition-transform">
+<span class="material-symbols-outlined" data-icon="groups" style="font-variation-settings: &quot;FILL&quot; 1;">groups</span>
+<span class="font-label-md text-label-md mt-1">Paciente</span>
+</button>
+<button class="flex flex-col items-center justify-center text-secondary hover:bg-secondary-container/30 active:scale-95 transition-transform w-16 h-14 rounded-xl">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-md text-label-md mt-1">Perfil</span>
+</button>
+</nav>
+<script>
+    function toggleEditMode() { 
+        const fab = document.getElementById('edit-fab'); 
+        const icon = fab.querySelector('.material-symbols-outlined'); 
+        const isEditing = icon.innerText === 'check'; 
+        
+        const displayAvaliacao = document.getElementById('display-avaliacao');
+        const inputAvaliacao = document.getElementById('input-avaliacao');
+        const displaySessao = document.getElementById('display-sessao');
+        const inputSessao = document.getElementById('input-sessao');
+
+        if (isEditing) { 
+            // Save mode
+            icon.innerText = 'edit'; 
+            icon.setAttribute('data-icon', 'edit');
+
+            // Update display values
+            displayAvaliacao.innerHTML = `<p class="mt-2 text-on-surface">${inputAvaliacao.value}</p>`;
+            displaySessao.innerHTML = `<p class="mt-2 text-on-surface">${inputSessao.value}</p>`;
+
+            // Toggle visibility
+            displayAvaliacao.classList.remove('hidden'); 
+            inputAvaliacao.classList.add('hidden'); 
+            displaySessao.classList.remove('hidden'); 
+            inputSessao.classList.add('hidden'); 
+
+            // Show toast
+            const toast = document.getElementById('toast');
+            toast.classList.remove('opacity-0');
+            setTimeout(() => {
+                toast.classList.add('opacity-0');
+            }, 3000);
+
+        } else { 
+            // Edit mode
+            icon.innerText = 'check'; 
+            icon.setAttribute('data-icon', 'check');
+
+            // Toggle visibility
+            displayAvaliacao.classList.add('hidden'); 
+            inputAvaliacao.classList.remove('hidden'); 
+            displaySessao.classList.add('hidden'); 
+            inputSessao.classList.remove('hidden'); 
+        } 
+    }
+</script>
+
+
+</body></html>

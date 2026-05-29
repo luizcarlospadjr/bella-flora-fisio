@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+
+<html class="" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Bella Flora Fisio - Agenda</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed-variant": "#5f3c4d",
+                        "surface-container-highest": "#e7e0e6",
+                        "primary-fixed-dim": "#dcb8fc",
+                        "on-secondary": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "on-background": "#1d1b1f",
+                        "surface-bright": "#fff7fd",
+                        "on-primary-container": "#60427d",
+                        "primary-container": "#d8b4f8",
+                        "on-surface": "#1d1b1f",
+                        "surface-container-low": "#f9f1f7",
+                        "surface-dim": "#dfd8de",
+                        "on-tertiary-fixed-variant": "#494900",
+                        "tertiary-fixed": "#e8e78a",
+                        "tertiary": "#616211",
+                        "on-secondary-container": "#795465",
+                        "outline": "#7c747f",
+                        "on-tertiary": "#ffffff",
+                        "surface": "#fff7fd",
+                        "on-tertiary-container": "#525300",
+                        "on-secondary-fixed": "#2e1221",
+                        "background": "#fff7fd",
+                        "surface-variant": "#e7e0e6",
+                        "primary-fixed": "#f0dbff",
+                        "on-error": "#ffffff",
+                        "on-primary-fixed": "#290a45",
+                        "tertiary-container": "#c7c76d",
+                        "inverse-primary": "#dcb8fc",
+                        "secondary": "#795465",
+                        "tertiary-fixed-dim": "#cbcb71",
+                        "secondary-fixed": "#ffd8e7",
+                        "surface-tint": "#70518d",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container": "#f3ecf2",
+                        "error": "#ba1a1a",
+                        "secondary-container": "#fdcde1",
+                        "surface-container-high": "#ede6ec",
+                        "on-primary-fixed-variant": "#573974",
+                        "secondary-fixed-dim": "#e9bacd",
+                        "error-container": "#ffdad6",
+                        "inverse-on-surface": "#f6eff5",
+                        "on-surface-variant": "#4b454e",
+                        "primary": "#70518d",
+                        "on-tertiary-fixed": "#1d1d00",
+                        "outline-variant": "#cdc3cf",
+                        "on-error-container": "#93000a",
+                        "inverse-surface": "#322f34"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-sm": "8px",
+                        "stack-md": "16px",
+                        "inset-card": "16px",
+                        "gutter": "16px",
+                        "stack-lg": "24px",
+                        "margin-mobile": "16px",
+                        "base": "8px",
+                        "safe": "env(safe-area-inset-bottom, 16px)"
+                    },
+                    "fontFamily": {
+                        "subtitle-md": ["Manrope"],
+                        "title-md": ["Manrope"],
+                        "body-lg": ["Manrope"],
+                        "label-lg": ["Manrope"],
+                        "subtitle-lg": ["Manrope"],
+                        "body-md": ["Manrope"],
+                        "label-md": ["Manrope"],
+                        "title-lg": ["Manrope"]
+                    },
+                    "fontSize": {
+                        "subtitle-md": ["18px", { "lineHeight": "26px", "fontWeight": "500" }],
+                        "title-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-lg": ["13px", { "lineHeight": "18px", "fontWeight": "500" }],
+                        "subtitle-lg": ["20px", { "lineHeight": "28px", "fontWeight": "500" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "label-md": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "title-lg": ["28px", { "lineHeight": "36px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Manrope', sans-serif; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .slide-up {
+            animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        .modal-overlay {
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+        }
+    </style>
+
+    <!-- Firebase CDN SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <!-- Bella Flora Custom Modules -->
+    <script src="navigation.js" defer></script>
+    <script src="sync.js" defer></script>
+</head>
+
+<body class="bg-background text-on-background min-h-screen flex flex-col antialiased selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-surface-container-high shadow-sm shadow-[0px_4px_12px_rgba(0,0,0,0.08)] h-[64px] w-full top-0 sticky z-40 flex items-center justify-between px-margin-mobile">
+<button aria-label="Return to Today" class="w-10 h-10 flex items-center justify-center rounded-full text-on-surface-variant hover:bg-primary-container/20 transition-colors active:scale-95 duration-200" id="return-today">
+<span class="material-symbols-outlined">today</span>
+</button>
+<h1 class="font-title-lg text-title-lg text-primary dark:text-primary-fixed-dim tracking-tight">Bella Flora Fisio</h1>
+<button aria-label="More options" class="w-10 h-10 flex items-center justify-center rounded-full text-on-surface-variant hover:bg-primary-container/20 transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</header>
+<main class="flex-1 pb-[90px] w-full max-w-3xl mx-auto relative">
+<!-- Page Header & Date Selector -->
+<section class="px-margin-mobile pt-stack-lg pb-stack-sm bg-surface sticky top-[64px] z-30 shadow-sm shadow-[0px_4px_12px_rgba(0,0,0,0.02)]">
+<div class="flex items-center justify-between mb-stack-md">
+<h2 class="font-title-md text-title-md text-on-surface">Agenda</h2>
+<div class="flex items-center gap-1 bg-surface-container-low rounded-full p-1 shadow-sm">
+<button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-surface-variant transition-colors" id="prev-week"><span class="material-symbols-outlined text-on-surface-variant text-sm">chevron_left</span></button>
+<button class="font-subtitle-md text-subtitle-md text-on-surface px-3 py-1 hover:bg-surface-container-highest rounded-full transition-colors active:scale-95" id="open-calendar">
+<span id="current-date-label">Out 25, 2023</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-surface-variant transition-colors" id="next-week"><span class="material-symbols-outlined text-on-surface-variant text-sm">chevron_right</span></button>
+</div>
+</div>
+<!-- Professional Filter -->
+<div class="flex gap-3 mb-stack-md overflow-x-auto hide-scrollbar pb-1">
+<button class="flex items-center gap-2 px-3 py-1.5 bg-primary-container text-on-primary-container rounded-full border border-primary-container shadow-sm active:scale-95 transition-all flex-shrink-0">
+<img alt="Dra. Beatriz Silva" class="w-6 h-6 rounded-full object-cover" src="assets/img/dra_beatriz_silva.png"/>
+<span class="font-label-lg text-label-lg">Dra. Beatriz Silva</span>
+</button>
+<button class="flex items-center gap-2 px-3 py-1.5 bg-surface text-on-surface-variant border border-outline-variant rounded-full hover:bg-surface-container active:scale-95 transition-all flex-shrink-0">
+<img alt="Dra. Ana Costa" class="w-6 h-6 rounded-full object-cover" src="assets/img/dra_ana_costa.png"/>
+<span class="font-label-lg text-label-lg">Dra. Ana Costa</span>
+</button>
+</div>
+<!-- Horizontal Date Strip -->
+<div class="flex gap-2 overflow-x-auto hide-scrollbar pb-2" id="date-strip">
+<button class="day-btn flex flex-col items-center justify-center min-w-[56px] h-[72px] rounded-xl border border-outline-variant bg-surface text-on-surface-variant hover:bg-surface-container transition-all hover:border-primary" data-day="22">
+<span class="font-label-md text-label-md uppercase">Dom</span>
+<span class="font-subtitle-lg text-subtitle-lg">22</span>
+</button>
+<button class="day-btn flex flex-col items-center justify-center min-w-[56px] h-[72px] rounded-xl border border-outline-variant bg-surface text-on-surface-variant hover:bg-surface-container transition-all hover:border-primary" data-day="23">
+<span class="font-label-md text-label-md uppercase">Seg</span>
+<span class="font-subtitle-lg text-subtitle-lg">23</span>
+</button>
+<button class="day-btn flex flex-col items-center justify-center min-w-[56px] h-[72px] rounded-xl border border-outline-variant bg-surface text-on-surface-variant hover:bg-surface-container transition-all hover:border-primary" data-day="24">
+<span class="font-label-md text-label-md uppercase">Ter</span>
+<span class="font-subtitle-lg text-subtitle-lg">24</span>
+</button>
+<button class="day-btn flex flex-col items-center justify-center min-w-[56px] h-[72px] rounded-xl bg-primary text-on-primary shadow-md active:scale-95 transition-all hover:bg-surface-tint" data-day="25">
+<span class="font-label-md text-label-md uppercase">Qua</span>
+<span class="font-subtitle-lg text-subtitle-lg">25</span>
+</button>
+<button class="day-btn flex flex-col items-center justify-center min-w-[56px] h-[72px] rounded-xl border border-outline-variant bg-surface text-on-surface-variant hover:bg-surface-container transition-all hover:border-primary" data-day="26">
+<span class="font-label-md text-label-md uppercase">Qui</span>
+<span class="font-subtitle-lg text-subtitle-lg">26</span>
+</button>
+<button class="day-btn flex flex-col items-center justify-center min-w-[56px] h-[72px] rounded-xl border border-outline-variant bg-surface text-on-surface-variant hover:bg-surface-container transition-all hover:border-primary" data-day="27">
+<span class="font-label-md text-label-md uppercase">Sex</span>
+<span class="font-subtitle-lg text-subtitle-lg">27</span>
+</button>
+<button class="day-btn flex flex-col items-center justify-center min-w-[56px] h-[72px] rounded-xl border border-outline-variant bg-surface text-on-surface-variant hover:bg-surface-container transition-all hover:border-primary" data-day="28">
+<span class="font-label-md text-label-md uppercase">Sab</span>
+<span class="font-subtitle-lg text-subtitle-lg">28</span>
+</button>
+</div>
+</section>
+<!-- Metrics Dashboard (Bento Grid) -->
+<section class="px-margin-mobile pt-stack-sm pb-stack-md">
+<div class="grid grid-cols-2 gap-3">
+<div class="col-span-2 bg-primary-container/30 border border-primary-container/50 rounded-[20px] p-4 flex items-center justify-between">
+<div>
+<p class="font-label-md text-label-md text-on-surface-variant mb-1">Atendimentos</p>
+<p class="font-subtitle-md text-subtitle-md text-on-surface">4/6 Concluídos</p>
+</div>
+<div class="w-10 h-10 rounded-full bg-primary-container text-primary flex items-center justify-center">
+<span class="material-symbols-outlined">check_circle</span>
+</div>
+</div>
+<div class="bg-error-container/30 border border-error-container/50 rounded-[20px] p-4 flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<p class="font-label-md text-label-md text-on-surface-variant">Cancelados</p>
+<span class="material-symbols-outlined text-error text-[20px]">cancel</span>
+</div>
+<p class="font-subtitle-md text-subtitle-md text-error">1 Sessão</p>
+</div>
+<div class="bg-secondary-container/30 border border-secondary-container/50 rounded-[20px] p-4 flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<p class="font-label-md text-label-md text-on-surface-variant">Ocupação</p>
+<span class="material-symbols-outlined text-secondary text-[20px]">trending_up</span>
+</div>
+<p class="font-subtitle-md text-subtitle-md text-secondary">83%</p>
+</div>
+</div>
+</section>
+<!-- Schedules Container -->
+<div class="relative" id="schedules-container">
+<!-- Schedule 25 (Active Example with extensions to 18:00) -->
+<section class="schedule-block flex px-margin-mobile flex-col gap-0 relative fade-in" id="schedule-25">
+<!-- Current Time Indicator -->
+<div class="absolute left-[72px] right-margin-mobile top-[180px] h-[2px] bg-error z-20 flex items-center pointer-events-none">
+<div class="w-2 h-2 rounded-full bg-error absolute -left-1"></div>
+</div>
+<!-- 08:00 -->
+<div class="flex gap-stack-md min-h-[80px] group">
+<div class="w-14 flex-shrink-0 pt-2 text-right"><span class="font-label-md text-label-md text-on-surface-variant">08:00</span></div>
+<div class="flex-1 relative pb-stack-sm">
+<div class="absolute left-0 top-4 bottom-0 w-px bg-surface-variant -z-10"></div>
+<button class="free-slot-btn w-full h-full min-h-[64px] border-2 border-dashed border-outline-variant rounded-xl flex items-center justify-center bg-surface hover:bg-surface-container-low transition-colors active:scale-[0.99]" data-time="08:00"><span class="font-label-lg text-label-lg text-secondary flex items-center gap-2"><span class="material-symbols-outlined text-[18px]">add</span>Livre</span></button>
+</div>
+</div>
+<!-- 09:00 -->
+<div class="flex gap-stack-md min-h-[100px] group">
+<div class="w-14 flex-shrink-0 pt-2 text-right"><span class="font-label-md text-label-md text-on-surface-variant">09:00</span></div>
+<div class="flex-1 relative pb-stack-sm">
+<div class="absolute left-0 top-4 bottom-0 w-px bg-surface-variant -z-10"></div>
+<div class="w-full bg-primary-container rounded-xl p-inset-card flex flex-col gap-2 shadow-sm active:scale-[0.99] transition-transform relative">
+<div class="flex justify-between items-start">
+<span class="font-label-md text-label-md text-on-primary-container bg-primary-fixed-dim/30 px-2 py-0.5 rounded-full inline-block">Ocupado</span>
+<button class="slot-options-btn w-8 h-8 rounded-full flex items-center justify-center hover:bg-black/5 transition-colors -mr-2 -mt-2"><span class="material-symbols-outlined text-on-primary-container text-[20px]">more_horiz</span></button>
+</div>
+<div class="flex items-center gap-3 mt-1">
+<img alt="Patient portrait" class="w-10 h-10 rounded-full object-cover border border-primary-fixed-dim" src="assets/img/mariana_silva.png"/>
+<div>
+<h3 class="font-subtitle-md text-subtitle-md text-on-primary-container">Mariana Costa</h3>
+<p class="font-body-md text-body-md text-on-primary-container/80 flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">psychology</span>Fisioterapia Pélvica</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- 10:00 Cancelled -->
+<div class="flex gap-stack-md min-h-[80px] group">
+<div class="w-14 flex-shrink-0 pt-2 text-right"><span class="font-label-md text-label-md text-on-surface-variant">10:00</span></div>
+<div class="flex-1 relative pb-stack-sm">
+<div class="absolute left-0 top-4 bottom-0 w-px bg-surface-variant -z-10"></div>
+<div class="w-full bg-surface-variant rounded-xl p-inset-card flex flex-col gap-1 border border-outline-variant/30 opacity-75 cursor-pointer">
+<div class="flex justify-between items-center">
+<span class="font-label-md text-label-md text-on-surface-variant flex items-center gap-1"><span class="material-symbols-outlined text-[14px] text-error">cancel</span><span class="text-error">Cancelado</span></span>
+<span class="font-label-md text-label-md text-on-surface-variant line-through">10:00 - 11:00</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Carlos Eduardo (Aviso tardio)</p>
+</div>
+</div>
+</div>
+<!-- 11:00 - 12:00 Free -->
+<div class="flex gap-stack-md min-h-[80px] group">
+<div class="w-14 flex-shrink-0 pt-2 text-right"><span class="font-label-md text-label-md text-on-surface-variant">11:00</span></div>
+<div class="flex-1 relative pb-stack-sm">
+<div class="absolute left-0 top-4 bottom-0 w-px bg-surface-variant -z-10"></div>
+<button class="free-slot-btn w-full h-full min-h-[64px] border-2 border-dashed border-outline-variant rounded-xl flex items-center justify-center bg-surface hover:bg-surface-container-low transition-colors" data-time="11:00"><span class="font-label-lg text-label-lg text-secondary flex items-center gap-2"><span class="material-symbols-outlined text-[18px]">add</span>Livre</span></button>
+</div>
+</div>
+<!-- 12:00 Lunch -->
+<div class="flex gap-stack-md min-h-[60px] group">
+<div class="w-14 flex-shrink-0 pt-2 text-right"><span class="font-label-md text-label-md text-on-surface-variant">12:00</span></div>
+<div class="flex-1 relative pb-stack-sm">
+<div class="absolute left-0 top-4 bottom-0 w-px bg-surface-variant -z-10"></div>
+<div class="w-full bg-surface-container-high rounded-xl p-3 flex justify-center items-center border border-surface-dim">
+<span class="font-label-lg text-label-lg text-on-surface-variant flex items-center gap-2"><span class="material-symbols-outlined text-[18px]">restaurant</span>Horário de Almoço</span>
+</div>
+</div>
+</div>
+<!-- 13:00 -->
+<div class="flex gap-stack-md min-h-[100px] group">
+<div class="w-14 flex-shrink-0 pt-2 text-right"><span class="font-label-md text-label-md text-on-surface-variant">13:00</span></div>
+<div class="flex-1 relative pb-stack-sm">
+<div class="absolute left-0 top-4 bottom-0 w-px bg-surface-variant -z-10"></div>
+<div class="w-full bg-primary-container rounded-xl p-inset-card flex flex-col gap-2 shadow-sm active:scale-[0.99] transition-transform relative">
+<div class="flex justify-between items-start">
+<span class="font-label-md text-label-md text-on-primary-container bg-primary-fixed-dim/30 px-2 py-0.5 rounded-full inline-block">Ocupado</span>
+<button class="slot-options-btn w-8 h-8 rounded-full flex items-center justify-center hover:bg-black/5 transition-colors -mr-2 -mt-2"><span class="material-symbols-outlined text-on-primary-container text-[20px]">more_horiz</span></button>
+</div>
+<div class="flex items-center gap-3 mt-1">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center text-primary font-subtitle-md">AS</div>
+<div>
+<h3 class="font-subtitle-md text-subtitle-md text-on-primary-container">Ana Souza</h3>
+<p class="font-body-md text-body-md text-on-primary-container/80 flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">sports_gymnastics</span>Pilates Clínico</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- 14:00 - 18:00 Slots (Filling remaining time) -->
+<div class="flex gap-stack-md min-h-[80px] group">
+<div class="w-14 flex-shrink-0 pt-2 text-right"><span class="font-label-md text-label-md text-on-surface-variant">14:00</span></div>
+<div class="flex-1 relative pb-stack-sm">
+<div class="absolute left-0 top-4 bottom-0 w-px bg-surface-variant -z-10"></div>
+<button class="free-slot-btn w-full h-full min-h-[64px] border-2 border-dashed border-outline-variant rounded-xl flex items-center justify-center bg-surface hover:bg-surface-container-low transition-colors" data-time="14:00"><span class="font-label-lg text-label-lg text-secondary flex items-center gap-2"><span class="material-symbols-outlined text-[18px]">add</span>Livre</span></button>
+</div>
+</div>
+<div class="flex gap-stack-md min-h-[80px] group">
+<div class="w-14 flex-shrink-0 pt-2 text-right"><span class="font-label-md text-label-md text-on-surface-variant">15:00</span></div>
+<div class="flex-1 relative pb-stack-sm">
+<div class="absolute left-0 top-4 bottom-0 w-px bg-surface-variant -z-10"></div>
+<button class="free-slot-btn w-full h-full min-h-[64px] border-2 border-dashed border-outline-variant rounded-xl flex items-center justify-center bg-surface hover:bg-surface-container-low transition-colors" data-time="15:00"><span class="font-label-lg text-label-lg text-secondary flex items-center gap-2"><span class="material-symbols-outlined text-[18px]">add</span>Livre</span></button>
+</div>
+</div>
+<div class="flex gap-stack-md min-h-[80px] group">
+<div class="w-14 flex-shrink-0 pt-2 text-right"><span class="font-label-md text-label-md text-on-surface-variant">16:00</span></div>
+<div class="flex-1 relative pb-stack-sm">
+<div class="absolute left-0 top-4 bottom-0 w-px bg-surface-variant -z-10"></div>
+<button class="free-slot-btn w-full h-full min-h-[64px] border-2 border-dashed border-outline-variant rounded-xl flex items-center justify-center bg-surface hover:bg-surface-container-low transition-colors" data-time="16:00"><span class="font-label-lg text-label-lg text-secondary flex items-center gap-2"><span class="material-symbols-outlined text-[18px]">add</span>Livre</span></button>
+</div>
+</div>
+<div class="flex gap-stack-md min-h-[80px] group">
+<div class="w-14 flex-shrink-0 pt-2 text-right"><span class="font-label-md text-label-md text-on-surface-variant">17:00</span></div>
+<div class="flex-1 relative pb-stack-sm">
+<div class="absolute left-0 top-4 bottom-0 w-px bg-surface-variant -z-10"></div>
+<button class="free-slot-btn w-full h-full min-h-[64px] border-2 border-dashed border-outline-variant rounded-xl flex items-center justify-center bg-surface hover:bg-surface-container-low transition-colors" data-time="17:00"><span class="font-label-lg text-label-lg text-secondary flex items-center gap-2"><span class="material-symbols-outlined text-[18px]">add</span>Livre</span></button>
+</div>
+</div>
+<div class="flex gap-stack-md min-h-[80px] group last:min-h-0">
+<div class="w-14 flex-shrink-0 pt-2 text-right"><span class="font-label-md text-label-md text-on-surface-variant">18:00</span></div>
+<div class="flex-1 relative">
+<div class="w-full h-1 bg-surface-variant/30 rounded-full mt-4"></div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Quick Actions Menu Dropdown -->
+<div class="hidden absolute z-50 bg-surface rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-surface-variant w-[220px] py-2 overflow-hidden fade-in" id="quick-actions-menu">
+<button class="w-full text-left px-4 py-3 hover:bg-surface-container-low flex items-center gap-3 transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant text-[20px]">clinical_notes</span>
+<span class="font-label-lg text-label-lg text-on-surface">Ver Prontuário</span>
+</button>
+<button class="w-full text-left px-4 py-3 hover:bg-surface-container-low flex items-center gap-3 transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant text-[20px]">edit_note</span>
+<span class="font-label-lg text-label-lg text-on-surface">Registrar Evolução</span>
+</button>
+<button class="w-full text-left px-4 py-3 hover:bg-surface-container-low flex items-center gap-3 transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant text-[20px]">chat</span>
+<span class="font-label-lg text-label-lg text-on-surface">Enviar Mensagem</span>
+</button>
+<div class="h-px bg-surface-variant w-full my-1"></div>
+<button class="w-full text-left px-4 py-3 hover:bg-error-container/30 flex items-center gap-3 transition-colors">
+<span class="material-symbols-outlined text-error text-[20px]">event_busy</span>
+<span class="font-label-lg text-label-lg text-error">Desmarcar Consulta</span>
+</button>
+</div>
+<!-- Scheduling Bottom Sheet Modal -->
+<div class="fixed inset-0 z-50 flex items-end justify-center hidden" id="scheduling-modal">
+<div class="modal-overlay absolute inset-0" id="scheduling-overlay"></div>
+<div class="bg-surface w-full max-w-3xl rounded-t-[32px] p-6 pb-safe shadow-[0_-8px_30px_rgb(0,0,0,0.12)] relative z-10 slide-up max-h-[90vh] overflow-y-auto">
+<div class="w-12 h-1.5 bg-outline-variant/50 rounded-full mx-auto mb-6"></div>
+<div class="flex justify-between items-center mb-6">
+<h3 class="text-title-lg font-title-lg text-on-surface">Novo Agendamento</h3>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-highest transition-colors" id="close-scheduling">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<form class="flex flex-col gap-6" onsubmit="event.preventDefault();">
+<!-- Time Pre-fill -->
+<div class="bg-surface-container-low rounded-2xl p-4 border border-surface-dim flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-container text-primary flex items-center justify-center">
+<span class="material-symbols-outlined">schedule</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface-variant">Horário Selecionado</p>
+<p class="font-subtitle-md text-subtitle-md text-on-surface" id="selected-time-display">08:00 - 09:00</p>
+</div>
+</div>
+<!-- Patient Selection -->
+<div class="flex flex-col gap-2">
+<label class="font-label-lg text-label-lg text-on-surface-variant">Paciente</label>
+<select class="w-full bg-surface-container border-transparent focus:border-primary focus:ring-1 focus:ring-primary rounded-xl px-4 py-3 font-body-lg text-body-lg text-on-surface h-14">
+<option disabled="" selected="" value="">Selecione um paciente</option>
+<option value="1">Lucas Andrade</option>
+<option value="2">Juliana Lima</option>
+<option value="3">Patrícia Rocha</option>
+<option class="text-primary font-bold" value="new">Cadastrar Novo</option>
+</select>
+</div>
+<!-- Treatment Selection -->
+<div class="flex flex-col gap-2">
+<label class="font-label-lg text-label-lg text-on-surface-variant">Tipo de Tratamento</label>
+<select class="w-full bg-surface-container border-transparent focus:border-primary focus:ring-1 focus:ring-primary rounded-xl px-4 py-3 font-body-lg text-body-lg text-on-surface h-14">
+<option disabled="" selected="" value="">Selecione o tratamento</option>
+<option value="pilates">Pilates Clínico - R$150</option>
+<option value="pelvica">Fisioterapia Pélvica - R$180</option>
+<option value="ortopedica">Reabilitação Ortopédica - R$160</option>
+</select>
+</div>
+<!-- Action Buttons -->
+<div class="flex flex-col gap-3 mt-4 mb-4">
+<button class="w-full bg-primary text-on-primary py-4 rounded-full font-label-lg text-label-lg shadow-md hover:shadow-lg active:scale-[0.98] transition-all" id="confirm-scheduling" type="submit">Confirmar e Salvar Agendamento</button>
+<button class="w-full bg-transparent text-primary py-4 rounded-full font-label-lg text-label-lg hover:bg-primary-container/20 active:scale-[0.98] transition-all" id="cancel-scheduling" type="button">Cancelar</button>
+</div>
+</form>
+</div>
+</div>
+<!-- Calendar Modal (Placeholder) -->
+<div class="fixed inset-0 z-50 flex items-center justify-center hidden" id="calendar-modal">
+<div class="modal-overlay absolute inset-0"></div>
+<div class="bg-surface w-[90%] max-w-sm rounded-[32px] p-6 shadow-2xl relative z-10 fade-in">
+<div class="flex justify-between items-center mb-6">
+<h3 class="text-title-md text-on-surface">Selecionar Data</h3>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-highest" id="close-calendar"><span class="material-symbols-outlined">close</span></button>
+</div>
+<div class="grid grid-cols-7 gap-1 text-center mb-4">
+<span class="text-label-md text-on-surface-variant">D</span><span class="text-label-md text-on-surface-variant">S</span><span class="text-label-md text-on-surface-variant">T</span><span class="text-label-md text-on-surface-variant">Q</span><span class="text-label-md text-on-surface-variant">Q</span><span class="text-label-md text-on-surface-variant">S</span><span class="text-label-md text-on-surface-variant">S</span>
+</div>
+<div class="grid grid-cols-7 gap-2">
+<!-- Simplified Calendar View -->
+<div class="h-10 w-full flex items-center justify-center text-on-surface-variant opacity-30">25</div>
+<div class="h-10 w-full flex items-center justify-center text-on-surface-variant opacity-30">26</div>
+<div class="h-10 w-full flex items-center justify-center text-on-surface-variant opacity-30">27</div>
+<div class="h-10 w-full flex items-center justify-center text-on-surface-variant opacity-30">28</div>
+<div class="h-10 w-full flex items-center justify-center text-on-surface-variant opacity-30">29</div>
+<div class="h-10 w-full flex items-center justify-center text-on-surface-variant opacity-30">30</div>
+<div class="h-10 w-full flex items-center justify-center rounded-full hover:bg-primary-container/30 cursor-pointer">1</div>
+<!-- ... current month days ... -->
+<div class="col-start-4 h-10 w-full flex items-center justify-center rounded-full bg-primary text-on-primary shadow-md">25</div>
+<!-- More days hidden for prototype -->
+</div>
+<button class="mt-8 w-full bg-primary text-on-primary py-3 rounded-full font-label-lg shadow-lg active:scale-95 transition-transform">Ir para hoje</button>
+</div>
+</div>
+<!-- BottomNavBar -->
+<nav class="bg-surface dark:bg-inverse-surface shadow-[0px_-2px_10px_rgba(0,0,0,0.05)] h-[72px] fixed bottom-0 w-full z-50 flex justify-around items-center px-4 pb-safe md:hidden">
+<a class="flex flex-col items-center justify-center text-secondary hover:bg-secondary-container/30 transition-colors w-16 h-14 rounded-xl" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 0;">home</span>
+<span class="font-label-lg text-label-lg text-[10px] leading-tight">Início</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-2xl py-1 active:scale-95 transition-transform h-14 px-6 w-20" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">calendar_today</span>
+<span class="font-label-lg text-label-lg text-[10px] leading-tight font-bold">Atendimento</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary hover:bg-secondary-container/30 transition-colors w-16 h-14 rounded-xl" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 0;">groups</span>
+<span class="font-label-lg text-label-lg text-[10px] leading-tight">Paciente</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary hover:bg-secondary-container/30 transition-colors w-16 h-14 rounded-xl" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 0;">person</span>
+<span class="font-label-lg text-label-lg text-[10px] leading-tight">Perfil</span>
+</a>
+</nav>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const days = document.querySelectorAll('.day-btn');
+        const dateLabel = document.getElementById('current-date-label');
+        const prevWeekBtn = document.getElementById('prev-week');
+        const nextWeekBtn = document.getElementById('next-week');
+        const returnTodayBtn = document.getElementById('return-today');
+        const calendarModal = document.getElementById('calendar-modal');
+        const openCalendarBtn = document.getElementById('open-calendar');
+        const closeCalendarBtn = document.getElementById('close-calendar');
+        
+        // Scheduling Modal Logic
+        const freeSlots = document.querySelectorAll('.free-slot-btn');
+        const schedulingModal = document.getElementById('scheduling-modal');
+        const closeSchedulingBtn = document.getElementById('close-scheduling');
+        const cancelSchedulingBtn = document.getElementById('cancel-scheduling');
+        const schedulingOverlay = document.getElementById('scheduling-overlay');
+        const selectedTimeDisplay = document.getElementById('selected-time-display');
+
+        const closeScheduling = () => {
+            schedulingModal.classList.add('hidden');
+        };
+
+        freeSlots.forEach(slot => {
+            slot.addEventListener('click', () => {
+                const time = slot.getAttribute('data-time');
+                const endTime = parseInt(time.split(':')[0]) + 1;
+                selectedTimeDisplay.textContent = `${time} - ${endTime.toString().padStart(2, '0')}:00`;
+                schedulingModal.classList.remove('hidden');
+            });
+        });
+
+        closeSchedulingBtn.addEventListener('click', closeScheduling);
+        cancelSchedulingBtn.addEventListener('click', closeScheduling);
+        schedulingOverlay.addEventListener('click', closeScheduling);
+        
+        document.getElementById('confirm-scheduling').addEventListener('click', () => {
+            // Placeholder for success logic
+            closeScheduling();
+        });
+
+        // Quick Actions Menu Logic
+        const slotOptionsBtns = document.querySelectorAll('.slot-options-btn');
+        const quickActionsMenu = document.getElementById('quick-actions-menu');
+
+        const closeQuickActions = (e) => {
+            if (!quickActionsMenu.contains(e.target) && !e.target.closest('.slot-options-btn')) {
+                quickActionsMenu.classList.add('hidden');
+            }
+        };
+
+        slotOptionsBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevent immediate closing
+                
+                // Position logic
+                const rect = btn.getBoundingClientRect();
+                quickActionsMenu.style.top = `${rect.bottom + window.scrollY + 8}px`;
+                // Try to align to the right of the button, but don't overflow screen
+                const rightSpace = window.innerWidth - rect.right;
+                if (rightSpace > 220) {
+                     quickActionsMenu.style.left = `${rect.right}px`;
+                     quickActionsMenu.style.right = 'auto';
+                } else {
+                     quickActionsMenu.style.right = `${window.innerWidth - rect.right}px`;
+                     quickActionsMenu.style.left = 'auto';
+                }
+
+                quickActionsMenu.classList.toggle('hidden');
+            });
+        });
+
+        document.addEventListener('click', closeQuickActions);
+        
+        // --- Existing Calendar/Nav Logic ---
+        let currentViewDate = 25;
+        let currentWeek = 'current'; // 'past', 'current', 'future'
+
+        const updateView = (day, weekType) => {
+            currentViewDate = day;
+            currentWeek = weekType;
+
+            // Reset all buttons
+            days.forEach(d => {
+                d.className = 'day-btn flex flex-col items-center justify-center min-w-[56px] h-[72px] rounded-xl border border-outline-variant bg-surface text-on-surface-variant hover:bg-surface-container transition-all hover:border-primary';
+            });
+
+            // Update active day
+            const activeBtn = document.querySelector(`[data-day="${day}"]`);
+            if(activeBtn) {
+                activeBtn.className = 'day-btn flex flex-col items-center justify-center min-w-[56px] h-[72px] rounded-xl bg-primary text-on-primary shadow-md active:scale-95 transition-all hover:bg-surface-tint';
+            }
+
+            // Update Header Text
+            let monthLabel = "Out";
+            if (weekType === 'past') monthLabel = "Set";
+            if (weekType === 'future') monthLabel = "Nov";
+            dateLabel.textContent = `${monthLabel} ${day}, 2023`;
+
+            // Simulation: Update schedule content based on week
+            const scheduleContainer = document.getElementById('schedule-25');
+            const timeIndicator = scheduleContainer.querySelector('.bg-error');
+            
+            if (weekType === 'past') {
+                // Change status to 'Atendido' for past weeks
+                const statusBadges = scheduleContainer.querySelectorAll('.bg-primary-fixed-dim\\/30');
+                statusBadges.forEach(badge => {
+                    badge.textContent = 'Atendido';
+                    badge.classList.remove('text-on-primary-container');
+                    badge.classList.add('text-on-secondary-container');
+                });
+                if(timeIndicator) timeIndicator.classList.add('hidden');
+            } else if (weekType === 'future') {
+                const statusBadges = scheduleContainer.querySelectorAll('.bg-primary-fixed-dim\\/30');
+                statusBadges.forEach(badge => {
+                    badge.textContent = 'Agendado';
+                });
+                if(timeIndicator) timeIndicator.classList.add('hidden');
+            } else {
+                const statusBadges = scheduleContainer.querySelectorAll('.bg-primary-fixed-dim\\/30');
+                statusBadges.forEach(badge => badge.textContent = 'Ocupado');
+                if(timeIndicator) timeIndicator.classList.remove('hidden');
+            }
+        };
+
+        // Day click logic
+        days.forEach(btn => {
+            btn.addEventListener('click', () => {
+                updateView(btn.getAttribute('data-day'), currentWeek);
+            });
+        });
+
+        // Week navigation logic
+        prevWeekBtn.addEventListener('click', () => updateView(18, 'past'));
+        nextWeekBtn.addEventListener('click', () => updateView(1, 'future'));
+        
+        // Reset to Today logic
+        returnTodayBtn.addEventListener('click', () => {
+            updateView(25, 'current');
+            // Visual feedback on the today button
+            returnTodayBtn.classList.add('bg-primary-container');
+            setTimeout(() => returnTodayBtn.classList.remove('bg-primary-container'), 500);
+        });
+
+        // Calendar Modal Logic
+        openCalendarBtn.addEventListener('click', () => {
+            calendarModal.classList.remove('hidden');
+        });
+        closeCalendarBtn.addEventListener('click', () => {
+            calendarModal.classList.add('hidden');
+        });
+        calendarModal.querySelector('.modal-overlay').addEventListener('click', () => {
+            calendarModal.classList.add('hidden');
+        });
+    });
+</script>
+</body></html>

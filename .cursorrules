@@ -1,0 +1,26 @@
+# Regras de Desenvolvimento - Bella Flora Fisio
+
+Você está trabalhando no projeto **Bella Flora Fisio**, um SaaS de fisioterapia pélvica estruturado com Next.js, TypeScript e Supabase.
+
+## Diretrizes de Banco de Dados e Tipos
+
+1. **Tipos Autogerados do Supabase**:
+   - A estrutura do banco de dados (tabelas, colunas, views, enums) é tipada de forma estrita no TypeScript.
+   - O arquivo contendo os tipos fica em: `types/supabase.ts` (ou `@/types/supabase`).
+
+2. **Utilização do Client Estrito**:
+   - Sempre que criar ou usar um client do Supabase (`createClient` ou `createBrowserClient`/`createServerClient`), passe o tipo `Database` importado de `@/types/supabase`:
+     ```typescript
+     import { createClient } from '@supabase/supabase-js'
+     import { Database } from '@/types/supabase'
+     
+     const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey)
+     ```
+
+3. **Manutenção do Banco**:
+   - **Uso Exclusivo da CLI do Supabase**: Sempre que precisar interagir com o banco de dados (executar SQL, alterar tabelas, remover registros de teste, atualizar triggers ou schema), **use exclusivamente o CLI do Supabase no terminal** (como rodar `supabase db execute "SUA QUERY SQL"`, aplicar migrations com `supabase db push` ou resetar com `supabase db reset`), **NUNCA** abrindo ou usando a interface gráfica web em `supabase.com/dashboard`. O login na CLI já foi efetuado e está configurado localmente.
+   - Sempre que alterar o banco de dados via CLI do Supabase, atualize os tipos TypeScript executando:
+     ```bash
+     npm run supabase:types
+     ```
+   - Priorize consultas seguras e tipadas de ponta a ponta.

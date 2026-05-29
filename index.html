@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Bella Flora Fisio - Plataforma de Reabilitação Pélvica Premium</title>
+    
+    <!-- Google Fonts: Manrope -->
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS para estilização moderna -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#70518d",
+                        "primary-container": "#f0dbff",
+                        "on-primary": "#ffffff",
+                        "secondary": "#795465",
+                        "secondary-container": "#ffd8e7",
+                        "background": "#fff7fd",
+                        "surface": "#ffffff",
+                        "surface-variant": "#f3ecf2",
+                        "on-surface": "#1d1b1f",
+                        "on-surface-variant": "#4b454e"
+                    },
+                    fontFamily: {
+                        sans: ['Manrope', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        .floral-gradient {
+            background: linear-gradient(135deg, #fff7fd 0%, #f9f1f7 100%);
+        }
+        .premium-shadow {
+            box-shadow: 0px 10px 30px rgba(112, 81, 141, 0.08);
+        }
+        .smooth-transition {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
+</head>
+<body class="floral-gradient text-on-surface font-sans min-h-screen antialiased">
+
+    <!-- Top Navigation Bar -->
+    <header class="bg-surface/80 backdrop-blur-md sticky top-0 z-50 border-b border-surface-variant/30 h-[72px] px-6 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">local_florist</span>
+            <span class="font-extrabold text-xl tracking-tight text-primary">Bella Flora <span class="font-light text-secondary">Fisio</span></span>
+        </div>
+        <div class="flex items-center gap-4">
+            <a href="splash_screen.html" class="bg-primary text-on-primary font-semibold text-sm px-5 py-2.5 rounded-full hover:bg-primary/90 hover:scale-[1.03] active:scale-95 smooth-transition shadow-sm flex items-center gap-2">
+                <span class="material-symbols-outlined text-lg">rocket_launch</span>
+                Iniciar Demonstração
+            </a>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-6 py-12 md:py-20 flex flex-col gap-16 md:gap-24">
+        
+        <!-- Hero Section: Foco no Produto -->
+        <section class="text-center flex flex-col items-center gap-6 max-w-3xl mx-auto">
+            <span class="bg-primary/10 text-primary text-xs font-bold tracking-wider uppercase px-4 py-1.5 rounded-full">Tecnologia & Acolhimento Clínico</span>
+            <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight text-primary leading-tight">
+                A evolução do cuidado em <span class="text-secondary">Fisioterapia Pélvica</span>
+            </h1>
+            <p class="text-lg text-on-surface-variant leading-relaxed">
+                Uma plataforma médica premium que conecta pacientes e fisioterapeutas em tempo real. Cuidado contínuo, monitoramento ativo de dor e prescrição interativa de exercícios para uma reabilitação segura e acolhedora.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 mt-4 w-full sm:w-auto">
+                <a href="splash_screen.html?role=patient" class="bg-primary text-on-primary font-bold px-8 py-4 rounded-2xl hover:scale-[1.03] active:scale-95 smooth-transition premium-shadow flex items-center justify-center gap-3">
+                    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+                    Área do Paciente
+                </a>
+                <a href="splash_screen.html?role=therapist" class="bg-surface text-primary border border-primary/20 font-bold px-8 py-4 rounded-2xl hover:bg-primary-container/20 hover:scale-[1.03] active:scale-95 smooth-transition premium-shadow flex items-center justify-center gap-3">
+                    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">medical_services</span>
+                    Portal do Fisioterapeuta
+                </a>
+            </div>
+        </section>
+
+        <!-- Seção de Imagem / Mockup do Produto -->
+        <section class="relative rounded-3xl overflow-hidden premium-shadow border border-surface-variant/40 bg-surface p-6 md:p-10 flex flex-col md:flex-row items-center gap-10">
+            <div class="absolute top-0 right-0 w-64 h-64 bg-primary-container/30 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="flex-1 flex flex-col gap-4">
+                <span class="text-secondary font-bold text-sm tracking-wide uppercase">Diferencial Exclusivo</span>
+                <h2 class="text-3xl font-extrabold text-primary leading-snug">Telemetria de Dor e Progresso Diário</h2>
+                <p class="text-on-surface-variant leading-relaxed">
+                    Nossa tecnologia de conexão instantânea permite que o paciente registre seus níveis de desconforto de forma extremamente simples no celular. O fisioterapeuta visualiza o gráfico de evolução no prontuário imediatamente, ajustando o plano de tratamento antes mesmo do próximo atendimento clínico.
+                </p>
+                <div class="flex flex-col gap-3 mt-2">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-secondary bg-secondary-container/40 p-1.5 rounded-xl">check_circle</span>
+                        <span class="font-medium text-sm">Decisões clínicas baseadas em dados diários reais</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-secondary bg-secondary-container/40 p-1.5 rounded-xl">check_circle</span>
+                        <span class="font-medium text-sm">Menor taxa de abandono do tratamento em casa</span>
+                    </div>
+                </div>
+            </div>
+            <div class="flex-1 w-full max-w-md bg-surface-variant/50 p-6 rounded-2xl border border-surface-variant flex flex-col gap-6 relative">
+                <!-- Simulador Visual do Produto -->
+                <div class="flex items-center justify-between pb-4 border-b border-surface-variant">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-primary bg-primary/10 p-2 rounded-full">forum</span>
+                        <div>
+                            <p class="text-xs text-on-surface-variant">Paciente Enviou Telemetria</p>
+                            <p class="font-bold text-sm text-primary">Nível de Dor: 8/10</p>
+                        </div>
+                    </div>
+                    <span class="bg-secondary/15 text-secondary text-[11px] font-bold px-2.5 py-1 rounded-full uppercase">Sincronizado</span>
+                </div>
+                <div class="bg-surface p-4 rounded-xl shadow-sm border border-surface-variant/40 flex flex-col gap-3">
+                    <div class="flex justify-between items-center text-xs font-bold text-on-surface-variant">
+                        <span>Acompanhamento no Prontuário</span>
+                        <span class="text-primary">Dra. Ana Costa</span>
+                    </div>
+                    <div class="h-4 bg-surface-variant rounded-full overflow-hidden flex">
+                        <div class="h-full bg-primary rounded-full smooth-transition" style="width: 80%"></div>
+                    </div>
+                    <p class="text-xs text-on-surface-variant italic">"A dor da Mariana subiu para 8 hoje. O plano de exercícios em casa foi reduzido automaticamente para evitar sobrecarga."</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Grid de Funcionalidades Principais -->
+        <section class="flex flex-col gap-12">
+            <div class="text-center flex flex-col gap-3 max-w-2xl mx-auto">
+                <h2 class="text-3xl font-extrabold text-primary">Tudo o que sua reabilitação precisa</h2>
+                <p class="text-on-surface-variant text-sm md:text-base">
+                    Um produto desenhado nos mínimos detalhes para oferecer conforto ao paciente e precisão ao profissional de saúde.
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div class="bg-surface rounded-2xl p-6 shadow-sm border border-surface-variant/40 hover:-translate-y-1 smooth-transition flex flex-col gap-4">
+                    <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
+                        <span class="material-symbols-outlined text-3xl">fitness_center</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-primary">Exercícios Gamificados</h3>
+                    <p class="text-on-surface-variant text-sm leading-relaxed">
+                        Vídeos de alta fidelidade e cronômetro interativo guiam o paciente na execução correta de cada contração e alongamento pélvico na sua própria casa.
+                    </p>
+                </div>
+                <!-- Card 2 -->
+                <div class="bg-surface rounded-2xl p-6 shadow-sm border border-surface-variant/40 hover:-translate-y-1 smooth-transition flex flex-col gap-4">
+                    <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
+                        <span class="material-symbols-outlined text-3xl">assignment</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-primary">Prontuário Livre de Papel</h3>
+                    <p class="text-on-surface-variant text-sm leading-relaxed">
+                        Fisioterapeutas prescrevem planos de tratamento, editam evoluções clínicas e anexam documentos em um sistema de prontuário eletrônico unificado e limpo.
+                    </p>
+                </div>
+                <!-- Card 3 -->
+                <div class="bg-surface rounded-2xl p-6 shadow-sm border border-surface-variant/40 hover:-translate-y-1 smooth-transition flex flex-col gap-4">
+                    <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
+                        <span class="material-symbols-outlined text-3xl">schedule</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-primary">Agenda Dinâmica</h3>
+                    <p class="text-on-surface-variant text-sm leading-relaxed">
+                        Agendamento integrado de consultas presenciais e online, com envio automático de alertas, gerenciamento de reposições e painel de repasses financeiros.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Banner de Chamada para Ação Final -->
+        <section class="bg-primary text-on-primary rounded-3xl p-8 md:p-12 text-center flex flex-col items-center gap-6 premium-shadow relative overflow-hidden">
+            <div class="absolute -top-20 -left-20 w-64 h-64 bg-white/5 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -bottom-20 -right-20 w-64 h-64 bg-white/5 rounded-full blur-3xl pointer-events-none"></div>
+            
+            <h2 class="text-3xl md:text-4xl font-extrabold max-w-xl leading-tight">Pronto para vivenciar a experiência completa?</h2>
+            <p class="text-primary-container text-sm md:text-base max-w-lg leading-relaxed">
+                Experimente agora mesmo o fluxo interativo completo de ponta a ponta simulando as telas reais de paciente e fisioterapeuta trabalhando juntos.
+            </p>
+            <a href="splash_screen.html" class="bg-surface text-primary font-bold px-8 py-4 rounded-2xl hover:scale-[1.03] active:scale-95 smooth-transition shadow-lg flex items-center gap-2 mt-2">
+                <span class="material-symbols-outlined font-bold">play_arrow</span>
+                Iniciar Demonstração do Produto
+            </a>
+        </section>
+
+    </main>
+
+    <footer class="bg-surface border-t border-surface-variant/30 py-8 text-center text-xs text-on-surface-variant px-6 mt-12">
+        <p class="max-w-md mx-auto leading-relaxed">
+            &copy; 2026 Bella Flora Fisio. Todos os direitos reservados. Projetado para uma experiência médica humanizada, ética e acolhedora.
+        </p>
+    </footer>
+
+</body>
+</html>

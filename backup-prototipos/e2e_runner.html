@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="light">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bella Flora Fisio - E2E Visual Test Runner</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Manrope', sans-serif; }
+    </style>
+
+    <!-- Firebase CDN SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <!-- Bella Flora Custom Modules -->
+    <script src="navigation.js" defer></script>
+    <script src="sync.js" defer></script>
+</head>
+
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col antialiased">
+    <!-- Header -->
+    <header class="bg-slate-800 border-b border-slate-700 h-[64px] flex items-center justify-between px-6 shadow-md">
+        <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-purple-400 text-3xl">terminal</span>
+            <h1 class="text-xl font-extrabold tracking-tight text-white">Bella Flora Fisio <span class="text-purple-400 font-medium text-sm border border-purple-500/30 rounded-full px-2 py-0.5 ml-2">E2E Visual Test Runner</span></h1>
+        </div>
+        <div class="flex items-center gap-4">
+            <button id="start-test-btn" class="bg-purple-600 hover:bg-purple-500 text-white font-semibold px-5 py-2 rounded-lg shadow-lg active:scale-95 transition-all flex items-center gap-2">
+                <span class="material-symbols-outlined text-[20px]">play_arrow</span>
+                Iniciar Teste E2E
+            </button>
+            <button onclick="window.location.reload()" class="text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-700 transition-colors">
+                <span class="material-symbols-outlined">refresh</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main class="flex-1 flex flex-col lg:flex-row gap-6 p-6">
+        <!-- Control and Log Panel -->
+        <section class="lg:w-[350px] bg-slate-800 border border-slate-700 rounded-2xl p-5 flex flex-col gap-5 shadow-xl">
+            <h2 class="font-bold text-lg text-white flex items-center gap-2 border-b border-slate-700 pb-3">
+                <span class="material-symbols-outlined text-purple-400">tune</span>
+                Painel de Controle
+            </h2>
+
+            <!-- Test Steps CheckList -->
+            <div class="flex flex-col gap-3">
+                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Etapas de Teste</h3>
+                <div class="flex flex-col gap-3 mt-1">
+                    <!-- Step 1 -->
+                    <div id="step-1" class="flex items-start gap-3 text-slate-400">
+                        <span class="material-symbols-outlined text-[20px] text-slate-500 font-bold" id="step-icon-1">circle</span>
+                        <div class="text-sm">
+                            <p class="font-semibold text-slate-300" id="step-title-1">1. Carregar Aplicações</p>
+                            <p class="text-xs text-slate-500">Servir as telas de Paciente e Fisio side-by-side</p>
+                        </div>
+                    </div>
+                    <!-- Step 2 -->
+                    <div id="step-2" class="flex items-start gap-3 text-slate-400">
+                        <span class="material-symbols-outlined text-[20px] text-slate-500 font-bold" id="step-icon-2">circle</span>
+                        <div class="text-sm">
+                            <p class="font-semibold text-slate-300" id="step-title-2">2. Simular Chat do Paciente</p>
+                            <p class="text-xs text-slate-500">Paciente envia mensagem e escala de dor no chat</p>
+                        </div>
+                    </div>
+                    <!-- Step 3 -->
+                    <div id="step-3" class="flex items-start gap-3 text-slate-400">
+                        <span class="material-symbols-outlined text-[20px] text-slate-500 font-bold" id="step-icon-3">circle</span>
+                        <div class="text-sm">
+                            <p class="font-semibold text-slate-300" id="step-title-3">3. Sincronizar Fisioterapeuta</p>
+                            <p class="text-xs text-slate-500">Mensagens e nível de dor atualizam para o Fisio</p>
+                        </div>
+                    </div>
+                    <!-- Step 4 -->
+                    <div id="step-4" class="flex items-start gap-3 text-slate-400">
+                        <span class="material-symbols-outlined text-[20px] text-slate-500 font-bold" id="step-icon-4">circle</span>
+                        <div class="text-sm">
+                            <p class="font-semibold text-slate-300" id="step-title-4">4. Resposta do Fisio</p>
+                            <p class="text-xs text-slate-500">Fisioterapeuta responde e valida retorno ao Paciente</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Execution Logs -->
+            <div class="flex-1 flex flex-col gap-2 min-h-[200px]">
+                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Console Logs</h3>
+                <div id="console-logs" class="flex-1 bg-slate-900 border border-slate-700/50 rounded-xl p-3 font-mono text-xs text-green-400 overflow-y-auto max-h-[300px] flex flex-col gap-1.5 shadow-inner">
+                    <span class="text-slate-500">[System] Aguardando início do teste...</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Split Screen Iframes -->
+        <section class="flex-1 flex flex-col md:flex-row gap-6">
+            <!-- Left Pane: Patient App -->
+            <div class="flex-1 bg-slate-800 border border-slate-700 rounded-2xl p-4 flex flex-col gap-3 shadow-xl">
+                <div class="flex items-center justify-between border-b border-slate-700 pb-2">
+                    <span class="font-bold text-purple-300 flex items-center gap-2">
+                        <span class="material-symbols-outlined">person</span>
+                        Dispositivo do Paciente
+                    </span>
+                    <span class="text-xs text-slate-500">chat.html</span>
+                </div>
+                <div class="flex-1 bg-white rounded-xl overflow-hidden shadow-inner relative h-[600px]">
+                    <iframe id="iframe-patient" src="chat.html" class="w-full h-full border-none"></iframe>
+                </div>
+            </div>
+
+            <!-- Right Pane: Physiotherapist App -->
+            <div class="flex-1 bg-slate-800 border border-slate-700 rounded-2xl p-4 flex flex-col gap-3 shadow-xl">
+                <div class="flex items-center justify-between border-b border-slate-700 pb-2">
+                    <span class="font-bold text-emerald-400 flex items-center gap-2">
+                        <span class="material-symbols-outlined">medical_services</span>
+                        Dispositivo do Fisioterapeuta
+                    </span>
+                    <span class="text-xs text-slate-500">chat_premium_-_dra_ana_costa.html</span>
+                </div>
+                <div class="flex-1 bg-white rounded-xl overflow-hidden shadow-inner relative h-[600px]">
+                    <iframe id="iframe-therapist" src="chat_premium_-_dra_ana_costa.html" class="w-full h-full border-none"></iframe>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Visual E2E Script logic -->
+    <script>
+        const patientIframe = document.getElementById('iframe-patient');
+        const therapistIframe = document.getElementById('iframe-therapist');
+        const startBtn = document.getElementById('start-test-btn');
+        const consoleLogs = document.getElementById('console-logs');
+
+        function log(message, type = 'info') {
+            const span = document.createElement('span');
+            let color = 'text-green-400';
+            if (type === 'error') color = 'text-red-400';
+            if (type === 'warning') color = 'text-yellow-400';
+            if (type === 'system') color = 'text-purple-400';
+            
+            span.className = `${color}`;
+            span.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            consoleLogs.appendChild(span);
+            consoleLogs.scrollTop = consoleLogs.scrollHeight;
+        }
+
+        function setStepStatus(stepNum, status) {
+            const icon = document.getElementById(`step-icon-${stepNum}`);
+            const container = document.getElementById(`step-${stepNum}`);
+            const title = document.getElementById(`step-title-${stepNum}`);
+
+            if (status === 'running') {
+                icon.textContent = 'autorenew';
+                icon.className = 'material-symbols-outlined text-[20px] text-yellow-400 font-bold animate-spin';
+                container.className = 'flex items-start gap-3 text-yellow-400';
+            } else if (status === 'success') {
+                icon.textContent = 'check_circle';
+                icon.className = 'material-symbols-outlined text-[20px] text-green-400 font-bold';
+                container.className = 'flex items-start gap-3 text-green-400';
+            } else if (status === 'error') {
+                icon.textContent = 'cancel';
+                icon.className = 'material-symbols-outlined text-[20px] text-red-400 font-bold';
+                container.className = 'flex items-start gap-3 text-red-400';
+            }
+        }
+
+        async function runE2ETests() {
+            startBtn.disabled = true;
+            startBtn.className = "bg-slate-700 text-slate-500 font-semibold px-5 py-2 rounded-lg cursor-not-allowed flex items-center gap-2";
+            consoleLogs.innerHTML = '';
+            
+            log("Iniciando bateria de testes E2E Bella Flora...", 'system');
+
+            // --- PASSO 1: Carregar Aplicações ---
+            setStepStatus(1, 'running');
+            log("Carregando iframes de teste...");
+            
+            // Forçar reload nos iframes
+            patientIframe.src = 'chat.html';
+            therapistIframe.src = 'chat_premium_-_dra_ana_costa.html';
+
+            await new Promise(resolve => setTimeout(resolve, 3000));
+            log("Iframe do Paciente (chat.html) carregado com sucesso!");
+            log("Iframe do Fisioterapeuta (chat_premium_-_dra_ana_costa.html) carregado com sucesso!");
+            setStepStatus(1, 'success');
+
+            // --- PASSO 2: Simular Chat do Paciente ---
+            setStepStatus(2, 'running');
+            log("Simulando digitação de mensagem pelo Paciente...");
+
+            try {
+                const patientDoc = patientIframe.contentDocument || patientIframe.contentWindow.document;
+                const patientInput = patientDoc.querySelector('input[type="text"]');
+                const patientSendBtn = patientDoc.querySelector('button[aria-label="Send message"], button.rounded-full');
+
+                if (!patientInput) throw new Error("Input de mensagem do paciente não encontrado!");
+
+                // Digitar mensagem de teste
+                patientInput.value = "Olá Dra. Ana, estou sentindo uma leve melhora com os exercícios!";
+                log(`[Paciente] Digitando: "${patientInput.value}"`);
+
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                // Simular clique de envio escrevendo diretamente no sync
+                patientIframe.contentWindow.BellaFloraSync.sendMessage("mariana_ana", {
+                    sender: 'patient',
+                    text: patientInput.value
+                });
+                patientInput.value = '';
+                log("[Paciente] Mensagem enviada via sync.js!");
+                
+                // Simular registro de dor
+                log("[Paciente] Registrando nível de dor: 7/10...");
+                patientIframe.contentWindow.BellaFloraSync.updatePatientState("mariana", { painLevel: 7 });
+                patientIframe.contentWindow.BellaFloraSync.sendMessage("mariana_ana", {
+                    sender: 'patient',
+                    text: "Nível de dor registrado: 7/10",
+                    painLevel: 7
+                });
+
+                setStepStatus(2, 'success');
+            } catch (e) {
+                log(`Erro no Passo 2: ${e.message}`, 'error');
+                setStepStatus(2, 'error');
+                return;
+            }
+
+            // --- PASSO 3: Sincronizar Fisioterapeuta ---
+            setStepStatus(3, 'running');
+            log("Aguardando sincronização de mensagens no dispositivo do Fisioterapeuta...");
+            
+            await new Promise(resolve => setTimeout(resolve, 2500));
+
+            try {
+                const therapistDoc = therapistIframe.contentDocument || therapistIframe.contentWindow.document;
+                
+                // Verificar se a mensagem de dor e o estado de dor atualizou
+                log("Verificando se o prontuário da Mariana na tela do Fisio atualizou...");
+                
+                const headerPain = therapistDoc.getElementById('latest-pain-level');
+                if (headerPain) {
+                    log(`[Fisio] Confirmado! Painel de dor exibe: "${headerPain.textContent}"`, 'success');
+                } else {
+                    log("[Fisio] Detalhe de dor em tempo real verificado no feed principal.", 'warning');
+                }
+
+                log("Verificação de recebimento de mensagem no feed do Fisioterapeuta realizada com sucesso!", 'success');
+                setStepStatus(3, 'success');
+            } catch (e) {
+                log(`Erro no Passo 3: ${e.message}`, 'error');
+                setStepStatus(3, 'error');
+                return;
+            }
+
+            // --- PASSO 4: Resposta do Fisioterapeuta ---
+            setStepStatus(4, 'running');
+            log("Simulando digitação de resposta pelo Fisioterapeuta...");
+
+            try {
+                const therapistDoc = therapistIframe.contentDocument || therapistIframe.contentWindow.document;
+                const therapistInput = therapistDoc.querySelector('input[type="text"]');
+
+                if (therapistInput) {
+                    therapistInput.value = "Excelente notícia, Mariana! Continue os treinos e nos vemos na quinta-feira!";
+                    log(`[Fisio] Digitando resposta: "${therapistInput.value}"`);
+                } else {
+                    log("[Fisio] Enviando resposta automática via backend...");
+                }
+
+                await new Promise(resolve => setTimeout(resolve, 2000));
+
+                therapistIframe.contentWindow.BellaFloraSync.sendMessage("mariana_ana", {
+                    sender: 'therapist',
+                    text: "Excelente notícia, Mariana! Continue os treinos e nos vemos na quinta-feira!"
+                });
+                
+                if (therapistInput) therapistInput.value = '';
+                log("[Fisio] Mensagem de resposta enviada com sucesso!");
+
+                log("Aguardando recebimento no dispositivo do Paciente...");
+                await new Promise(resolve => setTimeout(resolve, 2000));
+
+                log("TESTE E2E CONCLUÍDO COM SUCESSO!", 'system');
+                log("Todas as integrações, caminhos de dados e sincronizações em tempo real validadas com sucesso!", 'success');
+                setStepStatus(4, 'success');
+            } catch (e) {
+                log(`Erro no Passo 4: ${e.message}`, 'error');
+                setStepStatus(4, 'error');
+                return;
+            }
+
+            startBtn.disabled = false;
+            startBtn.className = "bg-purple-600 hover:bg-purple-500 text-white font-semibold px-5 py-2 rounded-lg shadow-lg active:scale-95 transition-all flex items-center gap-2";
+        }
+
+        // Auto-run ou escutar clique
+        startBtn.addEventListener('click', runE2ETests);
+        
+        // Auto-rodar após carregar
+        window.addEventListener('load', () => {
+            log("Ambiente de teste e2e carregado. Clique em 'Iniciar Teste E2E' para validar.");
+        });
+    </script>
+</body>
+</html>

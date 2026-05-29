@@ -1,0 +1,403 @@
+<!DOCTYPE html><html class="light" lang="pt-BR" style=""><head>
+    <!-- Firebase CDN SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <!-- Bella Flora Custom Modules -->
+    <script src="navigation.js" defer></script>
+    <script src="sync.js" defer></script>
+</head>
+<body class="bg-surface text-on-surface pb-24 min-h-screen flex flex-col">```html
+
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Bella Flora Fisio - Profissionais</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface": "#1d1b1f",
+                        "on-primary": "#ffffff",
+                        "surface-container-highest": "#e7e0e6",
+                        "primary-container": "#d8b4f8",
+                        "primary": "#70518d",
+                        "secondary-fixed": "#ffd8e7",
+                        "secondary-fixed-dim": "#e9bacd",
+                        "surface": "#fff7fd",
+                        "tertiary-container": "#c7c76d",
+                        "surface-bright": "#fff7fd",
+                        "on-primary-container": "#60427d",
+                        "background": "#fff7fd",
+                        "surface-container-low": "#f9f1f7",
+                        "outline-variant": "#cdc3cf",
+                        "on-error-container": "#93000a",
+                        "on-background": "#1d1b1f",
+                        "on-primary-fixed-variant": "#573974",
+                        "outline": "#7c747f",
+                        "on-secondary-fixed-variant": "#5f3c4d",
+                        "on-tertiary-fixed": "#1d1d00",
+                        "tertiary": "#616211",
+                        "inverse-on-surface": "#f6eff5",
+                        "primary-fixed-dim": "#dcb8fc",
+                        "error-container": "#ffdad6",
+                        "surface-variant": "#e7e0e6",
+                        "secondary": "#795465",
+                        "on-secondary-fixed": "#2e1221",
+                        "surface-container": "#f3ecf2",
+                        "inverse-primary": "#dcb8fc",
+                        "primary-fixed": "#f0dbff",
+                        "on-secondary-container": "#795465",
+                        "surface-tint": "#70518d",
+                        "on-surface-variant": "#4b454e",
+                        "inverse-surface": "#322f34",
+                        "surface-dim": "#dfd8de",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary-container": "#525300",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-fixed": "#290a45",
+                        "tertiary-fixed": "#e8e78a",
+                        "surface-container-high": "#ede6ec",
+                        "secondary-container": "#fdcde1",
+                        "on-tertiary-fixed-variant": "#494900",
+                        "tertiary-fixed-dim": "#cbcb71",
+                        "error": "#ba1a1a",
+                        "on-error": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-md": "16px",
+                        "stack-sm": "8px",
+                        "inset-card": "16px",
+                        "base": "8px",
+                        "gutter": "16px",
+                        "stack-lg": "24px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "label-lg": ["Manrope"],
+                        "body-lg": ["Manrope"],
+                        "subtitle-lg": ["Manrope"],
+                        "body-md": ["Manrope"],
+                        "title-md": ["Manrope"],
+                        "subtitle-md": ["Manrope"],
+                        "title-lg": ["Manrope"],
+                        "label-md": ["Manrope"]
+                    },
+                    "fontSize": {
+                        "label-lg": ["13px", {"lineHeight": "18px", "fontWeight": "500"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "subtitle-lg": ["20px", {"lineHeight": "28px", "fontWeight": "500"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "title-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "subtitle-md": ["18px", {"lineHeight": "26px", "fontWeight": "500"}],
+                        "title-lg": ["28px", {"lineHeight": "36px", "fontWeight": "600"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "fontWeight": "500"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: #fff7fd; /* surface */
+            color: #1d1b1f; /* on-surface */
+            font-family: 'Manrope', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        .ambient-shadow-lvl1 {
+            box-shadow: 0px 4px 12px rgba(112, 81, 141, 0.08); /* slight primary tint in shadow */
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Hide scrollbar for clean UI but allow scroll */
+        ::-webkit-scrollbar {
+            width: 0px;
+            background: transparent;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-surface-dim docked full-width top-0 sticky z-40 transition-transform duration-200">
+<div class="flex justify-between items-center px-gutter w-full h-16">
+<div class="flex items-center gap-2">
+<button aria-label="Voltar" class="w-10 h-10 -ml-2 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-variant transition-colors" id="reset-button">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<div class="flex items-center gap-2 hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined text-primary text-[28px]" data-icon="spa" style="font-variation-settings: 'FILL' 1;">spa</span>
+<h1 class="font-title-lg text-title-lg text-primary font-extrabold tracking-tight">Bella Flora Fisio</h1>
+</div>
+</div>
+<button aria-label="Notificações" class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 px-margin-mobile md:px-8 max-w-7xl mx-auto w-full pt-stack-md flex flex-col gap-stack-lg">
+<!-- Search Section -->
+<section class="flex flex-col gap-stack-sm">
+<h2 class="font-title-md text-title-md text-on-surface">Nossos Profissionais</h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">Encontre a especialista ideal para o seu cuidado e bem-estar. Nossa equipe está pronta para acolher você.</p>
+<div class="relative mt-stack-sm max-w-xl">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline" data-icon="search">search</span>
+<input class="w-full h-12 pl-12 pr-4 bg-surface-container-lowest border border-outline-variant rounded-xl font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors placeholder:text-outline ambient-shadow-lvl1" id="search-input" placeholder="Buscar por nome ou especialidade..." type="text">
+</div>
+</section>
+<!-- Filter Chips -->
+<section class="flex gap-2 overflow-x-auto pb-2 -mx-margin-mobile px-margin-mobile md:mx-0 md:px-0 scroll-smooth">
+<button class="flex-shrink-0 h-8 px-4 rounded-full bg-primary-container text-on-primary-container font-label-md text-label-md hover:opacity-90 transition-opacity whitespace-nowrap" id="filter-all">Todos</button>
+<button class="flex-shrink-0 h-8 px-4 rounded-full bg-secondary-container/30 text-on-secondary-container border border-secondary-container font-label-md text-label-md hover:bg-secondary-container/50 transition-colors whitespace-nowrap" id="filter-pelvica">Fisioterapia Pélvica</button>
+<button class="flex-shrink-0 h-8 px-4 rounded-full bg-secondary-container/30 text-on-secondary-container border border-secondary-container font-label-md text-label-md hover:bg-secondary-container/50 transition-colors whitespace-nowrap" id="filter-pilates">Pilates Clínico</button>
+<button class="flex-shrink-0 h-8 px-4 rounded-full bg-secondary-container/30 text-on-secondary-container border border-secondary-container font-label-md text-label-md hover:bg-secondary-container/50 transition-colors whitespace-nowrap" id="filter-pos-parto">Pós-Parto</button>
+<button class="flex-shrink-0 h-8 px-4 rounded-full bg-secondary-container/30 text-on-secondary-container border border-secondary-container font-label-md text-label-md hover:bg-secondary-container/50 transition-colors whitespace-nowrap" id="filter-acupuntura">Acupuntura</button>
+</section>
+<!-- Empty State Message (Hidden by default) -->
+<div class="hidden flex-col items-center justify-center py-12 gap-4 text-center" id="empty-state">
+<span class="material-symbols-outlined text-outline text-6xl" data-icon="person_search">person_search</span>
+<div>
+<h3 class="font-subtitle-lg text-subtitle-lg text-on-surface">Nenhum profissional encontrado</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Tente buscar por outro nome ou especialidade.</p>
+</div>
+</div>
+<!-- Professionals Grid -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-stack-md mt-stack-sm pb-stack-lg" id="professionals-grid">
+<!-- Professional Card 1 -->
+<div class="professional-card glass-card rounded-xl p-inset-card ambient-shadow-lvl1 flex flex-col gap-stack-md md:col-span-2 lg:col-span-2 hover:-translate-y-1 transition-transform duration-300" data-name="Ana Costa" data-specialty="pelvica pos-parto">
+<div class="flex flex-row items-start gap-stack-md">
+<img alt="Dra. Ana Costa profile" class="w-20 h-20 md:w-24 md:h-24 rounded-full object-cover border-2 border-primary-container shrink-0" src="assets/img/dra_ana_costa.png">
+<div class="flex-1 flex flex-col justify-center">
+<div class="flex justify-between items-start">
+<h3 class="professional-name font-subtitle-lg text-subtitle-lg text-on-surface">Dra. Ana Costa</h3>
+<div class="flex items-center gap-1 bg-surface-container-high px-2 py-1 rounded-full">
+<span class="material-symbols-outlined text-[14px] text-tertiary" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-md text-label-md text-on-surface-variant">4.9</span>
+</div>
+</div>
+<p class="font-body-md text-body-md text-primary mt-1">Fisioterapia Pélvica &amp; Obstétrica</p>
+<div class="mt-2 flex flex-wrap gap-2">
+<span class="inline-flex h-6 items-center px-2 rounded-full bg-secondary/15 text-secondary font-label-md text-[10px]">Gestantes</span>
+<span class="inline-flex h-6 items-center px-2 rounded-full bg-secondary/15 text-secondary font-label-md text-[10px]">Pós-Parto</span>
+</div>
+</div>
+</div>
+<div class="mt-auto pt-stack-sm border-t border-outline-variant/30 flex justify-between items-center">
+<p class="font-label-md text-label-md text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]" data-icon="schedule">schedule</span>
+                        Próx. disp: Amanhã, 14h
+                    </p>
+<button class="h-10 px-4 rounded-lg bg-primary text-on-primary font-label-lg text-label-lg hover:bg-primary/90 transition-colors flex items-center gap-2">
+                        Ver Perfil
+                        <span class="material-symbols-outlined text-[18px]" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Professional Card 2 -->
+<div class="professional-card glass-card rounded-xl p-inset-card ambient-shadow-lvl1 flex flex-col gap-stack-md hover:-translate-y-1 transition-transform duration-300" data-name="Beatriz Silva" data-specialty="pilates">
+<div class="flex flex-row items-start gap-stack-md">
+<img alt="Dra. Beatriz Silva profile" class="w-20 h-20 md:w-24 md:h-24 rounded-full object-cover border-2 border-primary-container shrink-0" src="assets/img/dra_beatriz_silva.png">
+<div class="flex-1 flex flex-col justify-center">
+<div class="flex justify-between items-start">
+<h3 class="professional-name font-subtitle-lg text-subtitle-lg text-on-surface">Dra. Beatriz Silva</h3>
+<div class="flex items-center gap-1 bg-surface-container-high px-2 py-1 rounded-full">
+<span class="material-symbols-outlined text-[14px] text-tertiary" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-md text-label-md text-on-surface-variant">4.8</span>
+</div>
+</div>
+<p class="font-body-md text-body-md text-primary mt-1">Pilates Clínico</p>
+<div class="mt-2 flex flex-wrap gap-2">
+<span class="inline-flex h-6 items-center px-2 rounded-full bg-secondary/15 text-secondary font-label-md text-[10px]">Postura</span>
+<span class="inline-flex h-6 items-center px-2 rounded-full bg-secondary/15 text-secondary font-label-md text-[10px]">Saúde da Mulher</span>
+</div>
+</div>
+</div>
+<div class="mt-auto pt-stack-sm border-t border-outline-variant/30 flex justify-between items-center">
+<p class="font-label-md text-label-md text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">schedule</span>
+                        Próx. disp: Quarta, 09h
+                    </p>
+<button class="h-10 px-4 rounded-lg bg-primary text-on-primary font-label-lg text-label-lg hover:bg-primary/90 transition-colors flex items-center gap-2">
+                        Ver Perfil
+                        <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Professional Card 3 -->
+<div class="professional-card glass-card rounded-xl p-inset-card ambient-shadow-lvl1 flex flex-col gap-stack-md hover:-translate-y-1 transition-transform duration-300" data-name="Carlos Mendes" data-specialty="osteopatia">
+<div class="flex flex-row items-start gap-stack-md">
+<img alt="Dr. Carlos Mendes profile" class="w-20 h-20 md:w-24 md:h-24 rounded-full object-cover border-2 border-primary-container shrink-0" src="assets/img/dr_carlos_mendes.png">
+<div class="flex-1 flex flex-col justify-center">
+<div class="flex justify-between items-start">
+<h3 class="professional-name font-subtitle-lg text-subtitle-lg text-on-surface">Dr. Carlos Mendes</h3>
+<div class="flex items-center gap-1 bg-surface-container-high px-2 py-1 rounded-full">
+<span class="material-symbols-outlined text-[14px] text-tertiary" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-md text-label-md text-on-surface-variant">4.9</span>
+</div>
+</div>
+<p class="font-body-md text-body-md text-primary mt-1">Osteopatia</p>
+<div class="mt-2 flex flex-wrap gap-2">
+<span class="inline-flex h-6 items-center px-2 rounded-full bg-secondary/15 text-secondary font-label-md text-[10px]">Dores Crônicas</span>
+<span class="inline-flex h-6 items-center px-2 rounded-full bg-secondary/15 text-secondary font-label-md text-[10px]">Pélvica</span>
+</div>
+</div>
+</div>
+<div class="mt-auto pt-stack-sm border-t border-outline-variant/30 flex justify-between items-center">
+<p class="font-label-md text-label-md text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">schedule</span>
+                        Próx. disp: Hoje, 17h
+                    </p>
+<button class="h-10 px-4 rounded-lg bg-primary text-on-primary font-label-lg text-label-lg hover:bg-primary/90 transition-colors flex items-center gap-2">
+                        Ver Perfil
+                        <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Professional Card 4 -->
+<div class="professional-card glass-card rounded-xl p-inset-card ambient-shadow-lvl1 flex flex-col gap-stack-md hover:-translate-y-1 transition-transform duration-300" data-name="Laura Nogueira" data-specialty="acupuntura">
+<div class="flex flex-row items-start gap-stack-md">
+<img alt="Dra. Laura Nogueira profile" class="w-20 h-20 md:w-24 md:h-24 rounded-full object-cover border-2 border-primary-container shrink-0" src="assets/img/dra_laura_nogueira.png">
+<div class="flex-1 flex flex-col justify-center">
+<div class="flex justify-between items-start">
+<h3 class="professional-name font-subtitle-lg text-subtitle-lg text-on-surface">Dra. Laura Nogueira</h3>
+<div class="flex items-center gap-1 bg-surface-container-high px-2 py-1 rounded-full">
+<span class="material-symbols-outlined text-[14px] text-tertiary" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-md text-label-md text-on-surface-variant">5.0</span>
+</div>
+</div>
+<p class="font-body-md text-body-md text-primary mt-1">Acupuntura</p>
+<div class="mt-2 flex flex-wrap gap-2">
+<span class="inline-flex h-6 items-center px-2 rounded-full bg-secondary/15 text-secondary font-label-md text-[10px]">Bem-estar</span>
+<span class="inline-flex h-6 items-center px-2 rounded-full bg-secondary/15 text-secondary font-label-md text-[10px]">Equilíbrio</span>
+</div>
+</div>
+</div>
+<div class="mt-auto pt-stack-sm border-t border-outline-variant/30 flex justify-between items-center">
+<p class="font-label-md text-label-md text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">schedule</span>
+                        Próx. disp: Amanhã, 10h
+                    </p>
+<button class="h-10 px-4 rounded-lg bg-primary text-on-primary font-label-lg text-label-lg hover:bg-primary/90 transition-colors flex items-center gap-2">
+                        Ver Perfil
+                        <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="bg-surface h-[80px] fixed bottom-0 w-full z-50 shadow-lg border-t border-outline-variant/10 flex justify-around items-center px-4 pb-safe md:hidden">
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-secondary-container/30 rounded-2xl px-4 py-1 active:scale-95 transition-transform">
+<span class="material-symbols-outlined mb-1">home</span>
+<span class="font-label-md text-[10px]">Início</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-secondary-container/30 rounded-2xl px-4 py-1 active:scale-95 transition-transform">
+<span class="material-symbols-outlined mb-1">medical_services</span>
+<span class="font-label-md text-[10px]">Tratamento</span>
+</button>
+<button class="flex flex-col items-center justify-center transition-transform active:scale-95">
+<div class="bg-primary-container text-on-primary-container rounded-full px-5 py-1 mb-1">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person_search</span>
+</div>
+<span class="font-label-md text-[10px] text-on-surface">Profissional</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-secondary-container/30 rounded-2xl px-4 py-1 active:scale-95 transition-transform">
+<span class="material-symbols-outlined mb-1">person</span>
+<span class="font-label-md text-[10px]">Perfil</span>
+</button>
+</nav>
+<script>
+  const searchInput = document.getElementById('search-input');
+  const resetButton = document.getElementById('reset-button');
+  const professionalCards = document.querySelectorAll('.professional-card');
+  const filterButtons = document.querySelectorAll('section.flex.gap-2.overflow-x-auto button');
+  const emptyState = document.getElementById('empty-state');
+  let currentFilter = 'all';
+
+  function filterProfessionals() {
+    const query = searchInput.value.toLowerCase().trim();
+    let visibleCount = 0;
+
+    professionalCards.forEach(card => {
+      const name = card.getAttribute('data-name').toLowerCase();
+      const specialtyAttr = card.getAttribute('data-specialty').toLowerCase();
+      
+      const matchesSearch = name.includes(query);
+      const matchesCategory = currentFilter === 'all' || specialtyAttr.includes(currentFilter);
+
+      if (matchesSearch && matchesCategory) {
+        card.style.display = 'flex';
+        visibleCount++;
+      } else {
+        card.style.display = 'none';
+      }
+    });
+
+    if (visibleCount === 0) {
+      emptyState.classList.remove('hidden');
+      emptyState.classList.add('flex');
+    } else {
+      emptyState.classList.add('hidden');
+      emptyState.classList.remove('flex');
+    }
+  }
+
+  // Search input event
+  searchInput.addEventListener('input', filterProfessionals);
+
+  // Reset button logic
+  resetButton.addEventListener('click', () => {
+    searchInput.value = '';
+    currentFilter = 'all';
+    
+    // Reset category buttons
+    filterButtons.forEach(btn => {
+      btn.classList.remove('bg-primary-container', 'text-on-primary-container');
+      btn.classList.add('bg-secondary-container/30', 'text-on-secondary-container', 'border', 'border-secondary-container');
+    });
+    document.getElementById('filter-all').classList.add('bg-primary-container', 'text-on-primary-container');
+    document.getElementById('filter-all').classList.remove('bg-secondary-container/30', 'text-on-secondary-container', 'border', 'border-secondary-container');
+
+    filterProfessionals();
+    searchInput.focus();
+  });
+
+  // Filter chips logic
+  filterButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      currentFilter = button.id.replace('filter-', '');
+
+      // Update button styles
+      filterButtons.forEach(btn => {
+        btn.classList.remove('bg-primary-container', 'text-on-primary-container');
+        btn.classList.add('bg-secondary-container/30', 'text-on-secondary-container', 'border', 'border-secondary-container');
+      });
+      button.classList.add('bg-primary-container', 'text-on-primary-container');
+      button.classList.remove('bg-secondary-container/30', 'text-on-secondary-container', 'border', 'border-secondary-container');
+
+      filterProfessionals();
+    });
+  });
+</script>
+
+```</body></html>

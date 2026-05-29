@@ -1,0 +1,297 @@
+<!DOCTYPE html><html lang="pt-BR" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Agenda da Dra. Ana Costa - Bella Flora Fisio</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-fixed": "#f0dbff",
+                    "surface-variant": "#e7e0e6",
+                    "primary": "#70518d",
+                    "on-secondary-fixed": "#2e1221",
+                    "surface-container": "#f3ecf2",
+                    "secondary-fixed": "#ffd8e7",
+                    "on-secondary-container": "#795465",
+                    "inverse-surface": "#322f34",
+                    "tertiary-fixed": "#e8e78a",
+                    "outline": "#7c747f",
+                    "on-primary-fixed": "#290a45",
+                    "primary-container": "#d8b4f8",
+                    "surface-container-high": "#ede6ec",
+                    "secondary-fixed-dim": "#e9bacd",
+                    "tertiary-container": "#c7c76d",
+                    "surface-tint": "#70518d",
+                    "error": "#ba1a1a",
+                    "surface-container-low": "#f9f1f7",
+                    "surface": "#fff7fd",
+                    "on-tertiary-fixed-variant": "#494900",
+                    "background": "#fff7fd",
+                    "on-primary-container": "#60427d",
+                    "surface-bright": "#fff7fd",
+                    "primary-fixed-dim": "#dcb8fc",
+                    "on-surface-variant": "#4b454e",
+                    "on-error": "#ffffff",
+                    "on-background": "#1d1b1f",
+                    "on-error-container": "#93000a",
+                    "on-tertiary-fixed": "#1d1d00",
+                    "tertiary": "#616211",
+                    "secondary-container": "#fdcde1",
+                    "on-secondary": "#ffffff",
+                    "surface-dim": "#dfd8de",
+                    "on-primary-fixed-variant": "#573974",
+                    "on-surface": "#1d1b1f",
+                    "error-container": "#ffdad6",
+                    "on-tertiary": "#ffffff",
+                    "on-secondary-fixed-variant": "#5f3c4d",
+                    "on-primary": "#ffffff",
+                    "secondary": "#795465",
+                    "outline-variant": "#cdc3cf",
+                    "inverse-primary": "#dcb8fc",
+                    "surface-container-highest": "#e7e0e6",
+                    "on-tertiary-container": "#525300",
+                    "inverse-on-surface": "#f6eff5",
+                    "surface-container-lowest": "#ffffff",
+                    "tertiary-fixed-dim": "#cbcb71"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack-sm": "8px",
+                    "margin-mobile": "16px",
+                    "inset-card": "16px",
+                    "stack-lg": "24px",
+                    "base": "8px",
+                    "stack-md": "16px",
+                    "gutter": "16px"
+            },
+            "fontFamily": {
+                    "title-lg": ["Manrope"],
+                    "label-md": ["Manrope"],
+                    "title-md": ["Manrope"],
+                    "subtitle-lg": ["Manrope"],
+                    "label-lg": ["Manrope"],
+                    "subtitle-md": ["Manrope"],
+                    "body-lg": ["Manrope"],
+                    "body-md": ["Manrope"]
+            },
+            "fontSize": {
+                    "title-lg": ["28px", {"lineHeight": "36px", "fontWeight": "600"}],
+                    "label-md": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "title-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "subtitle-lg": ["20px", {"lineHeight": "28px", "fontWeight": "500"}],
+                    "label-lg": ["13px", {"lineHeight": "18px", "fontWeight": "500"}],
+                    "subtitle-md": ["18px", {"lineHeight": "26px", "fontWeight": "500"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            font-family: 'Manrope', sans-serif;
+            background-color: #fff7fd;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+        }
+        .day-active {
+            background-color: #70518d;
+            color: #ffffff;
+            border-radius: 9999px;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+
+    <!-- Firebase CDN SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <!-- Bella Flora Custom Modules -->
+    <script src="navigation.js" defer></script>
+    <script src="sync.js" defer></script>
+</head>
+
+<body class="bg-background text-on-background min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 flex items-center justify-between px-margin-mobile h-14 bg-surface dark:bg-background">
+<div class="flex items-center gap-4">
+<button class="transition-opacity duration-200 active:scale-95 hover:opacity-80 text-primary">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="font-title-md text-[20px] font-bold text-primary">Agenda da Dra. Ana Costa</h1>
+</div>
+<button class="transition-opacity duration-200 active:scale-95 hover:opacity-80 text-primary">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</header>
+<main class="pt-20 px-margin-mobile max-w-2xl mx-auto">
+<!-- Professional Intro Card -->
+<section class="mb-stack-lg animate-in fade-in slide-in-from-bottom-4 duration-700">
+<div class="flex items-center gap-4 bg-white p-inset-card rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.08)]">
+<div class="w-16 h-16 rounded-full overflow-hidden border-2 border-primary-container shrink-0">
+<img class="w-full h-full object-cover" data-alt="A professional close-up portrait of Dra. Ana Costa, a physical therapist with a warm and inviting expression. She is wearing a clean white lab coat in a bright, modern clinic with soft lavender accents and natural light streaming in. The image has a high-key, minimalist aesthetic that feels reliable, clinical yet supportive and tranquil." src="assets/img/dra_ana_costa.png">
+</div>
+<div>
+<h2 class="font-subtitle-md text-subtitle-md text-primary font-bold">Dra. Ana Costa</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Especialista em Fisioterapia Pélvica</p>
+<div class="flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-[16px] text-tertiary">star</span>
+<span class="font-label-lg text-label-lg text-on-surface-variant">4.9 (124 avaliações)</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Calendar Section -->
+<section class="bg-white p-inset-card rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.08)] mb-stack-lg">
+<div class="flex items-center justify-between mb-stack-md">
+<h3 class="font-subtitle-md text-subtitle-md font-bold text-on-surface">Outubro 2023</h3>
+<div class="flex gap-2">
+<button class="p-2 hover:bg-surface-container rounded-full transition-colors text-primary">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="p-2 hover:bg-surface-container rounded-full transition-colors text-primary">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+<div class="calendar-grid mb-2">
+<div class="text-center font-label-md text-on-surface-variant py-2">Dom</div>
+<div class="text-center font-label-md text-on-surface-variant py-2">Seg</div>
+<div class="text-center font-label-md text-on-surface-variant py-2">Ter</div>
+<div class="text-center font-label-md text-on-surface-variant py-2">Qua</div>
+<div class="text-center font-label-md text-on-surface-variant py-2">Qui</div>
+<div class="text-center font-label-md text-on-surface-variant py-2">Sex</div>
+<div class="text-center font-label-md text-on-surface-variant py-2">Sáb</div>
+</div>
+<div class="calendar-grid gap-y-1">
+<!-- Simple static calendar generation for visual representation -->
+<div class="text-center py-3 text-outline-variant font-body-md">24</div>
+<div class="text-center py-3 text-outline-variant font-body-md">25</div>
+<div class="text-center py-3 text-outline-variant font-body-md">26</div>
+<div class="text-center py-3 text-outline-variant font-body-md">27</div>
+<div class="text-center py-3 text-outline-variant font-body-md">28</div>
+<div class="text-center py-3 text-outline-variant font-body-md">29</div>
+<div class="text-center py-3 text-outline-variant font-body-md">30</div>
+<div class="text-center py-3 font-body-md hover:bg-primary-container/20 rounded-full cursor-pointer transition-colors">1</div>
+<div class="text-center py-3 font-body-md hover:bg-primary-container/20 rounded-full cursor-pointer transition-colors">2</div>
+<div class="text-center py-3 font-body-md hover:bg-primary-container/20 rounded-full cursor-pointer transition-colors">3</div>
+<div class="text-center py-3 font-body-md hover:bg-primary-container/20 rounded-full cursor-pointer transition-colors">4</div>
+<div class="text-center py-3 font-body-md hover:bg-primary-container/20 rounded-full cursor-pointer transition-colors">5</div>
+<div class="text-center py-3 font-body-md hover:bg-primary-container/20 rounded-full cursor-pointer transition-colors">6</div>
+<div class="text-center py-3 font-body-md hover:bg-primary-container/20 rounded-full cursor-pointer transition-colors">7</div>
+<div class="text-center py-3 font-body-md hover:bg-primary-container/20 rounded-full cursor-pointer transition-colors">8</div>
+<div class="text-center py-3 font-body-md hover:bg-primary-container/20 rounded-full cursor-pointer transition-colors">9</div>
+<div class="text-center py-3 font-body-md day-active font-bold shadow-md">10</div>
+<div class="text-center py-3 font-body-md hover:bg-primary-container/20 rounded-full cursor-pointer transition-colors">11</div>
+<div class="text-center py-3 font-body-md hover:bg-primary-container/20 rounded-full cursor-pointer transition-colors">12</div>
+<div class="text-center py-3 font-body-md hover:bg-primary-container/20 rounded-full cursor-pointer transition-colors">13</div>
+<div class="text-center py-3 font-body-md hover:bg-primary-container/20 rounded-full cursor-pointer transition-colors">14</div>
+</div>
+</section>
+<!-- Time Slots Section -->
+<section class="animate-in fade-in slide-in-from-bottom-4 duration-1000">
+<h3 class="font-subtitle-md text-subtitle-md font-bold text-primary mb-stack-md">Horários Disponíveis</h3>
+<div class="grid grid-cols-3 gap-3">
+<button class="h-12 border-1.5 border-outline-variant bg-white rounded-xl font-label-lg text-primary flex items-center justify-center transition-all active:scale-95 hover:border-primary">08:00</button>
+<button class="h-12 border-1.5 border-primary bg-primary text-white rounded-xl font-label-lg flex items-center justify-center shadow-sm">09:00</button>
+<button class="h-12 border-1.5 border-outline-variant bg-white rounded-xl font-label-lg text-primary flex items-center justify-center transition-all active:scale-95 hover:border-primary">10:00</button>
+<button class="h-12 border-1.5 border-outline-variant bg-white rounded-xl font-label-lg text-primary flex items-center justify-center transition-all active:scale-95 hover:border-primary">14:00</button>
+<button class="h-12 border-1.5 border-outline-variant bg-white rounded-xl font-label-lg text-primary flex items-center justify-center transition-all active:scale-95 hover:border-primary">15:00</button>
+<button class="h-12 border-1.5 border-outline-variant bg-white rounded-xl font-label-lg text-primary flex items-center justify-center transition-all active:scale-95 hover:border-primary">16:00</button>
+</div>
+</section><section class="grid grid-cols-2 gap-4 mt-stack-lg">
+<div class="bg-secondary-container bg-opacity-30 p-4 rounded-xl">
+<span class="material-symbols-outlined text-secondary mb-2">spa</span>
+<p class="font-label-lg text-label-lg text-secondary">Sessão Individual</p>
+<p class="font-body-md text-body-md text-on-surface-variant">50 minutos</p>
+</div>
+<div class="bg-tertiary-container bg-opacity-30 p-4 rounded-xl">
+<span class="material-symbols-outlined text-tertiary mb-2">payments</span>
+<p class="font-label-lg text-label-lg text-on-tertiary-container">Investimento</p>
+<p class="font-body-md text-body-md text-on-surface-variant">R$ 180,00</p>
+</div>
+</section>
+<!-- Confirmation Note -->
+<p class="mt-stack-lg text-center font-body-md text-on-surface-variant px-4">
+            O agendamento será confirmado imediatamente e você receberá uma notificação.
+        </p>
+</main>
+<!-- Bottom Actions Container -->
+<div class="fixed bottom-20 left-0 w-full px-margin-mobile flex justify-center z-40">
+<button class="w-full max-w-md h-[52px] bg-primary text-white rounded-xl font-subtitle-md font-bold shadow-lg transition-transform active:scale-95 hover:opacity-90">
+            Confirmar Agendamento
+        </button>
+</div>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 py-3 pb-safe bg-surface dark:bg-surface-container-low shadow-[0px_-4px_12px_rgba(0,0,0,0.08)] rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-4 py-1 hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-colors active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-md text-label-md">Início</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-4 py-1 hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-colors active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="medical_services">medical_services</span>
+<span class="font-label-md text-label-md">Tratamento</span>
+</a>
+<!-- Active Tab: Profissional -->
+<a class="flex flex-col items-center justify-center rounded-full px-4 py-1 active:scale-95 transition-transform duration-150 bg-primary text-on-primary" href="#">
+<span class="material-symbols-outlined" data-icon="person_search" style="font-variation-settings: 'FILL' 1;">person_search</span>
+<span class="font-label-md text-label-md">Profissional</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-4 py-1 hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-colors active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+<span class="font-label-md text-label-md">Perfil</span>
+</a>
+</nav>
+<script>
+        // Simple Interaction logic for time slots
+        const timeSlots = document.querySelectorAll('section div.grid button');
+        timeSlots.forEach(slot => {
+            slot.addEventListener('click', () => {
+                timeSlots.forEach(s => {
+                    s.classList.remove('bg-primary', 'text-white', 'border-primary');
+                    s.classList.add('bg-white', 'text-primary', 'border-outline-variant');
+                });
+                slot.classList.remove('bg-white', 'text-primary', 'border-outline-variant');
+                slot.classList.add('bg-primary', 'text-white', 'border-primary', 'shadow-sm');
+            });
+        });
+
+        // Simple Day Selection logic
+        const days = document.querySelectorAll('.calendar-grid .cursor-pointer, .day-active');
+        days.forEach(day => {
+            day.addEventListener('click', () => {
+                days.forEach(d => {
+                    d.classList.remove('day-active', 'font-bold', 'shadow-md');
+                    d.classList.add('hover:bg-primary-container/20', 'cursor-pointer');
+                });
+                day.classList.add('day-active', 'font-bold', 'shadow-md');
+                day.classList.remove('hover:bg-primary-container/20');
+            });
+        });
+    </script>
+
+
+</body></html>

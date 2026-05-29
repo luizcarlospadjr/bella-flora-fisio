@@ -1,0 +1,270 @@
+<!DOCTYPE html><html lang="pt-BR"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-dim": "#dfd8de",
+                        "on-surface-variant": "#4b454e",
+                        "secondary": "#795465",
+                        "on-primary-fixed": "#290a45",
+                        "surface-bright": "#fff7fd",
+                        "surface-container-low": "#f9f1f7",
+                        "on-error-container": "#93000a",
+                        "error-container": "#ffdad6",
+                        "primary-fixed-dim": "#dcb8fc",
+                        "surface-variant": "#e7e0e6",
+                        "secondary-fixed": "#ffd8e7",
+                        "on-primary-container": "#60427d",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-high": "#ede6ec",
+                        "on-primary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "primary-fixed": "#f0dbff",
+                        "outline-variant": "#cdc3cf",
+                        "surface-container": "#f3ecf2",
+                        "secondary-fixed-dim": "#e9bacd",
+                        "secondary-container": "#fdcde1",
+                        "on-primary-fixed-variant": "#573974",
+                        "background": "#fff7fd",
+                        "tertiary-container": "#c7c76d",
+                        "on-background": "#1d1b1f",
+                        "tertiary-fixed-dim": "#cbcb71",
+                        "on-error": "#ffffff",
+                        "on-tertiary-container": "#525300",
+                        "outline": "#7c747f",
+                        "on-tertiary-fixed": "#1d1d00",
+                        "tertiary": "#616211",
+                        "on-tertiary-fixed-variant": "#494900",
+                        "tertiary-fixed": "#e8e78a",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-container": "#795465",
+                        "on-secondary-fixed": "#2e1221",
+                        "inverse-surface": "#322f34",
+                        "inverse-on-surface": "#f6eff5",
+                        "surface-container-highest": "#e7e0e6",
+                        "surface-tint": "#70518d",
+                        "on-secondary-fixed-variant": "#5f3c4d",
+                        "inverse-primary": "#dcb8fc",
+                        "on-secondary": "#ffffff",
+                        "primary": "#70518d",
+                        "primary-container": "#d8b4f8",
+                        "surface": "#fff7fd",
+                        "on-surface": "#1d1b1f"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "stack-md": "16px",
+                        "stack-lg": "24px",
+                        "margin-mobile": "16px",
+                        "base": "8px",
+                        "inset-card": "16px",
+                        "stack-sm": "8px"
+                    },
+                    "fontFamily": {
+                        "subtitle-lg": ["Manrope"],
+                        "title-lg": ["Manrope"],
+                        "label-md": ["Manrope"],
+                        "title-md": ["Manrope"],
+                        "body-lg": ["Manrope"],
+                        "subtitle-md": ["Manrope"],
+                        "label-lg": ["Manrope"],
+                        "body-md": ["Manrope"]
+                    },
+                    "fontSize": {
+                        "subtitle-lg": ["20px", {"lineHeight": "28px", "fontWeight": "500"}],
+                        "title-lg": ["28px", {"lineHeight": "36px", "fontWeight": "600"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                        "title-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "subtitle-md": ["18px", {"lineHeight": "26px", "fontWeight": "500"}],
+                        "label-lg": ["13px", {"lineHeight": "18px", "fontWeight": "500"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #fff7fd;
+            font-family: 'Manrope', sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .message-bubble-in {
+            border-radius: 16px 16px 16px 4px;
+        }
+        .message-bubble-out {
+            border-radius: 16px 16px 4px 16px;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  
+    <!-- Firebase CDN SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <!-- Bella Flora Custom Modules -->
+    <script src="navigation.js" defer></script>
+    <script src="sync.js" defer></script>
+</head>
+
+<body class="bg-background text-on-background">
+<!-- TopAppBar -->
+<header class="h-[64px] w-full top-0 sticky z-50 bg-surface shadow-[0px_4px_12px_rgba(0,0,0,0.08)] flex items-center justify-between px-gutter">
+<div class="flex items-center gap-3">
+<button class="w-10 h-10 flex items-center justify-center text-primary hover:bg-primary-container/20 transition-colors active:scale-95 duration-200 rounded-full">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary/10">
+<img alt="Mariana Silva" class="w-full h-full object-cover" data-alt="A professional close-up portrait of a young woman with a kind expression, representing a patient named Mariana Silva. The lighting is soft and natural, emphasizing a calm and healing atmosphere. She is set against a clean, minimalist background with soft pastel tones of lavender and white, consistent with a high-end physical therapy clinic's visual identity." src="assets/img/mariana_silva.png">
+</div>
+<div>
+<h1 class="font-title-md text-label-lg text-on-surface leading-tight">Mariana Silva</h1>
+<p class="font-label-md text-label-md text-secondary">Online há 5 min</p>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-1">
+<span id="latest-pain-level" class="bg-error/15 text-error px-2 py-0.5 rounded-full font-label-md text-label-md border border-error/20 mr-2">Dor: --/10</span>
+<button class="w-10 h-10 flex items-center justify-center text-primary hover:bg-primary-container/20 transition-colors active:scale-95 duration-200 rounded-full" title="Ver Prontuário">
+<span class="material-symbols-outlined" data-icon="clinical_notes">clinical_notes</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center text-primary hover:bg-primary-container/20 transition-colors active:scale-95 duration-200 rounded-full">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</header>
+<!-- Chat Canvas -->
+<main class="flex-1 overflow-y-auto px-4 py-6 space-y-6 flex flex-col">
+<!-- Date Divider -->
+<div class="flex justify-center">
+<span class="bg-surface-container-high px-4 py-1 rounded-full text-on-surface-variant font-label-md text-[10px] uppercase tracking-wider">Hoje</span>
+</div>
+<!-- Message In -->
+<div class="flex flex-col items-start max-w-[85%] self-start">
+<div class="bg-surface-container-highest text-on-surface p-4 message-bubble-in shadow-sm">
+<p class="font-body-md text-body-md">Olá, Dra. Bella! Fiz os exercícios de alongamento que você passou ontem, mas senti uma leve pontada na lombar ao levantar da cadeira hoje de manhã. É normal?</p>
+</div>
+<span class="mt-1 font-label-md text-[10px] text-on-surface-variant/70 ml-1">09:12</span>
+</div>
+<!-- Message Out -->
+<div class="flex flex-col items-end max-w-[85%] self-end">
+<div class="bg-primary-container text-on-primary-container p-4 message-bubble-out shadow-sm">
+<p class="font-body-md text-body-md">Bom dia, Mariana! Entendi. Essa pontada pode acontecer se o movimento foi muito brusco. Você sentiu dor durante a execução dos exercícios ou só ao levantar agora cedo?</p>
+</div>
+<div class="flex items-center gap-1 mt-1 mr-1">
+<span class="font-label-md text-[10px] text-on-surface-variant/70">09:15</span>
+<span class="material-symbols-outlined text-[12px] text-primary" data-icon="done_all">done_all</span>
+</div>
+</div>
+<!-- Message In -->
+<div class="flex flex-col items-start max-w-[85%] self-start">
+<div class="bg-surface-container-highest text-on-surface p-4 message-bubble-in shadow-sm">
+<p class="font-body-md text-body-md">Foi só ao levantar. Durante os exercícios foi tudo bem tranquilo, segui os limites que conversamos.</p>
+</div>
+<span class="mt-1 font-label-md text-[10px] text-on-surface-variant/70 ml-1">09:17</span>
+</div>
+<!-- System Alert / Card -->
+<div class="bg-secondary-container/20 border border-secondary/10 p-4 rounded-2xl flex items-start gap-3">
+<span class="material-symbols-outlined text-secondary" data-icon="event_note">event_note</span>
+<div class="flex-1">
+<h4 class="font-subtitle-md text-label-lg text-secondary">Próxima Sessão</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">Amanhã, 14 de Outubro às 15:30</p>
+<button class="mt-3 text-secondary font-label-lg flex items-center gap-1">
+                    Gerenciar agendamento <span class="material-symbols-outlined text-[16px]" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</main>
+<!-- Quick Replies & Input Area -->
+<section class="bg-surface-container-lowest p-gutter space-y-4 pb-[88px] shadow-[0px_-4px_12px_rgba(0,0,0,0.03)]">
+<!-- Quick Replies -->
+<div class="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+<button class="flex-none px-4 py-2 bg-surface-container-high text-on-surface-variant font-label-lg rounded-full border border-outline-variant/30 hover:bg-primary-container/20 transition-colors whitespace-nowrap">
+                Pode continuar
+            </button>
+<button class="flex-none px-4 py-2 bg-surface-container-high text-on-surface-variant font-label-lg rounded-full border border-outline-variant/30 hover:bg-primary-container/20 transition-colors whitespace-nowrap">
+                Reduza a carga
+            </button>
+<button class="flex-none px-4 py-2 bg-surface-container-high text-on-surface-variant font-label-lg rounded-full border border-outline-variant/30 hover:bg-primary-container/20 transition-colors whitespace-nowrap">
+                Aplique gelo
+            </button>
+<button class="flex-none px-4 py-2 bg-surface-container-high text-on-surface-variant font-label-lg rounded-full border border-outline-variant/30 hover:bg-primary-container/20 transition-colors whitespace-nowrap">
+                Envie um vídeo
+            </button>
+</div>
+<!-- Input Bar -->
+<div class="flex items-center gap-2">
+<button class="w-12 h-12 flex items-center justify-center text-primary rounded-full bg-primary/5 hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+</button>
+<div class="flex-1 h-[52px] relative flex items-center">
+<input class="w-full h-full bg-surface-container-low border-none rounded-2xl px-5 text-on-surface placeholder:text-on-surface-variant/50 focus:ring-2 focus:ring-primary/20" placeholder="Escreva sua mensagem..." type="text">
+<button class="absolute right-3 w-10 h-10 flex items-center justify-center text-primary hover:bg-primary/10 transition-colors rounded-full">
+<span class="material-symbols-outlined" data-icon="mic">mic</span>
+</button>
+</div>
+<button class="w-[52px] h-[52px] flex items-center justify-center bg-primary text-on-primary rounded-2xl shadow-lg active:scale-95 transition-transform">
+<span class="material-symbols-outlined" data-icon="send" style="font-variation-settings: &quot;FILL&quot; 1;">send</span>
+</button>
+</div>
+</section>
+<!-- BottomNavBar -->
+<nav class="h-[72px] fixed bottom-0 w-full z-50 bg-surface dark:bg-inverse-surface shadow-[0px_-2px_10px_rgba(0,0,0,0.05)] flex justify-around items-center px-4 pb-safe">
+<!-- Home -->
+<button class="flex flex-col items-center justify-center text-secondary hover:bg-secondary-container/30 transition-colors w-16 h-full">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-lg text-label-lg">Home</span>
+</button>
+<!-- Schedule -->
+<button class="flex flex-col items-center justify-center text-secondary hover:bg-secondary-container/30 transition-colors w-16 h-full">
+<span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
+<span class="font-label-lg text-label-lg">Schedule</span>
+</button>
+<!-- Patients (Active) -->
+<button class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-2xl px-4 py-1 transition-transform active:scale-95">
+<span class="material-symbols-outlined" data-icon="groups" style="font-variation-settings: &quot;FILL&quot; 1;">groups</span>
+<span class="font-label-lg text-label-lg">Paciente</span>
+</button>
+<!-- Profile -->
+<button class="flex flex-col items-center justify-center text-secondary hover:bg-secondary-container/30 transition-colors w-16 h-full">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-lg text-label-lg">Profile</span>
+</button>
+</nav>
+<style>
+        /* Custom scrollbar for quick replies */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+
+
+</body></html>

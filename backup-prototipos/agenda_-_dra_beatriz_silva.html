@@ -1,0 +1,297 @@
+<!DOCTYPE html><html class="light" lang="pt-BR"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport">
+<title>Agenda - Dra. Beatriz Silva</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-fixed": "#f0dbff",
+                    "surface-variant": "#e7e0e6",
+                    "primary": "#70518d",
+                    "on-secondary-fixed": "#2e1221",
+                    "surface-container": "#f3ecf2",
+                    "secondary-fixed": "#ffd8e7",
+                    "on-secondary-container": "#795465",
+                    "inverse-surface": "#322f34",
+                    "tertiary-fixed": "#e8e78a",
+                    "outline": "#7c747f",
+                    "on-primary-fixed": "#290a45",
+                    "primary-container": "#d8b4f8",
+                    "surface-container-high": "#ede6ec",
+                    "secondary-fixed-dim": "#e9bacd",
+                    "tertiary-container": "#c7c76d",
+                    "surface-tint": "#70518d",
+                    "error": "#ba1a1a",
+                    "surface-container-low": "#f9f1f7",
+                    "surface": "#fff7fd",
+                    "on-tertiary-fixed-variant": "#494900",
+                    "background": "#fff7fd",
+                    "on-primary-container": "#60427d",
+                    "surface-bright": "#fff7fd",
+                    "primary-fixed-dim": "#dcb8fc",
+                    "on-surface-variant": "#4b454e",
+                    "on-error": "#ffffff",
+                    "on-background": "#1d1b1f",
+                    "on-error-container": "#93000a",
+                    "on-tertiary-fixed": "#1d1d00",
+                    "tertiary": "#616211",
+                    "secondary-container": "#fdcde1",
+                    "on-secondary": "#ffffff",
+                    "surface-dim": "#dfd8de",
+                    "on-primary-fixed-variant": "#573974",
+                    "on-surface": "#1d1b1f",
+                    "error-container": "#ffdad6",
+                    "on-tertiary": "#ffffff",
+                    "on-secondary-fixed-variant": "#5f3c4d",
+                    "on-primary": "#ffffff",
+                    "secondary": "#795465",
+                    "outline-variant": "#cdc3cf",
+                    "inverse-primary": "#dcb8fc",
+                    "surface-container-highest": "#e7e0e6",
+                    "on-tertiary-container": "#525300",
+                    "inverse-on-surface": "#f6eff5",
+                    "surface-container-lowest": "#ffffff",
+                    "tertiary-fixed-dim": "#cbcb71"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack-sm": "8px",
+                    "margin-mobile": "16px",
+                    "inset-card": "16px",
+                    "stack-lg": "24px",
+                    "base": "8px",
+                    "stack-md": "16px",
+                    "gutter": "16px"
+            },
+            "fontFamily": {
+                    "title-lg": ["Manrope"],
+                    "label-md": ["Manrope"],
+                    "title-md": ["Manrope"],
+                    "subtitle-lg": ["Manrope"],
+                    "label-lg": ["Manrope"],
+                    "subtitle-md": ["Manrope"],
+                    "body-lg": ["Manrope"],
+                    "body-md": ["Manrope"]
+            },
+            "fontSize": {
+                    "title-lg": ["28px", {"lineHeight": "36px", "fontWeight": "600"}],
+                    "label-md": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "title-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "subtitle-lg": ["20px", {"lineHeight": "28px", "fontWeight": "500"}],
+                    "label-lg": ["13px", {"lineHeight": "18px", "fontWeight": "500"}],
+                    "subtitle-md": ["18px", {"lineHeight": "26px", "fontWeight": "500"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Manrope', sans-serif; -webkit-tap-highlight-color: transparent; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+
+    <!-- Firebase CDN SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <!-- Bella Flora Custom Modules -->
+    <script src="navigation.js" defer></script>
+    <script src="sync.js" defer></script>
+</head>
+
+<body class="bg-surface text-on-surface min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 flex items-center justify-between px-margin-mobile h-14 w-full bg-surface dark:bg-background">
+<div class="flex items-center gap-4">
+<button class="transition-opacity duration-200 active:scale-95 hover:opacity-80">
+<span class="material-symbols-outlined text-primary">arrow_back</span>
+</button>
+<h1 class="font-title-md text-title-md text-primary truncate max-w-[200px]">Agenda da Dra. Beatriz Silva</h1>
+</div>
+<div class="flex items-center">
+<button class="transition-opacity duration-200 active:scale-95 hover:opacity-80">
+<span class="material-symbols-outlined text-primary">notifications</span>
+</button>
+</div>
+</header>
+<main class="pt-20 px-margin-mobile">
+<!-- Professional Bio Card -->
+<section class="mb-stack-lg animate-in fade-in slide-in-from-bottom-4 duration-700">
+<div class="bg-surface-container-lowest rounded-xl p-inset-card shadow-[0px_4px_12px_rgba(0,0,0,0.08)] flex items-center gap-4">
+<div class="w-20 h-20 rounded-full overflow-hidden border-2 border-primary-container shrink-0">
+<img class="w-full h-full object-cover" data-alt="A professional portrait of a female physiotherapist with dark hair tied back, wearing a clean white clinical coat. She is smiling warmly in a bright, modern clinic environment featuring soft lavender accents and botanical plants in the background. The lighting is natural and airy, emphasizing a welcoming and professional atmosphere for a wellness recovery center." src="assets/img/dra_beatriz_silva.png">
+</div>
+<div>
+<h2 class="font-subtitle-lg text-subtitle-lg text-primary">Dra. Beatriz Silva</h2>
+<p class="font-label-lg text-label-lg text-on-surface-variant">Especialista em Pilates Clínico</p>
+<div class="flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-[16px] text-tertiary" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-md text-label-md text-on-surface-variant">4.9 (128 avaliações)</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Calendar Selection -->
+<section class="mb-stack-lg">
+<div class="flex items-center justify-between mb-stack-sm px-1">
+<h3 class="font-subtitle-md text-subtitle-md text-on-surface">Outubro 2023</h3>
+<div class="flex gap-2">
+<button class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant text-base">chevron_left</span>
+</button>
+<button class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant text-base">chevron_right</span>
+</button>
+</div>
+</div>
+<div class="bg-surface-container-lowest rounded-xl p-4 shadow-[0px_4px_12px_rgba(0,0,0,0.08)]">
+<div class="calendar-grid text-center mb-2">
+<span class="font-label-md text-label-md text-outline-variant">D</span>
+<span class="font-label-md text-label-md text-outline-variant">S</span>
+<span class="font-label-md text-label-md text-outline-variant">T</span>
+<span class="font-label-md text-label-md text-outline-variant">Q</span>
+<span class="font-label-md text-label-md text-outline-variant">Q</span>
+<span class="font-label-md text-label-md text-outline-variant">S</span>
+<span class="font-label-md text-label-md text-outline-variant">S</span>
+</div>
+<div class="calendar-grid gap-y-2">
+<!-- Week 1 Placeholder Days -->
+<span class="py-2 text-outline-variant opacity-30">27</span>
+<span class="py-2 text-outline-variant opacity-30">28</span>
+<span class="py-2 text-outline-variant opacity-30">29</span>
+<span class="py-2 text-outline-variant opacity-30">30</span>
+<button class="py-2 rounded-lg font-body-md text-body-md hover:bg-surface-variant transition-all" style="opacity: 1; transform: translateY(0px); transition: 0.4s ease-out;">1</button>
+<button class="py-2 rounded-lg font-body-md text-body-md hover:bg-surface-variant transition-all" style="opacity: 1; transform: translateY(0px); transition: 0.4s ease-out;">2</button>
+<button class="py-2 rounded-lg font-body-md text-body-md hover:bg-surface-variant transition-all" style="opacity: 1; transform: translateY(0px); transition: 0.4s ease-out;">3</button>
+<!-- Week 2 -->
+<button class="py-2 rounded-lg font-body-md text-body-md hover:bg-surface-variant transition-all" style="opacity: 1; transform: translateY(0px); transition: 0.4s ease-out;">4</button>
+<button class="py-2 rounded-lg font-body-md text-body-md hover:bg-surface-variant transition-all" style="opacity: 1; transform: translateY(0px); transition: 0.4s ease-out;">5</button>
+<button class="py-2 rounded-lg font-body-md text-body-md hover:bg-surface-variant transition-all" style="opacity: 1; transform: translateY(0px); transition: 0.4s ease-out;">6</button>
+<button class="py-2 rounded-lg font-body-md text-body-md hover:bg-surface-variant transition-all" style="opacity: 1; transform: translateY(0px); transition: 0.4s ease-out;">7</button>
+<button class="py-2 rounded-lg font-body-md text-body-md hover:bg-surface-variant transition-all" style="opacity: 1; transform: translateY(0px); transition: 0.4s ease-out;">8</button>
+<button class="py-2 rounded-lg font-body-md text-body-md hover:bg-surface-variant transition-all" style="opacity: 1; transform: translateY(0px); transition: 0.4s ease-out;">9</button>
+<button class="py-2 rounded-lg font-body-md text-body-md hover:bg-surface-variant transition-all" style="opacity: 1; transform: translateY(0px); transition: 0.4s ease-out;">10</button>
+<!-- Week 3 (Selection Example) -->
+<button class="py-2 rounded-lg font-body-md text-body-md hover:bg-surface-variant transition-all" style="opacity: 1; transform: translateY(0px); transition: 0.4s ease-out;">11</button>
+<button class="py-2 rounded-lg font-body-md text-body-md hover:bg-surface-variant transition-all" style="opacity: 1; transform: translateY(0px); transition: 0.4s ease-out;">12</button>
+<button class="py-2 rounded-lg font-body-md text-body-md bg-primary text-on-primary ring-4 ring-primary-container ring-opacity-30 font-bold scale-110 transition-all duration-300" style="opacity: 1; transform: translateY(0px); transition: 0.4s ease-out;">13</button>
+<button class="py-2 rounded-lg font-body-md text-body-md hover:bg-surface-variant transition-all" style="opacity: 1; transform: translateY(0px); transition: 0.4s ease-out;">14</button>
+<button class="py-2 rounded-lg font-body-md text-body-md hover:bg-surface-variant transition-all" style="opacity: 1; transform: translateY(0px); transition: 0.4s ease-out;">15</button>
+<button class="py-2 rounded-lg font-body-md text-body-md hover:bg-surface-variant transition-all" style="opacity: 1; transform: translateY(0px); transition: 0.4s ease-out;">16</button>
+<button class="py-2 rounded-lg font-body-md text-body-md hover:bg-surface-variant transition-all" style="opacity: 1; transform: translateY(0px); transition: 0.4s ease-out;">17</button>
+</div>
+</div>
+</section>
+<!-- Time Slots Section -->
+<section class="mb-stack-lg">
+<h3 class="font-subtitle-md text-subtitle-md text-on-surface mb-stack-sm px-1">Horários Disponíveis</h3>
+<div class="grid grid-cols-3 gap-3">
+<button class="time-slot px-4 py-3 rounded-xl border border-outline-variant font-body-md text-body-md text-on-surface hover:border-primary hover:text-primary transition-all active:scale-95" onclick="selectTime(this)">08:30</button>
+<button class="time-slot px-4 py-3 rounded-xl border border-outline-variant font-body-md text-body-md text-on-surface hover:border-primary hover:text-primary transition-all active:scale-95" onclick="selectTime(this)">09:30</button>
+<button class="time-slot px-4 py-3 rounded-xl border border-outline-variant font-body-md text-body-md text-on-surface hover:border-primary hover:text-primary transition-all active:scale-95" onclick="selectTime(this)">10:30</button>
+<button class="time-slot px-4 py-3 rounded-xl border border-outline-variant font-body-md text-body-md text-on-surface hover:border-primary hover:text-primary transition-all active:scale-95" onclick="selectTime(this)">14:30</button>
+<button class="time-slot px-4 py-3 rounded-xl border-2 border-primary bg-primary-container text-on-primary-container font-bold transition-all active:scale-95" onclick="selectTime(this)">15:30</button>
+<button class="time-slot px-4 py-3 rounded-xl border border-outline-variant font-body-md text-body-md text-on-surface hover:border-primary hover:text-primary transition-all active:scale-95" onclick="selectTime(this)">16:30</button>
+<button class="time-slot px-4 py-3 rounded-xl border border-outline-variant font-body-md text-body-md text-on-surface hover:border-primary hover:text-primary transition-all active:scale-95" onclick="selectTime(this)">17:30</button>
+</div>
+</section>
+<!-- Treatment Type Hint (Bento Style) -->
+<section class="grid grid-cols-2 gap-4">
+<div class="bg-secondary-container bg-opacity-30 p-4 rounded-xl">
+<span class="material-symbols-outlined text-secondary mb-2">spa</span>
+<p class="font-label-lg text-label-lg text-secondary">Sessão Individual</p>
+<p class="font-body-md text-body-md text-on-surface-variant">50 minutos</p>
+</div>
+<div class="bg-tertiary-container bg-opacity-30 p-4 rounded-xl">
+<span class="material-symbols-outlined text-tertiary mb-2">payments</span>
+<p class="font-label-lg text-label-lg text-on-tertiary-container">Investimento</p>
+<p class="font-body-md text-body-md text-on-surface-variant">R$ 180,00</p>
+</div>
+</section>
+</main>
+<!-- Bottom Actions Container -->
+<div class="fixed bottom-20 left-0 w-full px-margin-mobile z-40">
+<button class="w-full h-[52px] bg-primary text-on-primary rounded-[16px] font-subtitle-md text-subtitle-md shadow-lg active:scale-[0.98] transition-transform duration-150 flex items-center justify-center gap-2">
+            Confirmar Agendamento
+            <span class="material-symbols-outlined">event_available</span>
+</button>
+</div>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 py-3 pb-safe bg-surface dark:bg-surface-container-low shadow-[0px_-4px_12px_rgba(0,0,0,0.08)] rounded-t-xl">
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-4 py-1 hover:bg-surface-variant transition-colors active:scale-95 transition-transform duration-150">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-md text-label-md">Início</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-4 py-1 hover:bg-surface-variant transition-colors active:scale-95 transition-transform duration-150">
+<span class="material-symbols-outlined">medical_services</span>
+<span class="font-label-md text-label-md">Tratamento</span>
+</button>
+<button class="flex flex-col items-center justify-center rounded-full px-4 py-1 active:scale-95 transition-transform duration-150 bg-primary-container dark:bg-on-primary-container text-on-primary-container dark:text-primary-fixed">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person_search</span>
+<span class="font-label-md text-label-md">Profissional</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-4 py-1 hover:bg-surface-variant transition-colors active:scale-95 transition-transform duration-150">
+<span class="material-symbols-outlined">account_circle</span>
+<span class="font-label-md text-label-md">Perfil</span>
+</button>
+</nav>
+<script>
+        function selectTime(element) {
+            // Remove selection from all
+            document.querySelectorAll('.time-slot').forEach(slot => {
+                slot.classList.remove('border-2', 'border-primary', 'bg-primary-container', 'text-on-primary-container', 'font-bold');
+                slot.classList.add('border', 'border-outline-variant', 'font-body-md', 'text-body-md', 'text-on-surface');
+            });
+            
+            // Add selection to clicked
+            element.classList.remove('border', 'border-outline-variant', 'font-body-md', 'text-body-md', 'text-on-surface');
+            element.classList.add('border-2', 'border-primary', 'bg-primary-container', 'text-on-primary-container', 'font-bold');
+            
+            // Haptic feedback simulation
+            if (window.navigator.vibrate) {
+                window.navigator.vibrate(5);
+            }
+        }
+
+        // Add a simple entrance animation for calendar days
+        document.querySelectorAll('.calendar-grid button').forEach((btn, index) => {
+            btn.style.opacity = '0';
+            btn.style.transform = 'translateY(10px)';
+            setTimeout(() => {
+                btn.style.transition = 'all 0.4s ease-out';
+                btn.style.opacity = '1';
+                btn.style.transform = 'translateY(0)';
+            }, index * 20);
+        });
+    </script>
+
+
+</body></html>

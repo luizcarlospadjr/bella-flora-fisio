@@ -1,0 +1,313 @@
+<!DOCTYPE html><html lang="pt-BR" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Agendar Consulta - Bella Flora Fisio</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "background": "#fff7fd",
+                      "on-secondary-fixed": "#2e1221",
+                      "inverse-primary": "#dcb8fc",
+                      "secondary-fixed-dim": "#e9bacd",
+                      "on-tertiary-container": "#525300",
+                      "surface-dim": "#dfd8de",
+                      "on-secondary": "#ffffff",
+                      "on-error": "#ffffff",
+                      "on-background": "#1d1b1f",
+                      "on-primary-container": "#60427d",
+                      "inverse-surface": "#322f34",
+                      "surface-variant": "#e7e0e6",
+                      "primary-fixed": "#f0dbff",
+                      "primary": "#70518d",
+                      "on-tertiary": "#ffffff",
+                      "surface-container-highest": "#e7e0e6",
+                      "on-primary-fixed-variant": "#573974",
+                      "surface-container": "#f3ecf2",
+                      "surface": "#fff7fd",
+                      "secondary-fixed": "#ffd8e7",
+                      "error": "#ba1a1a",
+                      "on-primary": "#ffffff",
+                      "tertiary-fixed": "#e8e78a",
+                      "surface-container-lowest": "#ffffff",
+                      "secondary": "#795465",
+                      "on-secondary-fixed-variant": "#5f3c4d",
+                      "on-surface-variant": "#4b454e",
+                      "inverse-on-surface": "#f6eff5",
+                      "on-surface": "#1d1b1f",
+                      "primary-container": "#d8b4f8",
+                      "on-tertiary-fixed": "#1d1d00",
+                      "error-container": "#ffdad6",
+                      "tertiary": "#616211",
+                      "outline-variant": "#cdc3cf",
+                      "surface-tint": "#70518d",
+                      "on-tertiary-fixed-variant": "#494900",
+                      "outline": "#7c747f",
+                      "on-secondary-container": "#795465",
+                      "on-error-container": "#93000a",
+                      "on-primary-fixed": "#290a45",
+                      "primary-fixed-dim": "#dcb8fc",
+                      "surface-container-high": "#ede6ec",
+                      "surface-bright": "#fff7fd",
+                      "tertiary-fixed-dim": "#cbcb71",
+                      "secondary-container": "#fdcde1",
+                      "tertiary-container": "#c7c76d",
+                      "surface-container-low": "#f9f1f7"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "gutter": "16px",
+                      "margin-mobile": "16px",
+                      "base": "8px",
+                      "inset-card": "16px",
+                      "stack-sm": "8px",
+                      "stack-md": "16px",
+                      "stack-lg": "24px"
+              },
+              "fontFamily": {
+                      "title-md": [
+                              "Manrope"
+                      ],
+                      "title-lg": [
+                              "Manrope"
+                      ],
+                      "subtitle-md": [
+                              "Manrope"
+                      ],
+                      "label-lg": [
+                              "Manrope"
+                      ],
+                      "label-md": [
+                              "Manrope"
+                      ],
+                      "subtitle-lg": [
+                              "Manrope"
+                      ],
+                      "body-md": [
+                              "Manrope"
+                      ],
+                      "body-lg": [
+                              "Manrope"
+                      ]
+              },
+              "fontSize": {
+                      "title-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "title-lg": [
+                              "28px",
+                              {
+                                      "lineHeight": "36px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "subtitle-md": [
+                              "18px",
+                              {
+                                      "lineHeight": "26px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "label-lg": [
+                              "13px",
+                              {
+                                      "lineHeight": "18px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "label-md": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "subtitle-lg": [
+                              "20px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "body-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-lg": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        body {
+            -webkit-tap-highlight-color: transparent;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .pb-safe {
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+
+    <!-- Firebase CDN SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <!-- Bella Flora Custom Modules -->
+    <script src="navigation.js" defer></script>
+    <script src="sync.js" defer></script>
+</head>
+
+<body class="bg-background text-on-background font-body-lg min-h-screen pb-[100px]">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-surface-dim font-title-md text-title-md text-primary dark:text-primary-fixed-dim docked full-width top-0 sticky z-50">
+<div class="flex items-center justify-between px-margin-mobile h-16 w-full max-w-md mx-auto">
+<button class="text-on-surface-variant dark:text-on-surface-variant hover:opacity-80 transition-opacity p-2 -ml-2 rounded-full active:scale-95 transition-transform duration-200">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="flex-1 text-center font-bold tracking-tight">Bella Flora Fisio</h1>
+<div class="w-10"></div> <!-- Spacer for centering -->
+</div>
+</header>
+<main class="max-w-md mx-auto px-margin-mobile pt-stack-md flex flex-col gap-stack-lg">
+<!-- Selecione o Serviço -->
+<section>
+<h2 class="font-subtitle-lg text-subtitle-lg text-on-surface mb-stack-sm">Selecione o Serviço</h2>
+<div class="flex overflow-x-auto hide-scrollbar gap-stack-sm pb-2 -mx-margin-mobile px-margin-mobile">
+<button class="flex-none w-32 h-32 bg-primary-container text-on-primary-container rounded-xl flex flex-col items-center justify-center p-inset-card shadow-[0_4px_12px_rgba(0,0,0,0.08)] active:scale-95 transition-all border-2 border-primary">
+<span class="material-symbols-outlined text-4xl mb-2" data-icon="spa">spa</span>
+<span class="font-label-lg text-label-lg text-center">Massoterapia</span>
+</button>
+<button class="flex-none w-32 h-32 bg-surface-container-lowest text-on-surface rounded-xl flex flex-col items-center justify-center p-inset-card shadow-[0_4px_12px_rgba(0,0,0,0.08)] active:scale-95 transition-all border border-outline-variant opacity-80 hover:opacity-100">
+<span class="material-symbols-outlined text-4xl mb-2 text-primary" data-icon="acupuncture">acupuncture</span>
+<span class="font-label-lg text-label-lg text-center">Acupuntura</span>
+</button>
+<button class="flex-none w-32 h-32 bg-surface-container-lowest text-on-surface rounded-xl flex flex-col items-center justify-center p-inset-card shadow-[0_4px_12px_rgba(0,0,0,0.08)] active:scale-95 transition-all border border-outline-variant opacity-80 hover:opacity-100">
+<span class="material-symbols-outlined text-4xl mb-2 text-primary" data-icon="pregnant_woman">pregnant_woman</span>
+<span class="font-label-lg text-label-lg text-center">Fisioterapia Pélvica</span>
+</button>
+<button class="flex-none w-32 h-32 bg-surface-container-lowest text-on-surface rounded-xl flex flex-col items-center justify-center p-inset-card shadow-[0_4px_12px_rgba(0,0,0,0.08)] active:scale-95 transition-all border border-outline-variant opacity-80 hover:opacity-100">
+<span class="material-symbols-outlined text-4xl mb-2 text-primary" data-icon="fitness_center">fitness_center</span>
+<span class="font-label-lg text-label-lg text-center">Pilates</span>
+</button>
+</div>
+</section>
+<!-- Escolha a Data -->
+<section>
+<h2 class="font-subtitle-lg text-subtitle-lg text-on-surface mb-stack-sm">Escolha a Data</h2>
+<div class="bg-surface-container-lowest rounded-xl p-inset-card shadow-[0_4px_12px_rgba(0,0,0,0.08)]">
+<div class="flex justify-between items-center mb-4">
+<span class="font-subtitle-md text-subtitle-md font-bold text-on-surface">Novembro 2023</span>
+<div class="flex gap-2">
+<button class="text-on-surface-variant p-1"><span class="material-symbols-outlined">chevron_left</span></button>
+<button class="text-on-surface-variant p-1"><span class="material-symbols-outlined">chevron_right</span></button>
+</div>
+</div>
+<div class="grid grid-cols-7 gap-1 text-center mb-2 font-label-md text-label-md text-on-surface-variant">
+<div class="">Dom</div><div class="">Seg</div><div class="">Ter</div><div class="">Qua</div><div class="">Qui</div><div class="">Sex</div><div class="">Sáb</div>
+</div>
+<div class="grid grid-cols-7 gap-1 text-center font-body-md text-body-md"><div class="py-2 text-on-surface-variant/30">1</div><div class="py-2 text-on-surface-variant/30">2</div><div class="py-2 text-on-surface-variant/30">3</div><div class="py-2 text-on-surface-variant/30">4</div><div class="py-2 text-on-surface-variant/30">5</div><div class="py-2 text-on-surface-variant/30">6</div><div class="py-2 text-on-surface-variant/30">7</div><div class="py-2 text-on-surface-variant/30">8</div><div class="py-2 text-on-surface-variant/30">9</div><div class="py-2 text-on-surface-variant/30">10</div><div class="py-2 text-on-surface-variant/30">11</div><div class="py-2 bg-primary text-on-primary rounded-full font-bold shadow-md cursor-pointer">12</div><div class="py-2 text-on-surface cursor-pointer font-medium hover:bg-primary-container/20 rounded-full transition-colors">13</div><div class="py-2 text-on-surface cursor-pointer font-medium hover:bg-primary-container/20 rounded-full transition-colors">14</div><div class="py-2 text-on-surface-variant/30">15</div><div class="py-2 text-on-surface-variant/30">16</div><div class="py-2 text-on-surface-variant/30">17</div><div class="py-2 text-on-surface cursor-pointer font-medium hover:bg-primary-container/20 rounded-full transition-colors">18</div><div class="py-2 text-on-surface cursor-pointer font-medium hover:bg-primary-container/20 rounded-full transition-colors">19</div><div class="py-2 text-on-surface cursor-pointer font-medium hover:bg-primary-container/20 rounded-full transition-colors">20</div><div class="py-2 text-on-surface-variant/30">21</div><div class="py-2 text-on-surface-variant/30">22</div><div class="py-2 text-on-surface-variant/30">23</div><div class="py-2 text-on-surface-variant/30">24</div><div class="py-2 text-on-surface cursor-pointer font-medium hover:bg-primary-container/20 rounded-full transition-colors">25</div><div class="py-2 text-on-surface cursor-pointer font-medium hover:bg-primary-container/20 rounded-full transition-colors">26</div><div class="py-2 text-on-surface-variant/30">27</div><div class="py-2 text-on-surface-variant/30">28</div><div class="py-2 text-on-surface-variant/30">29</div><div class="py-2 text-on-surface-variant/30">30</div><div class="py-2 text-on-surface-variant/30">31</div></div>
+</div>
+</section>
+<!-- Horários Disponíveis -->
+<section>
+<h2 class="font-subtitle-lg text-subtitle-lg text-on-surface mb-stack-sm">Horários Disponíveis</h2>
+<div class="grid grid-cols-3 gap-stack-sm">
+<button class="h-12 rounded-xl bg-surface-container-lowest border border-outline-variant font-label-lg text-label-lg text-on-surface flex items-center justify-center active:scale-95 transition-all opacity-80 hover:opacity-100">08:00</button>
+<button class="h-12 rounded-xl bg-surface-container-lowest border border-outline-variant font-label-lg text-label-lg text-on-surface flex items-center justify-center active:scale-95 transition-all opacity-80 hover:opacity-100">09:30</button>
+<button class="h-12 rounded-xl bg-primary-container text-on-primary-container font-label-lg text-label-lg flex items-center justify-center active:scale-95 transition-all font-bold border-2 border-primary shadow-sm">14:00</button>
+<button class="h-12 rounded-xl bg-surface-container-lowest border border-outline-variant font-label-lg text-label-lg text-on-surface flex items-center justify-center active:scale-95 transition-all opacity-80 hover:opacity-100">16:30</button>
+<button class="h-12 rounded-xl bg-surface-container-lowest border border-outline-variant font-label-lg text-label-lg text-on-surface flex items-center justify-center active:scale-95 transition-all opacity-50 cursor-not-allowed">18:00</button>
+</div>
+</section><section class="grid grid-cols-1 gap-4 mt-stack-lg">
+    <div class="bg-primary-container bg-opacity-20 p-4 rounded-xl flex items-center gap-4"><div class="w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
+            <img src="assets/img/dra_beatriz_silva.png" alt="Dra. Beatriz Silva" class="w-full h-full object-cover">
+        </div>
+        <div class="">
+            <p class="font-label-lg text-label-lg text-primary">Profissional Responsável</p>
+            <p class="font-body-lg text-body-lg font-bold text-on-surface">Dra. Alice Silva</p>
+        </div></div>
+    <div class="grid grid-cols-2 gap-4">
+        <div class="bg-secondary-container bg-opacity-30 p-4 rounded-xl">
+            <span class="material-symbols-outlined text-secondary mb-2">spa</span>
+            <p class="font-label-lg text-label-lg text-secondary">Sessão Individual</p>
+            <p class="font-body-md text-body-md text-on-surface-variant">50 minutos</p>
+        </div>
+        <div class="bg-tertiary-container bg-opacity-30 p-4 rounded-xl">
+            <span class="material-symbols-outlined text-tertiary mb-2">payments</span>
+            <p class="font-label-lg text-label-lg text-on-tertiary-container">Investimento</p>
+            <p class="font-body-md text-body-md text-on-surface-variant">R$ 180,00</p>
+        </div>
+    </div>
+</section>
+<!-- Spacer for FAB/Button -->
+<div class="h-24"></div>
+</main>
+<!-- Confirm Button - Floating above Bottom Nav -->
+<div class="fixed bottom-[90px] left-0 w-full px-margin-mobile z-40 max-w-md left-1/2 -translate-x-1/2">
+<button class="w-full h-[52px] rounded-[16px] bg-primary text-on-primary font-title-md text-[16px] flex items-center justify-center shadow-lg active:scale-95 transition-all">
+            Confirmar Agendamento
+        </button>
+</div>
+<!-- BottomNavBar -->
+<nav class="bg-surface h-[80px] fixed bottom-0 w-full z-50 shadow-lg border-t border-outline-variant/10 flex justify-around items-center px-4 pb-safe md:hidden max-w-md mx-auto left-0 right-0">
+<button class="flex flex-col items-center justify-center hover:bg-secondary-container/30 rounded-2xl px-4 py-1 active:scale-95 transition-transform bg-primary-container rounded-full text-on-primary-container">
+<span class="material-symbols-outlined mb-1 text-on-primary-container">home</span>
+<span class="font-label-md text-[10px]">Início</span>
+</button>
+<button class="flex flex-col items-center justify-center transition-transform active:scale-95 text-on-surface-variant">
+<div class="mb-1">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">medical_services</span>
+</div>
+<span class="font-label-md text-[10px] text-on-surface-variant">Tratamento</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-secondary-container/30 rounded-2xl px-4 py-1 active:scale-95 transition-transform">
+<span class="material-symbols-outlined mb-1">person_search</span>
+<span class="font-label-md text-[10px]">Profissional</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-secondary-container/30 rounded-2xl px-4 py-1 active:scale-95 transition-transform">
+<span class="material-symbols-outlined mb-1">person</span>
+<span class="font-label-md text-[10px]">Perfil</span>
+</button>
+</nav>
+
+
+
+
+
+
+</body></html>

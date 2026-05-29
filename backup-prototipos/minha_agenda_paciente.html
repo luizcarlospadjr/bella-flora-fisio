@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Bella Flora Fisio - Minha Agenda</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Manrope', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cdc3cf;
+            border-radius: 10px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-low": "#f9f1f7",
+                        "surface": "#fff7fd",
+                        "on-primary": "#ffffff",
+                        "inverse-on-surface": "#f6eff5",
+                        "secondary": "#795465",
+                        "primary-container": "#d8b4f8",
+                        "on-primary-container": "#60427d",
+                        "error": "#ba1a1a",
+                        "primary": "#70518d",
+                        "on-secondary-fixed-variant": "#5f3c4d",
+                        "outline": "#7c747f",
+                        "on-secondary-container": "#795465",
+                        "outline-variant": "#cdc3cf",
+                        "primary-fixed-dim": "#dcb8fc",
+                        "on-error-container": "#93000a",
+                        "inverse-primary": "#dcb8fc",
+                        "secondary-container": "#fdcde1",
+                        "tertiary-fixed-dim": "#cbcb71",
+                        "secondary-fixed": "#ffd8e7",
+                        "surface-variant": "#e7e0e6",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-high": "#ede6ec",
+                        "surface-container-highest": "#e7e0e6",
+                        "surface-tint": "#70518d",
+                        "error-container": "#ffdad6",
+                        "on-tertiary-fixed-variant": "#494900",
+                        "surface-dim": "#dfd8de",
+                        "on-primary-fixed-variant": "#573974",
+                        "on-secondary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "on-background": "#1d1b1f",
+                        "surface-bright": "#fff7fd",
+                        "on-tertiary-fixed": "#1d1d00",
+                        "on-primary-fixed": "#290a45",
+                        "on-surface-variant": "#4b454e",
+                        "tertiary-fixed": "#e8e78a",
+                        "tertiary": "#616211",
+                        "on-tertiary-container": "#525300",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed": "#f0dbff",
+                        "on-surface": "#1d1b1f",
+                        "surface-container": "#f3ecf2",
+                        "on-secondary-fixed": "#2e1221",
+                        "tertiary-container": "#c7c76d",
+                        "secondary-fixed-dim": "#e9bacd",
+                        "inverse-surface": "#322f34",
+                        "background": "#fff7fd"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-md": "16px",
+                        "base": "8px",
+                        "margin-mobile": "16px",
+                        "gutter": "16px",
+                        "inset-card": "16px",
+                        "stack-sm": "8px",
+                        "stack-lg": "24px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Manrope"],
+                        "label-lg": ["Manrope"],
+                        "title-md": ["Manrope"],
+                        "body-md": ["Manrope"],
+                        "body-lg": ["Manrope"],
+                        "title-lg": ["Manrope"],
+                        "subtitle-lg": ["Manrope"],
+                        "subtitle-md": ["Manrope"]
+                    },
+                    "fontSize": {
+                        "label-md": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                        "label-lg": ["13px", {"lineHeight": "18px", "fontWeight": "500"}],
+                        "title-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "title-lg": ["28px", {"lineHeight": "36px", "fontWeight": "600"}],
+                        "subtitle-lg": ["20px", {"lineHeight": "28px", "fontWeight": "500"}],
+                        "subtitle-md": ["18px", {"lineHeight": "26px", "fontWeight": "500"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  
+    <!-- Firebase CDN SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <!-- Bella Flora Custom Modules -->
+    <script src="navigation.js" defer></script>
+    <script src="sync.js" defer></script>
+</head>
+
+<body class="bg-background text-on-surface min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-surface-dim shadow-sm flex justify-between items-center w-full px-margin-mobile h-16 fixed top-0 z-50">
+<div class="flex items-center gap-4">
+<button class="hover:bg-surface-container-high dark:hover:bg-surface-container-highest transition-colors p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim">arrow_back</span>
+</button>
+<h1 class="font-title-md text-title-md text-primary dark:text-primary-fixed-dim font-semibold">Minha Agenda</h1>
+</div>
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-container shadow-sm">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="A professional headshot of a young woman with a warm, friendly expression, set against a clean, soft-focus studio background. The lighting is bright and even, reflecting a clinical yet welcoming atmosphere. Her style is modern and professional, aligning with a high-end physical therapy clinic aesthetic. The image uses a soft, light-mode palette with gentle lavender and white tones." src="assets/img/mariana_silva.png"/>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 mt-16 pb-24 px-margin-mobile pt-stack-lg max-w-2xl mx-auto w-full">
+<!-- Calendar Section -->
+<section class="bg-surface-container-lowest rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.08)] p-inset-card mb-stack-lg">
+<div class="flex justify-between items-center mb-6">
+<h2 class="font-subtitle-md text-subtitle-md text-on-surface">Novembro 2024</h2>
+<div class="flex gap-2">
+<button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-primary">chevron_left</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-primary">chevron_right</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-7 text-center mb-2">
+<span class="font-label-md text-label-md text-outline">Dom</span>
+<span class="font-label-md text-label-md text-outline">Seg</span>
+<span class="font-label-md text-label-md text-outline">Ter</span>
+<span class="font-label-md text-label-md text-outline">Qua</span>
+<span class="font-label-md text-label-md text-outline">Qui</span>
+<span class="font-label-md text-label-md text-outline">Sex</span>
+<span class="font-label-md text-label-md text-outline">Sáb</span>
+</div>
+<div class="grid grid-cols-7 gap-y-2 text-center">
+<!-- Row 1 -->
+<span class="p-2 font-body-md text-body-md text-outline-variant opacity-50">27</span>
+<span class="p-2 font-body-md text-body-md text-outline-variant opacity-50">28</span>
+<span class="p-2 font-body-md text-body-md text-outline-variant opacity-50">29</span>
+<span class="p-2 font-body-md text-body-md text-outline-variant opacity-50">30</span>
+<span class="p-2 font-body-md text-body-md text-outline-variant opacity-50">31</span>
+<span class="p-2 font-body-md text-body-md hover:bg-surface-container-high rounded-full cursor-pointer transition-colors">1</span>
+<span class="p-2 font-body-md text-body-md hover:bg-surface-container-high rounded-full cursor-pointer transition-colors">2</span>
+<!-- Row 2 -->
+<span class="p-2 font-body-md text-body-md hover:bg-surface-container-high rounded-full cursor-pointer transition-colors">3</span>
+<span class="p-2 font-body-md text-body-md hover:bg-surface-container-high rounded-full cursor-pointer transition-colors relative">
+                    4
+                    <span class="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-1 h-1 bg-primary rounded-full"></span>
+</span>
+<span class="p-2 font-body-md text-body-md hover:bg-surface-container-high rounded-full cursor-pointer transition-colors">5</span>
+<span class="p-2 font-body-md text-body-md hover:bg-surface-container-high rounded-full cursor-pointer transition-colors relative">
+                    6
+                    <span class="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-1 h-1 bg-primary rounded-full"></span>
+</span>
+<span class="p-2 font-body-md text-body-md hover:bg-surface-container-high rounded-full cursor-pointer transition-colors">7</span>
+<span class="p-2 font-body-md text-body-md hover:bg-surface-container-high rounded-full cursor-pointer transition-colors">8</span>
+<span class="p-2 font-body-md text-body-md hover:bg-surface-container-high rounded-full cursor-pointer transition-colors">9</span>
+<!-- Row 3 -->
+<span class="p-2 font-body-md text-body-md hover:bg-surface-container-high rounded-full cursor-pointer transition-colors">10</span>
+<span class="p-2 font-body-md text-body-md hover:bg-surface-container-high rounded-full cursor-pointer transition-colors relative">
+                    11
+                    <span class="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-1 h-1 bg-primary rounded-full"></span>
+</span>
+<span class="p-2 font-body-md text-body-md hover:bg-surface-container-high rounded-full cursor-pointer transition-colors">12</span>
+<span class="p-2 font-body-md text-body-md hover:bg-surface-container-high rounded-full cursor-pointer transition-colors relative">
+                    13
+                    <span class="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-1 h-1 bg-primary rounded-full"></span>
+</span>
+<span class="p-2 font-body-md text-body-md hover:bg-surface-container-high rounded-full cursor-pointer transition-colors">14</span>
+<span class="p-2 font-body-md text-body-md hover:bg-surface-container-high rounded-full cursor-pointer transition-colors">15</span>
+<span class="p-2 font-body-md text-body-md hover:bg-surface-container-high rounded-full cursor-pointer transition-colors">16</span>
+<!-- Row 4 -->
+<span class="p-2 font-body-md text-body-md hover:bg-surface-container-high rounded-full cursor-pointer transition-colors">17</span>
+<span class="p-2 font-body-md text-body-md hover:bg-surface-container-high rounded-full cursor-pointer transition-colors relative">
+                    18
+                    <span class="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-1 h-1 bg-primary rounded-full"></span>
+</span>
+<span class="p-2 font-body-md text-body-md bg-primary text-on-primary rounded-full cursor-pointer relative font-bold ring-4 ring-primary-container/30">
+                    19
+                    <span class="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-1 h-1 bg-white rounded-full"></span>
+</span>
+<span class="p-2 font-body-md text-body-md hover:bg-surface-container-high rounded-full cursor-pointer transition-colors relative">
+                    20
+                    <span class="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-1 h-1 bg-primary rounded-full"></span>
+</span>
+<span class="p-2 font-body-md text-body-md hover:bg-surface-container-high rounded-full cursor-pointer transition-colors">21</span>
+<span class="p-2 font-body-md text-body-md hover:bg-surface-container-high rounded-full cursor-pointer transition-colors">22</span>
+<span class="p-2 font-body-md text-body-md hover:bg-surface-container-high rounded-full cursor-pointer transition-colors">23</span>
+</div>
+</section>
+<!-- Appointments List Header -->
+<div class="flex justify-between items-center mb-4">
+<h3 class="font-subtitle-lg text-subtitle-lg text-on-surface">19 de Novembro</h3>
+<span class="font-label-lg text-label-lg px-3 py-1 bg-secondary-container text-on-secondary-container rounded-full">Terça-feira</span>
+</div>
+<!-- Appointment Cards -->
+<div class="space-y-4">
+<!-- Featured Appointment -->
+<div class="bg-surface-container-lowest border-l-4 border-primary rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.08)] p-inset-card flex items-center gap-4 group transition-all hover:scale-[1.01]">
+<div class="flex flex-col items-center justify-center bg-primary-container/20 w-16 h-16 rounded-xl text-primary shrink-0">
+<span class="font-title-md text-title-md leading-none">14:30</span>
+<span class="font-label-md text-label-md uppercase tracking-wider">PM</span>
+</div>
+<div class="flex-1">
+<h4 class="font-subtitle-md text-subtitle-md text-on-surface mb-1">Fisioterapia Pélvica</h4>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">medical_services</span>
+<span class="font-body-md text-body-md">Dra. Ana Costa</span>
+</div>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container text-primary group-hover:bg-primary group-hover:text-white transition-all">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+<!-- Additional Detail Card (Glassmorphism look) -->
+<div class="bg-surface/60 backdrop-blur-md border border-white/40 rounded-xl p-inset-card shadow-sm flex items-start gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-primary shrink-0">
+<span class="material-symbols-outlined">info</span>
+</div>
+<div>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                        Sua sessão está confirmada. Lembre-se de chegar com 10 minutos de antecedência e trazer roupas confortáveis.
+                    </p>
+</div>
+</div>
+<!-- Future Preview Section (Asymmetric) -->
+<div class="grid grid-cols-2 gap-4 mt-8">
+<div class="bg-surface-container-low rounded-xl p-inset-card flex flex-col justify-between aspect-square">
+<span class="font-label-lg text-label-lg text-secondary">Próxima Semana</span>
+<div>
+<span class="font-title-lg text-title-lg text-on-surface block">03</span>
+<span class="font-body-md text-body-md text-on-surface-variant">Sessões agendadas</span>
+</div>
+</div>
+<div class="bg-primary rounded-xl p-inset-card flex flex-col justify-between aspect-square text-on-primary shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-[32px]" style="font-variation-settings: 'FILL' 1;">add_circle</span>
+<span class="font-subtitle-md text-subtitle-md leading-tight">Marcar nova consulta</span>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-3 pb-safe bg-surface-container-lowest dark:bg-surface-container-low shadow-[0px_-4px_12px_rgba(0,0,0,0.08)] rounded-t-xl">
+<a class="flex flex-col items-center justify-center bg-primary-container dark:bg-on-primary-fixed-variant text-on-primary-container dark:text-primary-fixed rounded-full px-4 py-1 scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label-md text-label-md">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-4 py-1 hover:bg-surface-variant/50 transition-all" href="#">
+<span class="material-symbols-outlined">healing</span>
+<span class="font-label-md text-label-md">Treatment</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-4 py-1 hover:bg-surface-variant/50 transition-all" href="#">
+<span class="material-symbols-outlined">medical_services</span>
+<span class="font-label-md text-label-md">Pros</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-4 py-1 hover:bg-surface-variant/50 transition-all" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-md text-label-md">Profile</span>
+</a>
+</nav>
+<script>
+        // Micro-interaction for calendar days
+        document.querySelectorAll('.grid-cols-7 span:not(.text-outline)').forEach(day => {
+            day.addEventListener('click', function() {
+                if(this.classList.contains('text-outline-variant')) return; // ignore prev month days
+                
+                // Clear active states
+                document.querySelectorAll('.grid-cols-7 span').forEach(d => {
+                    d.classList.remove('bg-primary', 'text-on-primary', 'font-bold', 'ring-4', 'ring-primary-container/30');
+                    if(!d.classList.contains('text-outline-variant') && !d.classList.contains('text-outline')) {
+                        d.classList.add('hover:bg-surface-container-high');
+                    }
+                });
+                
+                // Set current active
+                this.classList.add('bg-primary', 'text-on-primary', 'font-bold', 'ring-4', 'ring-primary-container/30');
+                this.classList.remove('hover:bg-surface-container-high');
+            });
+        });
+
+        // Simple scale animation on cards
+        const cards = document.querySelectorAll('.bg-surface-container-lowest');
+        cards.forEach(card => {
+            card.addEventListener('mousedown', () => card.style.transform = 'scale(0.98)');
+            card.addEventListener('mouseup', () => card.style.transform = 'scale(1.01)');
+            card.addEventListener('mouseleave', () => card.style.transform = 'scale(1)');
+        });
+    </script>
+</body></html>

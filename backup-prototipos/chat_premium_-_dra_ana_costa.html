@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Bella Flora Fisio - Chat</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "secondary-fixed": "#ffd8e7",
+                "surface-container-lowest": "#ffffff",
+                "tertiary-container": "#c7c76d",
+                "outline-variant": "#cdc3cf",
+                "on-tertiary": "#ffffff",
+                "secondary-container": "#fdcde1",
+                "on-primary-fixed": "#290a45",
+                "on-secondary": "#ffffff",
+                "on-primary-fixed-variant": "#573974",
+                "surface-container-low": "#f9f1f7",
+                "inverse-surface": "#322f34",
+                "on-primary-container": "#60427d",
+                "surface": "#fff7fd",
+                "primary-fixed-dim": "#dcb8fc",
+                "tertiary-fixed-dim": "#cbcb71",
+                "on-tertiary-fixed-variant": "#494900",
+                "on-secondary-fixed": "#2e1221",
+                "inverse-on-surface": "#f6eff5",
+                "surface-container-high": "#ede6ec",
+                "surface-dim": "#dfd8de",
+                "primary-fixed": "#f0dbff",
+                "primary-container": "#d8b4f8",
+                "on-background": "#1d1b1f",
+                "surface-container-highest": "#e7e0e6",
+                "on-surface": "#1d1b1f",
+                "surface-variant": "#e7e0e6",
+                "outline": "#7c747f",
+                "on-secondary-fixed-variant": "#5f3c4d",
+                "error": "#ba1a1a",
+                "background": "#fff7fd",
+                "secondary": "#795465",
+                "on-surface-variant": "#4b454e",
+                "error-container": "#ffdad6",
+                "tertiary": "#616211",
+                "surface-tint": "#70518d",
+                "on-tertiary-fixed": "#1d1d00",
+                "tertiary-fixed": "#e8e78a",
+                "secondary-fixed-dim": "#e9bacd",
+                "on-primary": "#ffffff",
+                "surface-bright": "#fff7fd",
+                "on-secondary-container": "#795465",
+                "on-tertiary-container": "#525300",
+                "on-error-container": "#93000a",
+                "primary": "#70518d",
+                "surface-container": "#f3ecf2",
+                "on-error": "#ffffff",
+                "inverse-primary": "#dcb8fc"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.5rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+        },
+        "spacing": {
+                "base": "8px",
+                "margin-mobile": "16px",
+                "stack-md": "16px",
+                "gutter": "16px",
+                "stack-sm": "8px",
+                "stack-lg": "24px",
+                "inset-card": "16px"
+        },
+        "fontFamily": {
+                "title-lg": [
+                        "Manrope"
+                ],
+                "label-lg": [
+                        "Manrope"
+                ],
+                "body-md": [
+                        "Manrope"
+                ],
+                "label-md": [
+                        "Manrope"
+                ],
+                "title-md": [
+                        "Manrope"
+                ],
+                "subtitle-md": [
+                        "Manrope"
+                ],
+                "subtitle-lg": [
+                        "Manrope"
+                ],
+                "body-lg": [
+                        "Manrope"
+                ]
+        },
+        "fontSize": {
+                "title-lg": [
+                        "28px",
+                        {
+                                "lineHeight": "36px",
+                                "fontWeight": "600"
+                        }
+                ],
+                "label-lg": [
+                        "13px",
+                        {
+                                "lineHeight": "18px",
+                                "fontWeight": "500"
+                        }
+                ],
+                "body-md": [
+                        "14px",
+                        {
+                                "lineHeight": "20px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "label-md": [
+                        "12px",
+                        {
+                                "lineHeight": "16px",
+                                "fontWeight": "500"
+                        }
+                ],
+                "title-md": [
+                        "24px",
+                        {
+                                "lineHeight": "32px",
+                                "fontWeight": "600"
+                        }
+                ],
+                "subtitle-md": [
+                        "18px",
+                        {
+                                "lineHeight": "26px",
+                                "fontWeight": "500"
+                        }
+                ],
+                "subtitle-lg": [
+                        "20px",
+                        {
+                                "lineHeight": "28px",
+                                "fontWeight": "500"
+                        }
+                ],
+                "body-lg": [
+                        "16px",
+                        {
+                                "lineHeight": "24px",
+                                "fontWeight": "400"
+                        }
+                ]
+        }
+},
+    },
+  }
+</script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .chat-container {
+            height: calc(100vh - 64px - 72px - 88px);
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .pulse {
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .wave-anim {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            height: 20px;
+        }
+
+        .wave-anim div {
+            width: 3px;
+            background-color: theme('colors.primary');
+            border-radius: 2px;
+            animation: wave 1s infinite ease-in-out;
+        }
+
+        .wave-anim div:nth-child(2) { animation-delay: 0.1s; }
+        .wave-anim div:nth-child(3) { animation-delay: 0.2s; }
+        .wave-anim div:nth-child(4) { animation-delay: 0.3s; }
+        .wave-anim div:nth-child(5) { animation-delay: 0.4s; }
+
+        @keyframes wave {
+            0%, 100% { height: 4px; }
+            50% { height: 100%; }
+        }
+        
+        /* Modal & Overlay Transitions */
+        .modal-enter { opacity: 0; transform: scale(0.95) translateY(10px); }
+        .modal-enter-active { opacity: 1; transform: scale(1) translateY(0); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .modal-leave { opacity: 1; transform: scale(1) translateY(0); }
+        .modal-leave-active { opacity: 0; transform: scale(0.95) translateY(10px); transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+
+        .overlay-enter { opacity: 0; }
+        .overlay-enter-active { opacity: 1; transition: opacity 0.3s ease-out; }
+        .overlay-leave { opacity: 1; }
+        .overlay-leave-active { opacity: 0; transition: opacity 0.2s ease-in; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+      overflow: hidden; /* Prevent body scrolling when chat scrolls */
+    }
+  </style>
+
+    <!-- Firebase CDN SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <!-- Bella Flora Custom Modules -->
+    <script src="navigation.js" defer></script>
+    <script src="sync.js" defer></script>
+</head>
+
+<body class="bg-background text-on-background font-body-md min-h-screen pb-[90px] antialiased flex flex-col">
+<!-- TopAppBar -->
+<header class="bg-surface shadow-sm h-[64px] w-full top-0 sticky flex items-center justify-between px-margin-mobile z-40 border-b border-outline-variant/10 shrink-0">
+<div class="flex items-center gap-3">
+<button class="text-primary hover:bg-primary-container/20 transition-colors active:scale-95 duration-200 p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<div class="flex items-center gap-3">
+<div class="relative">
+<img alt="Dra. Ana Costa" class="w-10 h-10 rounded-full object-cover border border-surface-variant shadow-sm" data-alt="A professional portrait of a female physiotherapist in her late 30s with a kind smile. She is wearing a clean white clinical coat over a soft lavender blouse. The background is a brightly lit, modern medical office with soft-focus botanical elements. The lighting is airy and high-key, conveying a sense of professional care and tranquility in line with the Bella Flora brand." src="assets/img/dra_ana_costa.png"/>
+<div class="absolute bottom-0 right-0 w-3 h-3 bg-[#4ade80] border-2 border-surface rounded-full"></div>
+</div>
+<div>
+<h1 class="font-subtitle-md text-subtitle-md text-on-surface font-semibold leading-tight">Dra. Ana Costa</h1>
+<p class="font-label-md text-[11px] text-on-surface-variant">Online agora</p>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-1">
+<span id="latest-pain-level" class="bg-error/15 text-error px-2 py-0.5 rounded-full font-label-md text-label-md border border-error/20 mr-2">Dor: --/10</span>
+<button class="text-primary hover:bg-primary-container/20 transition-colors active:scale-95 duration-200 p-2 rounded-full flex items-center justify-center" onclick="startCall('video')">
+<span class="material-symbols-outlined">videocam</span>
+</button>
+<button class="text-primary hover:bg-primary-container/20 transition-colors active:scale-95 duration-200 p-2 rounded-full flex items-center justify-center" onclick="startCall('audio')">
+<span class="material-symbols-outlined">call</span>
+</button>
+</div>
+</header>
+<!-- Chat Canvas -->
+<main class="px-margin-mobile py-stack-md flex flex-col gap-4 overflow-y-auto flex-grow max-w-md w-full mx-auto pb-32" id="chat-canvas">
+<!-- Date Divider -->
+<div class="flex justify-center my-2">
+<span class="bg-surface-container-low border border-outline-variant/30 text-on-surface-variant font-label-md text-label-md px-3 py-1 rounded-full shadow-sm">Hoje</span>
+</div>
+<!-- Recipient Message (Dra Ana) -->
+<div class="flex items-end gap-2 max-w-[85%] self-start">
+<div class="bg-surface-container text-on-surface p-inset-card rounded-[16px] rounded-bl-sm shadow-[0px_2px_8px_rgba(0,0,0,0.04)] border border-outline-variant/20">
+<p class="font-body-md text-body-md">Olá! Como você está se sentindo após os exercícios de mobilidade de ontem? Sentiu algum desconforto no joelho?</p>
+<div class="flex justify-end mt-1">
+<span class="font-label-md text-[10px] text-on-surface-variant">09:15</span>
+</div>
+</div>
+</div>
+<!-- Sender Message (Patient) -->
+<div class="flex items-end gap-2 max-w-[85%] self-end">
+<div class="bg-primary text-on-primary p-inset-card rounded-[16px] rounded-br-sm shadow-[0px_4px_12px_rgba(112,81,141,0.15)]">
+<p class="font-body-md text-body-md">Bom dia, Dra. Ana! Me sinto bem melhor. O joelho não inchou hoje cedo, mas senti uma leve pontada durante a última série.</p>
+<div class="flex justify-end mt-1 gap-1 items-center">
+<span class="font-label-md text-[10px] opacity-80">09:18</span>
+<span class="material-symbols-outlined text-[14px]">done_all</span>
+</div>
+</div>
+</div>
+<!-- Image Attachment from Dra Ana -->
+<div class="flex flex-col gap-2 max-w-[85%] self-start">
+<div class="bg-surface-container p-2 rounded-[16px] rounded-bl-sm shadow-[0px_2px_8px_rgba(0,0,0,0.04)] border border-outline-variant/20">
+<img alt="Exercise Reference" class="w-full rounded-xl object-cover mb-2" data-alt="A detailed close-up of a person performing a gentle knee rehabilitation exercise on a soft yoga mat. The lighting is soft and natural, coming from a nearby window. The environment is minimalist and clean, with soft lavender and grey tones. The visual style is therapeutic and professional, emphasizing safe physical recovery and professional guidance." src="assets/img/mariana_silva.png"/>
+<p class="font-body-md text-body-md px-2 pb-1 text-on-surface">Tente manter esta angulação hoje para evitar a pontada. Reduza a amplitude se doer.</p>
+<div class="flex justify-end px-2">
+<span class="font-label-md text-[10px] text-on-surface-variant">09:20</span>
+</div>
+</div>
+</div>
+<!-- Sender Message -->
+<div class="flex items-end gap-2 max-w-[85%] self-end">
+<div class="bg-primary text-on-primary p-inset-card rounded-[16px] rounded-br-sm shadow-[0px_4px_12px_rgba(112,81,141,0.15)]">
+<p class="font-body-md text-body-md">Perfeito, vou ajustar aqui agora mesmo. Obrigado!</p>
+<div class="flex justify-end mt-1 gap-1 items-center">
+<span class="font-label-md text-[10px] opacity-80">09:22</span>
+<span class="material-symbols-outlined text-[14px]">done_all</span>
+</div>
+</div>
+</div>
+</main>
+<!-- Input Area -->
+<div class="fixed bottom-[72px] left-0 w-full px-margin-mobile py-3 bg-surface/90 backdrop-blur-md z-40 border-t border-outline-variant/10">
+<div class="max-w-md mx-auto relative">
+<!-- Default Input Bar -->
+<div class="flex items-center gap-2 bg-surface-container-lowest border border-outline-variant/40 rounded-[16px] p-2 shadow-[0px_4px_12px_rgba(0,0,0,0.05)] transition-opacity duration-200" id="default-input-bar">
+<button class="p-2 text-primary hover:bg-primary-container/20 rounded-full transition-colors" onclick="toggleAttachmentMenu()">
+<span class="material-symbols-outlined">add_circle</span>
+</button>
+<input class="flex-grow bg-transparent border-none focus:ring-0 text-on-surface font-body-md px-2 py-2 placeholder:text-on-surface-variant outline-none" id="message-input" onkeypress="handleKeyPress(event)" placeholder="Escreva sua mensagem..." type="text"/>
+<button class="p-2 text-primary hover:bg-primary-container/20 rounded-full transition-colors" onclick="startAudioRecording()">
+<span class="material-symbols-outlined">mic</span>
+</button>
+<button class="bg-primary text-on-primary p-3 rounded-[12px] shadow-sm active:scale-95 transition-all duration-200 ml-1 hover:bg-primary/90 flex items-center justify-center" onclick="sendMessage()">
+<span class="material-symbols-outlined">send</span>
+</button>
+</div>
+<!-- Audio Recording Bar (Hidden initially) -->
+<div class="hidden absolute top-0 left-0 w-full h-full flex items-center justify-between bg-surface-container-lowest border border-outline-variant/40 rounded-[16px] p-2 shadow-[0px_4px_12px_rgba(0,0,0,0.05)]" id="audio-recording-bar">
+<div class="flex items-center gap-3 px-3">
+<div class="w-3 h-3 rounded-full bg-error pulse"></div>
+<span class="font-body-md text-error font-medium" id="recording-timer">00:00</span>
+<div class="wave-anim ml-2">
+<div></div><div></div><div></div><div></div><div></div>
+</div>
+</div>
+<button class="bg-error text-on-error p-3 rounded-[12px] shadow-sm active:scale-95 transition-all duration-200 flex items-center justify-center" onclick="stopAudioRecording()">
+<span class="material-symbols-outlined">stop</span>
+</button>
+</div>
+</div>
+</div>
+<!-- BottomNavBar -->
+<nav class="bg-surface h-[72px] fixed bottom-0 w-full z-30 shadow-[0_-4px_12px_rgba(0,0,0,0.05)] border-t border-outline-variant/10 flex justify-around items-center px-4 pb-safe md:hidden">
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-secondary-container/30 rounded-full px-2 py-1 active:scale-95 transition-transform">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-md text-[10px] mt-1">Início</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-secondary-container/30 rounded-full px-2 py-1 active:scale-95 transition-transform">
+<span class="material-symbols-outlined">healing</span>
+<span class="font-label-md text-[10px] mt-1">Tratamento</span>
+</button>
+<button class="flex flex-col items-center justify-center text-primary active:scale-95 transition-transform">
+<div class="bg-primary-container/40 px-5 py-1 rounded-full mb-1 flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person_search</span>
+</div>
+<span class="font-label-md text-[10px] font-bold">Profissional</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-secondary-container/30 rounded-full px-2 py-1 active:scale-95 transition-transform">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-md text-[10px] mt-1">Perfil</span>
+</button>
+</nav>
+<!-- Overlays & Modals (Hidden initially) -->
+<!-- Attachment Menu Overlay -->
+<div class="fixed inset-0 bg-scrim/40 backdrop-blur-sm z-50 hidden" id="attachment-overlay" onclick="toggleAttachmentMenu()">
+<div class="absolute bottom-0 left-0 w-full bg-surface rounded-t-3xl shadow-2xl p-6 transition-transform transform translate-y-full" id="attachment-menu" onclick="event.stopPropagation()">
+<div class="w-12 h-1.5 bg-outline-variant/40 rounded-full mx-auto mb-6"></div>
+<div class="grid grid-cols-2 gap-4 max-w-md mx-auto">
+<button class="flex flex-col items-center gap-2 p-4 rounded-2xl bg-surface-container-low hover:bg-surface-container transition-colors" onclick="toggleAttachmentMenu()">
+<div class="w-12 h-12 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined">image</span>
+</div>
+<span class="font-label-md text-on-surface text-center">Enviar Imagem/<br/>Vídeo</span>
+</button>
+<button class="flex flex-col items-center gap-2 p-4 rounded-2xl bg-surface-container-low hover:bg-surface-container transition-colors" onclick="toggleAttachmentMenu()">
+<div class="w-12 h-12 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined">description</span>
+</div>
+<span class="font-label-md text-on-surface text-center">Exame Clínico<br/>(PDF)</span>
+</button>
+<button class="flex flex-col items-center gap-2 p-4 rounded-2xl bg-surface-container-low hover:bg-surface-container transition-colors" onclick="openPainModal()">
+<div class="w-12 h-12 rounded-full bg-error-container text-on-error-container flex items-center justify-center">
+<span class="material-symbols-outlined">sentiment_dissatisfied</span>
+</div>
+<span class="font-label-md text-on-surface text-center">Registrar Nível<br/>de Dor</span>
+</button>
+<button class="flex flex-col items-center gap-2 p-4 rounded-2xl bg-surface-container-low hover:bg-surface-container transition-colors" onclick="toggleAttachmentMenu()">
+<div class="w-12 h-12 rounded-full bg-tertiary-container text-on-tertiary-container flex items-center justify-center">
+<span class="material-symbols-outlined">fitness_center</span>
+</div>
+<span class="font-label-md text-on-surface text-center">Ver Meus<br/>Exercícios</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Pain Level Modal -->
+<div class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[60] hidden flex items-center justify-center p-4" id="pain-modal-overlay">
+<div class="bg-surface w-full max-w-sm rounded-3xl p-6 shadow-2xl opacity-0 scale-95 transition-all duration-300" id="pain-modal">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-title-md text-title-md text-on-surface">Nível de Dor</h3>
+<button class="text-on-surface-variant p-1 rounded-full hover:bg-surface-variant" onclick="closePainModal()">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<div class="flex flex-col items-center gap-6">
+<div class="text-6xl transition-all duration-300 transform scale-110" id="pain-emoji">😐</div>
+<div class="w-full px-2">
+<input class="w-full h-2 bg-surface-variant rounded-lg appearance-none cursor-pointer accent-primary" id="pain-slider" max="10" min="1" oninput="updatePainLevel()" type="range" value="5"/>
+<div class="flex justify-between mt-2 font-label-md text-on-surface-variant">
+<span>1 (Leve)</span>
+<span>10 (Intensa)</span>
+</div>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface text-center font-medium" id="pain-description">Desconforto Moderado</p>
+<button class="w-full py-3 bg-primary text-on-primary rounded-full font-label-lg font-bold hover:bg-primary/90 transition-colors shadow-md mt-2" onclick="submitPainLevel()">
+                Registrar Dor
+            </button>
+</div>
+</div>
+</div>
+<!-- Call Overlay -->
+<div class="fixed inset-0 bg-inverse-surface/95 backdrop-blur-xl z-[100] hidden flex flex-col justify-between items-center py-12 px-6" id="call-overlay">
+<div class="w-full flex justify-between items-start">
+<button class="text-inverse-on-surface p-2 rounded-full hover:bg-white/10" onclick="endCall()">
+<span class="material-symbols-outlined">expand_more</span>
+</button>
+</div>
+<div class="flex flex-col items-center gap-6">
+<div class="relative">
+<img alt="Dra Ana" class="w-32 h-32 rounded-full object-cover border-4 border-inverse-on-surface shadow-2xl relative z-10" src="assets/img/dra_ana_costa.png"/>
+<!-- Pulsing rings -->
+<div class="absolute inset-0 rounded-full border-2 border-white/30 animate-[ping_2s_cubic-bezier(0,0,0.2,1)_infinite]"></div>
+<div class="absolute inset-[-20px] rounded-full border-2 border-white/20 animate-[ping_2.5s_cubic-bezier(0,0,0.2,1)_infinite_0.5s]"></div>
+</div>
+<div class="text-center">
+<h2 class="font-title-lg text-title-lg text-inverse-on-surface mb-1">Dra. Ana Costa</h2>
+<p class="font-body-md text-inverse-on-surface/80" id="call-status">Chamando...</p>
+</div>
+</div>
+<div class="flex items-center gap-6 bg-white/10 p-4 rounded-[32px] backdrop-blur-md">
+<button class="w-14 h-14 rounded-full bg-white/20 text-inverse-on-surface flex items-center justify-center hover:bg-white/30 transition-colors backdrop-blur-lg">
+<span class="material-symbols-outlined">mic_off</span>
+</button>
+<button class="w-14 h-14 rounded-full bg-white/20 text-inverse-on-surface flex items-center justify-center hover:bg-white/30 transition-colors backdrop-blur-lg" id="cam-toggle-btn">
+<span class="material-symbols-outlined">videocam_off</span>
+</button>
+<button class="w-16 h-16 rounded-full bg-error text-on-error flex items-center justify-center shadow-lg hover:bg-error/90 transition-colors" onclick="endCall()">
+<span class="material-symbols-outlined text-[32px]">call_end</span>
+</button>
+</div>
+</div>
+<script>
+    const chatCanvas = document.getElementById('chat-canvas');
+    const messageInput = document.getElementById('message-input');
+    
+    function getCurrentTime() {
+        const now = new Date();
+        return `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+    }
+
+    function scrollToBottom() {
+        chatCanvas.scrollTop = chatCanvas.scrollHeight;
+    }
+
+    function handleKeyPress(event) {
+        if (event.key === 'Enter') {
+            sendMessage();
+        }
+    }
+
+    function sendMessage() {
+        const text = messageInput.value.trim();
+        if (!text) return;
+
+        appendSenderMessage(text);
+        messageInput.value = '';
+        scrollToBottom();
+
+        // Simulate reply
+        setTimeout(() => {
+            appendRecipientMessage('Perfeito! Vou dar uma olhada e te respondo com calma em instantes, continue se cuidando.');
+            scrollToBottom();
+        }, 2000);
+    }
+
+    function appendSenderMessage(text) {
+        const time = getCurrentTime();
+        const html = `
+        <div class="flex items-end gap-2 max-w-[85%] self-end fade-in">
+            <div class="bg-primary text-on-primary p-inset-card rounded-[16px] rounded-br-sm shadow-[0px_4px_12px_rgba(112,81,141,0.15)]">
+                <p class="font-body-md text-body-md">${text}</p>
+                <div class="flex justify-end mt-1 gap-1 items-center">
+                    <span class="font-label-md text-[10px] opacity-80">${time}</span>
+                    <span class="material-symbols-outlined text-[14px]">done_all</span>
+                </div>
+            </div>
+        </div>
+        `;
+        chatCanvas.insertAdjacentHTML('beforeend', html);
+    }
+
+    function appendRecipientMessage(text) {
+        const time = getCurrentTime();
+        const html = `
+        <div class="flex items-end gap-2 max-w-[85%] self-start fade-in">
+            <div class="bg-surface-container text-on-surface p-inset-card rounded-[16px] rounded-bl-sm shadow-[0px_2px_8px_rgba(0,0,0,0.04)] border border-outline-variant/20">
+                <p class="font-body-md text-body-md">${text}</p>
+                <div class="flex justify-end mt-1">
+                    <span class="font-label-md text-[10px] text-on-surface-variant">${time}</span>
+                </div>
+            </div>
+        </div>
+        `;
+        chatCanvas.insertAdjacentHTML('beforeend', html);
+    }
+
+    // Audio Recording Logic
+    let audioTimerInterval;
+    let audioSeconds = 0;
+
+    function startAudioRecording() {
+        document.getElementById('default-input-bar').classList.add('hidden');
+        document.getElementById('audio-recording-bar').classList.remove('hidden');
+        audioSeconds = 0;
+        updateAudioTimer();
+        audioTimerInterval = setInterval(() => {
+            audioSeconds++;
+            updateAudioTimer();
+        }, 1000);
+    }
+
+    function updateAudioTimer() {
+        const mins = Math.floor(audioSeconds / 60).toString().padStart(2, '0');
+        const secs = (audioSeconds % 60).toString().padStart(2, '0');
+        document.getElementById('recording-timer').textContent = `${mins}:${secs}`;
+    }
+
+    function stopAudioRecording() {
+        clearInterval(audioTimerInterval);
+        document.getElementById('audio-recording-bar').classList.add('hidden');
+        document.getElementById('default-input-bar').classList.remove('hidden');
+        
+        if (audioSeconds > 0) {
+            sendAudioMessage(audioSeconds);
+        }
+        audioSeconds = 0;
+    }
+
+    function sendAudioMessage(durationSecs) {
+        const time = getCurrentTime();
+        const mins = Math.floor(durationSecs / 60).toString().padStart(2, '0');
+        const secs = (durationSecs % 60).toString().padStart(2, '0');
+        const durationStr = `${mins}:${secs}`;
+
+        const html = `
+        <div class="flex items-end gap-2 max-w-[85%] self-end fade-in">
+            <div class="bg-primary text-on-primary p-3 rounded-[16px] rounded-br-sm shadow-[0px_4px_12px_rgba(112,81,141,0.15)] w-64">
+                <div class="flex items-center gap-3">
+                    <button class="bg-on-primary/20 p-2 rounded-full flex-shrink-0 hover:bg-on-primary/30 transition-colors">
+                        <span class="material-symbols-outlined text-[20px]">play_arrow</span>
+                    </button>
+                    <div class="flex-grow flex flex-col justify-center">
+                        <div class="w-full h-1.5 bg-on-primary/30 rounded-full overflow-hidden">
+                            <div class="w-1/3 h-full bg-on-primary rounded-full"></div>
+                        </div>
+                        <div class="flex justify-between mt-1">
+                            <span class="font-label-md text-[10px] opacity-80">${durationStr}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex justify-end mt-1 gap-1 items-center">
+                    <span class="font-label-md text-[10px] opacity-80">${time}</span>
+                    <span class="material-symbols-outlined text-[14px]">done_all</span>
+                </div>
+            </div>
+        </div>
+        `;
+        chatCanvas.insertAdjacentHTML('beforeend', html);
+        scrollToBottom();
+    }
+
+    // Attachment Menu Logic
+    function toggleAttachmentMenu() {
+        const overlay = document.getElementById('attachment-overlay');
+        const menu = document.getElementById('attachment-menu');
+        
+        if (overlay.classList.contains('hidden')) {
+            overlay.classList.remove('hidden');
+            // Small delay to allow display:block to apply before animating transform
+            setTimeout(() => {
+                menu.classList.remove('translate-y-full');
+            }, 10);
+        } else {
+            menu.classList.add('translate-y-full');
+            setTimeout(() => {
+                overlay.classList.add('hidden');
+            }, 300); // match transition duration
+        }
+    }
+
+    // Pain Modal Logic
+    const painEmojis = {
+        1: { emoji: '😀', color: '#4ade80', desc: 'Sem Dor / Muito Leve' },
+        2: { emoji: '🙂', color: '#4ade80', desc: 'Leve' },
+        3: { emoji: '😐', color: '#4ade80', desc: 'Desconforto Leve' },
+        4: { emoji: '😕', color: '#facc15', desc: 'Desconforto Moderado' },
+        5: { emoji: '🙁', color: '#facc15', desc: 'Dor Moderada' },
+        6: { emoji: '😖', color: '#facc15', desc: 'Dor Forte' },
+        7: { emoji: '😫', color: '#f87171', desc: 'Dor Muito Forte' },
+        8: { emoji: '😩', color: '#f87171', desc: 'Dor Intensa' },
+        9: { emoji: '😭', color: '#ef4444', desc: 'Dor Muito Intensa' },
+        10: { emoji: '😵', color: '#dc2626', desc: 'Dor Insuportável' }
+    };
+
+    function openPainModal() {
+        toggleAttachmentMenu(); // close bottom sheet
+        const overlay = document.getElementById('pain-modal-overlay');
+        const modal = document.getElementById('pain-modal');
+        
+        overlay.classList.remove('hidden');
+        setTimeout(() => {
+            modal.classList.remove('opacity-0', 'scale-95');
+            modal.classList.add('opacity-100', 'scale-100');
+        }, 10);
+        updatePainLevel(); // init state
+    }
+
+    function closePainModal() {
+        const overlay = document.getElementById('pain-modal-overlay');
+        const modal = document.getElementById('pain-modal');
+        
+        modal.classList.remove('opacity-100', 'scale-100');
+        modal.classList.add('opacity-0', 'scale-95');
+        
+        setTimeout(() => {
+            overlay.classList.add('hidden');
+        }, 300);
+    }
+
+    function updatePainLevel() {
+        const val = document.getElementById('pain-slider').value;
+        const config = painEmojis[val];
+        
+        const emojiEl = document.getElementById('pain-emoji');
+        const descEl = document.getElementById('pain-description');
+        
+        emojiEl.textContent = config.emoji;
+        // Simple bounce animation on change
+        emojiEl.style.transform = 'scale(1.3)';
+        setTimeout(() => emojiEl.style.transform = 'scale(1.1)', 150);
+        
+        descEl.textContent = config.desc;
+        descEl.style.color = config.color;
+    }
+
+    function submitPainLevel() {
+        const val = document.getElementById('pain-slider').value;
+        const config = painEmojis[val];
+        
+        const messageText = `Nível de dor registrado: ${val}/10 (${config.desc}) ${config.emoji}`;
+        appendSenderMessage(messageText);
+        scrollToBottom();
+        closePainModal();
+        
+        // Simulate supportive reply
+        setTimeout(() => {
+            appendRecipientMessage(val > 6 ? 'Puxa, vi que a dor está forte. Recomendo aplicar compressa de gelo por 15 min agora e suspender os exercícios de hoje. Me avise se não melhorar.' : 'Obrigada por registrar. Está dentro do esperado para esta fase do tratamento. Pode manter os exercícios leves.');
+            scrollToBottom();
+        }, 2000);
+    }
+
+    // Call Logic
+    function startCall(type) {
+        const overlay = document.getElementById('call-overlay');
+        const statusText = document.getElementById('call-status');
+        const camBtn = document.getElementById('cam-toggle-btn');
+        
+        if(type === 'audio') {
+            camBtn.classList.add('hidden');
+            statusText.textContent = 'Chamada de Voz...';
+        } else {
+            camBtn.classList.remove('hidden');
+            statusText.textContent = 'Chamada de Vídeo...';
+        }
+
+        overlay.classList.remove('hidden');
+        overlay.classList.add('overlay-enter');
+        setTimeout(() => {
+            overlay.classList.remove('overlay-enter');
+            overlay.classList.add('overlay-enter-active');
+        }, 10);
+    }
+
+    function endCall() {
+        const overlay = document.getElementById('call-overlay');
+        overlay.classList.remove('overlay-enter-active');
+        overlay.classList.add('overlay-leave');
+        
+        setTimeout(() => {
+            overlay.classList.remove('overlay-leave');
+            overlay.classList.add('overlay-leave-active');
+            setTimeout(() => {
+                overlay.classList.add('hidden');
+                overlay.classList.remove('overlay-leave-active');
+            }, 200);
+        }, 10);
+    }
+</script>
+</body></html>

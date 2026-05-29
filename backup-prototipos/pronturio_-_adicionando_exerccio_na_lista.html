@@ -1,0 +1,262 @@
+<!DOCTYPE html><html class="light" lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Para Casa - Mariana Silva</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-fixed-variant": "#494900",
+                        "on-tertiary-fixed": "#1d1d00",
+                        "inverse-surface": "#322f34",
+                        "on-primary-fixed-variant": "#573974",
+                        "surface-container-highest": "#e7e0e6",
+                        "on-error-container": "#93000a",
+                        "on-secondary-container": "#795465",
+                        "surface": "#fff7fd",
+                        "on-surface-variant": "#4b454e",
+                        "primary-fixed": "#f0dbff",
+                        "surface-container-low": "#f9f1f7",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary": "#795465",
+                        "surface-variant": "#e7e0e6",
+                        "primary": "#70518d",
+                        "inverse-primary": "#dcb8fc",
+                        "error-container": "#ffdad6",
+                        "surface-container-high": "#ede6ec",
+                        "on-secondary-fixed-variant": "#5f3c4d",
+                        "secondary-fixed": "#ffd8e7",
+                        "outline-variant": "#cdc3cf",
+                        "on-secondary": "#ffffff",
+                        "inverse-on-surface": "#f6eff5",
+                        "on-tertiary-container": "#525300",
+                        "on-surface": "#1d1b1f",
+                        "secondary-fixed-dim": "#e9bacd",
+                        "tertiary-container": "#c7c76d",
+                        "tertiary": "#616211",
+                        "primary-fixed-dim": "#dcb8fc",
+                        "error": "#ba1a1a",
+                        "surface-dim": "#dfd8de",
+                        "outline": "#7c747f",
+                        "on-primary-container": "#60427d",
+                        "background": "#fff7fd",
+                        "on-primary": "#ffffff",
+                        "on-primary-fixed": "#290a45",
+                        "surface-bright": "#fff7fd",
+                        "secondary-container": "#fdcde1",
+                        "on-background": "#1d1b1f",
+                        "surface-container": "#f3ecf2",
+                        "on-error": "#ffffff",
+                        "primary-container": "#d8b4f8",
+                        "on-secondary-fixed": "#2e1221",
+                        "tertiary-fixed-dim": "#cbcb71",
+                        "tertiary-fixed": "#e8e78a",
+                        "surface-tint": "#70518d",
+                        "on-tertiary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-lg": "24px",
+                        "stack-sm": "8px",
+                        "margin-mobile": "16px",
+                        "stack-md": "16px",
+                        "gutter": "16px",
+                        "base": "8px",
+                        "inset-card": "16px"
+                    },
+                    "fontFamily": {
+                        "title-md": ["Manrope", "sans-serif"],
+                        "subtitle-lg": ["Manrope", "sans-serif"],
+                        "label-md": ["Manrope", "sans-serif"],
+                        "body-md": ["Manrope", "sans-serif"],
+                        "label-lg": ["Manrope", "sans-serif"],
+                        "subtitle-md": ["Manrope", "sans-serif"],
+                        "body-lg": ["Manrope", "sans-serif"],
+                        "title-lg": ["Manrope", "sans-serif"]
+                    },
+                    "fontSize": {
+                        "title-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "subtitle-lg": ["20px", {"lineHeight": "28px", "fontWeight": "500"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "label-lg": ["13px", {"lineHeight": "18px", "fontWeight": "500"}],
+                        "subtitle-md": ["18px", {"lineHeight": "26px", "fontWeight": "500"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "title-lg": ["28px", {"lineHeight": "36px", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+
+    <!-- Firebase CDN SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <!-- Bella Flora Custom Modules -->
+    <script src="navigation.js" defer></script>
+    <script src="sync.js" defer></script>
+</head>
+
+<body class="bg-surface-container font-body-md text-on-surface antialiased pb-32">
+<!-- TopAppBar (From JSON) -->
+<header class="bg-surface shadow-sm h-[64px] w-full top-0 sticky z-50 flex items-center justify-between px-margin-mobile"><button class="text-primary hover:bg-primary-container/20 transition-colors active:scale-95 duration-200 p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="font-title-md text-title-md text-primary tracking-tight">Prontuário</h1>
+<button class="text-primary hover:bg-primary-container/20 transition-colors active:scale-95 duration-200 p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button></header>
+<main class="px-margin-mobile pt-stack-md pb-stack-lg max-w-3xl mx-auto space-y-stack-lg">
+<!-- Patient Info Sub-header -->
+<section class="bg-surface-container-low rounded-xl p-inset-card flex items-center space-x-gutter shadow-[0px_4px_12px_rgba(0,0,0,0.08)] justify-between">
+<div class="relative">
+<img alt="Mariana Silva" class="w-[64px] h-[64px] rounded-full object-cover border-2 border-primary-container" data-alt="A professional, well-lit headshot of a 32-year-old woman smiling warmly. The lighting is soft and high-key, complementing a modern, clean, light-mode aesthetic with subtle lavender undertones in the background to match a premium physical therapy clinic brand." src="assets/img/mariana_silva.png">
+</div>
+<div class="flex-1">
+<h2 class="font-subtitle-lg text-subtitle-lg text-on-surface">Mariana Silva</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">32 anos • ID: 8492-A</p>
+</div>
+<button class="text-primary hover:bg-primary-container/20 transition-colors active:scale-95 duration-200 p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="chat">chat</span>
+</button>
+</section>
+<!-- Tabs -->
+<nav class="flex border-b border-surface-variant overflow-x-auto hide-scrollbar"><button class="flex-1 py-stack-sm text-center border-b-2 border-transparent font-subtitle-md text-subtitle-md text-on-surface-variant hover:bg-surface-container/50 transition-colors px-4 whitespace-nowrap">Histórico</button>
+<button class="flex-1 py-stack-sm text-center border-b-2 border-transparent font-subtitle-md text-subtitle-md text-on-surface-variant hover:bg-surface-container/50 transition-colors px-4 whitespace-nowrap">Evolução</button>
+<button class="flex-1 py-stack-sm text-center border-b-2 border-primary font-subtitle-md text-subtitle-md text-primary px-4 whitespace-nowrap font-bold">
+                Para Casa
+</button></nav>
+<!-- Content Area -->
+<section class="py-stack-lg">
+<!-- Section Header -->
+<div class="flex items-center justify-between mb-stack-md">
+<h3 class="font-subtitle-md text-subtitle-md text-on-surface">Prescrição Domiciliar</h3>
+<button class="flex items-center gap-1 text-primary font-label-lg text-label-lg py-1 px-3 rounded-full hover:bg-primary-fixed transition-colors active:scale-95">
+<span class="material-symbols-outlined text-[18px]" data-icon="add">add</span>
+                    Novo
+                </button>
+</div>
+<!-- Exercises List -->
+<div class="flex flex-col gap-stack-md"><div class="bg-surface-container-lowest p-inset-card rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.08)] border-2 border-primary/30 animate-in fade-in slide-in-from-top-4 duration-300">
+<div class="flex justify-between items-start mb-4">
+<div class="flex-1">
+<label class="font-label-lg text-label-lg text-primary block mb-1" for="new-exercise-name">Nome do Exercício</label>
+<input class="w-full h-[48px] px-3 rounded-lg border border-outline-variant/60 bg-transparent text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-shadow" id="new-exercise-name" placeholder="Ex: Alongamento Cervical" type="text">
+</div>
+<button class="text-on-surface-variant hover:text-error transition-colors p-1 -mr-1 -mt-1 active:scale-95 ml-2">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</button>
+</div>
+<div class="grid grid-cols-3 gap-3 mb-4">
+<div class="flex flex-col gap-1">
+<label class="font-label-lg text-label-lg text-primary" for="new-series">Séries</label>
+<input class="h-[48px] px-3 rounded-lg border border-outline-variant/60 bg-transparent text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-shadow text-center" id="new-series" placeholder="Ex: 3" type="number">
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-lg text-label-lg text-primary" for="new-reps">Repetições</label>
+<input class="h-[48px] px-3 rounded-lg border border-outline-variant/60 bg-transparent text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-shadow text-center" id="new-reps" placeholder="Ex: 10" type="number">
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-lg text-label-lg text-primary" for="new-pause">Pausa</label>
+<div class="relative">
+<span class="absolute left-2 top-1/2 -translate-y-1/2 material-symbols-outlined text-[18px] text-outline" data-icon="timer">timer</span>
+<input class="h-[48px] pl-8 pr-2 w-full rounded-lg border border-outline-variant/60 bg-transparent text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-shadow text-center" id="new-pause" placeholder="30s" type="text">
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-lg text-label-lg text-primary" for="new-obs">Observações</label>
+<textarea class="w-full px-3 py-3 rounded-lg border border-outline-variant/60 bg-transparent text-on-surface font-body-md placeholder:text-on-surface-variant/50 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-shadow resize-none" id="new-obs" placeholder="Instruções adicionais para o paciente..." rows="2"></textarea>
+</div>
+</div>
+<!-- Exercise Card 1 -->
+<div class="bg-surface-container-lowest p-inset-card rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.04)] border border-outline-variant/20">
+<div class="flex justify-between items-start mb-4">
+<h4 class="font-subtitle-lg text-subtitle-lg text-on-surface max-w-[85%]">Alongamento de Isquiotibiais</h4>
+<button class="text-on-surface-variant hover:text-error transition-colors p-1 -mr-1 -mt-1 active:scale-95">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</button>
+</div>
+<div class="grid grid-cols-3 gap-3 mb-4">
+<div class="flex flex-col gap-1">
+<label class="font-label-lg text-label-lg text-on-surface">Séries</label>
+<input class="h-[48px] px-3 rounded-lg border border-outline-variant/60 bg-transparent text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-shadow text-center" type="number" value="3">
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-lg text-label-lg text-on-surface">Repetições</label>
+<input class="h-[48px] px-3 rounded-lg border border-outline-variant/60 bg-transparent text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-shadow text-center" type="number" value="15">
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-lg text-label-lg text-on-surface">Pausa</label>
+<input class="h-[48px] px-3 rounded-lg border border-outline-variant/60 bg-transparent text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-shadow text-center" type="text" value="60s">
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-lg text-label-lg text-on-surface">Observações</label>
+<textarea class="w-full px-3 py-3 rounded-lg border border-outline-variant/60 bg-transparent text-on-surface font-body-md placeholder:text-on-surface-variant/50 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-shadow resize-none" placeholder="Ex: Manter a coluna reta..." rows="2">Sustentar a posição no limite do conforto.</textarea>
+</div>
+</div>
+<!-- Exercise Card 2 -->
+<div class="bg-surface-container-lowest p-inset-card rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.04)] border border-outline-variant/20">
+<div class="flex justify-between items-start mb-4">
+<h4 class="font-subtitle-lg text-subtitle-lg text-on-surface max-w-[85%]">Ponte Pélvica</h4>
+<button class="text-on-surface-variant hover:text-error transition-colors p-1 -mr-1 -mt-1 active:scale-95">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</button>
+</div>
+<div class="grid grid-cols-3 gap-3 mb-4">
+<div class="flex flex-col gap-1">
+<label class="font-label-lg text-label-lg text-on-surface">Séries</label>
+<input class="h-[48px] px-3 rounded-lg border border-outline-variant/60 bg-transparent text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-shadow text-center" type="number" value="3">
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-lg text-label-lg text-on-surface">Repetições</label>
+<input class="h-[48px] px-3 rounded-lg border border-outline-variant/60 bg-transparent text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-shadow text-center" type="number" value="12">
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-lg text-label-lg text-on-surface">Pausa</label>
+<input class="h-[48px] px-3 rounded-lg border border-outline-variant/60 bg-transparent text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-shadow text-center" type="text" value="30s">
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-lg text-label-lg text-on-surface">Observações</label>
+<textarea class="w-full px-3 py-3 rounded-lg border border-outline-variant/60 bg-transparent text-on-surface font-body-md placeholder:text-on-surface-variant/50 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-shadow resize-none" placeholder="Adicionar notas..." rows="2">Concentrar na contração dos glúteos.</textarea>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Fixed Footer Action -->
+<div class="fixed bottom-[80px] left-0 w-full px-margin-mobile py-4 bg-gradient-to-t from-surface-container via-surface-container to-transparent z-40">
+<button class="w-full h-[52px] bg-primary text-on-primary font-subtitle-lg text-subtitle-lg rounded-xl shadow-[0px_4px_12px_rgba(112,81,141,0.2)] flex items-center justify-center gap-2 active:scale-[0.98] transition-transform">
+<span class="material-symbols-outlined text-[20px]" data-icon="send">send</span>
+            Salvar e Enviar
+        </button>
+</div>
+<!-- BottomNavBar (From JSON) -->
+<nav class="flex border-b border-surface-variant overflow-x-auto hide-scrollbar">
+</nav>
+</body></html>

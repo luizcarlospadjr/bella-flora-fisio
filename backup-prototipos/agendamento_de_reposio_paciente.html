@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-fixed-variant": "#494900",
+                    "on-secondary-fixed-variant": "#5f3c4d",
+                    "on-tertiary": "#ffffff",
+                    "surface-container-low": "#f9f1f7",
+                    "on-error-container": "#93000a",
+                    "background": "#fff7fd",
+                    "tertiary-container": "#c7c76d",
+                    "surface-container-high": "#ede6ec",
+                    "primary-fixed": "#f0dbff",
+                    "on-surface": "#1d1b1f",
+                    "outline-variant": "#cdc3cf",
+                    "on-background": "#1d1b1f",
+                    "tertiary": "#616211",
+                    "outline": "#7c747f",
+                    "surface-container": "#f3ecf2",
+                    "on-tertiary-container": "#525300",
+                    "surface-dim": "#dfd8de",
+                    "on-primary-fixed": "#290a45",
+                    "on-primary-container": "#60427d",
+                    "primary": "#70518d",
+                    "surface": "#fff7fd",
+                    "surface-variant": "#e7e0e6",
+                    "inverse-on-surface": "#f6eff5",
+                    "primary-container": "#d8b4f8",
+                    "surface-container-highest": "#e7e0e6",
+                    "surface-bright": "#fff7fd",
+                    "secondary-fixed": "#ffd8e7",
+                    "on-secondary-container": "#795465",
+                    "secondary-container": "#fdcde1",
+                    "on-error": "#ffffff",
+                    "on-secondary": "#ffffff",
+                    "secondary": "#795465",
+                    "on-primary-fixed-variant": "#573974",
+                    "surface-tint": "#70518d",
+                    "error": "#ba1a1a",
+                    "inverse-primary": "#dcb8fc",
+                    "primary-fixed-dim": "#dcb8fc",
+                    "inverse-surface": "#322f34",
+                    "on-primary": "#ffffff",
+                    "tertiary-fixed": "#e8e78a",
+                    "error-container": "#ffdad6",
+                    "tertiary-fixed-dim": "#cbcb71",
+                    "surface-container-lowest": "#ffffff",
+                    "on-secondary-fixed": "#2e1221",
+                    "secondary-fixed-dim": "#e9bacd",
+                    "on-tertiary-fixed": "#1d1d00",
+                    "on-surface-variant": "#4b454e"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack-lg": "24px",
+                    "margin-mobile": "16px",
+                    "stack-sm": "8px",
+                    "gutter": "16px",
+                    "base": "8px",
+                    "stack-md": "16px",
+                    "inset-card": "16px"
+            },
+            "fontFamily": {
+                    "title-lg": ["Manrope"],
+                    "body-lg": ["Manrope"],
+                    "subtitle-md": ["Manrope"],
+                    "subtitle-lg": ["Manrope"],
+                    "label-md": ["Manrope"],
+                    "label-lg": ["Manrope"],
+                    "body-md": ["Manrope"],
+                    "title-md": ["Manrope"]
+            },
+            "fontSize": {
+                    "title-lg": ["28px", {"lineHeight": "36px", "fontWeight": "600"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "subtitle-md": ["18px", {"lineHeight": "26px", "fontWeight": "500"}],
+                    "subtitle-lg": ["20px", {"lineHeight": "28px", "fontWeight": "500"}],
+                    "label-md": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "label-lg": ["13px", {"lineHeight": "18px", "fontWeight": "500"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "title-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  
+    <!-- Firebase CDN SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <!-- Bella Flora Custom Modules -->
+    <script src="navigation.js" defer></script>
+    <script src="sync.js" defer></script>
+</head>
+
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-md overflow-x-hidden">
+<!-- TopAppBar -->
+<nav class="fixed top-0 left-0 w-full z-50 bg-surface shadow-sm h-16 flex justify-between items-center px-margin-mobile">
+<div class="flex items-center gap-4">
+<button class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-surface-container-high transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined text-primary" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="text-title-lg font-title-lg font-semibold text-primary">Reposição de Consulta</h1>
+</div>
+<button class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-primary" data-icon="notifications">notifications</span>
+</button>
+</nav>
+<!-- Content Canvas -->
+<main class="flex-grow pt-20 pb-32 px-margin-mobile max-w-2xl mx-auto w-full">
+<!-- Header Image Decoration -->
+<div class="mb-stack-lg rounded-xl overflow-hidden shadow-sm aspect-[21/9]">
+<img alt="Clínica Bella Flora Fisio" class="w-full h-full object-cover" data-alt="A tranquil physiotherapy treatment room with soft natural lighting coming through large windows. The interior features a professional lavender and white color palette, with a comfortable treatment table and minimalist wooden accents. The atmosphere is peaceful and healing, perfectly reflecting a high-end health and wellness clinical environment." src="assets/img/clinic_interior.png"/>
+</div>
+<!-- Instruction Text -->
+<section class="mb-stack-lg">
+<p class="text-on-surface-variant font-body-lg text-body-lg">
+                Selecione uma data e horário para repor sua consulta pendente.
+            </p>
+</section>
+<!-- Calendar Component -->
+<section class="bg-surface-container-lowest rounded-xl p-inset-card shadow-[0px_4px_12px_rgba(0,0,0,0.08)] mb-stack-lg">
+<div class="flex items-center justify-between mb-stack-md">
+<h3 class="text-primary font-subtitle-lg text-subtitle-lg">Outubro 2023</h3>
+<div class="flex gap-2">
+<button class="p-2 rounded-full hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-outline" data-icon="chevron_left">chevron_left</span>
+</button>
+<button class="p-2 rounded-full hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-outline" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- Calendar Grid -->
+<div class="grid grid-cols-7 gap-1 text-center">
+<div class="text-label-md font-label-md text-outline py-2">D</div>
+<div class="text-label-md font-label-md text-outline py-2">S</div>
+<div class="text-label-md font-label-md text-outline py-2">T</div>
+<div class="text-label-md font-label-md text-outline py-2">Q</div>
+<div class="text-label-md font-label-md text-outline py-2">Q</div>
+<div class="text-label-md font-label-md text-outline py-2">S</div>
+<div class="text-label-md font-label-md text-outline py-2">S</div>
+<!-- Calendar Days Mockup -->
+<div class="text-body-md py-3 text-outline-variant">25</div>
+<div class="text-body-md py-3 text-outline-variant">26</div>
+<div class="text-body-md py-3 text-outline-variant">27</div>
+<div class="text-body-md py-3 text-outline-variant">28</div>
+<div class="text-body-md py-3 text-outline-variant">29</div>
+<div class="text-body-md py-3 text-outline-variant">30</div>
+<div class="text-body-md py-3 font-medium">1</div>
+<div class="text-body-md py-3 font-medium">2</div>
+<div class="text-body-md py-3 font-medium">3</div>
+<div class="text-body-md py-3 font-medium">4</div>
+<div class="text-body-md py-3 font-medium">5</div>
+<div class="text-body-md py-3 font-medium">6</div>
+<div class="text-body-md py-3 font-medium">7</div>
+<div class="text-body-md py-3 font-medium">8</div>
+<div class="text-body-md py-3 font-medium">9</div>
+<div class="text-body-md py-3 font-medium">10</div>
+<div class="text-body-md py-3 font-medium">11</div>
+<div class="text-body-md py-3 font-medium">12</div>
+<div class="relative py-3 flex items-center justify-center">
+<button class="w-10 h-10 bg-primary text-on-primary rounded-full text-body-md font-bold shadow-md z-10 transition-transform active:scale-95">13</button>
+</div>
+<div class="text-body-md py-3 font-medium hover:bg-surface-container-high rounded-full cursor-pointer transition-colors">14</div>
+<div class="text-body-md py-3 font-medium hover:bg-surface-container-high rounded-full cursor-pointer transition-colors">15</div>
+<div class="text-body-md py-3 font-medium hover:bg-surface-container-high rounded-full cursor-pointer transition-colors">16</div>
+<div class="text-body-md py-3 font-medium hover:bg-surface-container-high rounded-full cursor-pointer transition-colors">17</div>
+<div class="text-body-md py-3 font-medium hover:bg-surface-container-high rounded-full cursor-pointer transition-colors">18</div>
+<div class="text-body-md py-3 font-medium hover:bg-surface-container-high rounded-full cursor-pointer transition-colors">19</div>
+<div class="text-body-md py-3 font-medium hover:bg-surface-container-high rounded-full cursor-pointer transition-colors">20</div>
+<div class="text-body-md py-3 font-medium hover:bg-surface-container-high rounded-full cursor-pointer transition-colors">21</div>
+</div>
+</section>
+<!-- Time Slots Grid -->
+<section class="mb-12">
+<h3 class="text-primary font-subtitle-md text-subtitle-md mb-stack-md">Horários Disponíveis</h3>
+<div class="grid grid-cols-3 gap-3">
+<!-- Time Slot Card -->
+<button class="h-12 border-[1.5px] border-secondary text-secondary font-medium rounded-xl hover:bg-secondary-container transition-all flex items-center justify-center">08:00</button>
+<button class="h-12 border-[1.5px] border-secondary text-secondary font-medium rounded-xl hover:bg-secondary-container transition-all flex items-center justify-center">09:00</button>
+<button class="h-12 bg-primary text-on-primary font-bold rounded-xl shadow-md transition-all flex items-center justify-center">10:00</button>
+<button class="h-12 border-[1.5px] border-secondary text-secondary font-medium rounded-xl hover:bg-secondary-container transition-all flex items-center justify-center">14:00</button>
+<button class="h-12 border-[1.5px] border-secondary text-secondary font-medium rounded-xl hover:bg-secondary-container transition-all flex items-center justify-center">15:00</button>
+<button class="h-12 border-[1.5px] border-secondary text-secondary font-medium rounded-xl hover:bg-secondary-container transition-all flex items-center justify-center">16:00</button>
+<button class="h-12 border-[1.5px] border-secondary text-secondary font-medium rounded-xl hover:bg-secondary-container transition-all flex items-center justify-center">17:00</button>
+</div>
+</section>
+<!-- Confirm Button -->
+<div class="flex flex-col gap-4">
+<button class="h-[52px] w-full bg-primary text-on-primary rounded-xl font-bold shadow-lg hover:brightness-110 active:scale-95 transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined" data-icon="check_circle">check_circle</span>
+                Confirmar Reposição
+            </button>
+<p class="text-center text-label-md text-outline px-4 italic">A reposição será agendada para 13 de Outubro às 10:00.</p>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 bg-surface-container-low border-t border-outline-variant shadow-lg flex justify-around items-center px-2 py-3 pb-safe rounded-t-xl">
+<!-- Inicio (Active) -->
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl px-4 py-2 transition-all scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="home" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="text-label-md font-label-md">Início</span>
+</a>
+<!-- Tratamento -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 hover:bg-surface-container-high transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="assignment">assignment</span>
+<span class="text-label-md font-label-md">Tratamento</span>
+</a>
+<!-- Profissional -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 hover:bg-surface-container-high transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="medical_services">medical_services</span>
+<span class="text-label-md font-label-md">Profissional</span>
+</a>
+<!-- Perfil -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 hover:bg-surface-container-high transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="text-label-md font-label-md">Perfil</span>
+</a>
+</nav>
+<script>
+        // Simple micro-interactions for selection feedback
+        document.querySelectorAll('.grid-cols-3 button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Remove active classes from all
+                document.querySelectorAll('.grid-cols-3 button').forEach(b => {
+                    b.classList.remove('bg-primary', 'text-on-primary', 'font-bold', 'shadow-md');
+                    b.classList.add('border-[1.5px]', 'border-secondary', 'text-secondary', 'font-medium');
+                });
+                
+                // Add active classes to selected
+                this.classList.remove('border-[1.5px]', 'border-secondary', 'text-secondary', 'font-medium');
+                this.classList.add('bg-primary', 'text-on-primary', 'font-bold', 'shadow-md');
+            });
+        });
+
+        document.querySelectorAll('.grid-cols-7 .cursor-pointer').forEach(day => {
+            day.addEventListener('click', function() {
+                // Find previous active and reset it
+                const currentActive = document.querySelector('.grid-cols-7 .bg-primary');
+                if(currentActive) {
+                    const parent = currentActive.parentElement;
+                    const dayNum = currentActive.innerText;
+                    parent.innerHTML = dayNum;
+                    parent.classList.add('cursor-pointer', 'hover:bg-surface-container-high', 'transition-colors', 'font-medium');
+                }
+
+                // Make this one active
+                const dayValue = this.innerText;
+                this.innerHTML = `<button class="w-10 h-10 bg-primary text-on-primary rounded-full text-body-md font-bold shadow-md z-10 transition-transform active:scale-95">${dayValue}</button>`;
+                this.classList.remove('hover:bg-surface-container-high', 'font-medium');
+            });
+        });
+    </script>
+</body></html>

@@ -1,0 +1,393 @@
+<!DOCTYPE html><html class="light" lang="pt-BR" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<title>Bella Flora Fisio - Evolução da Paciente</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Google Fonts: Manrope -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration from Brand Anchors -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "outline-variant": "#cdc3cf",
+                    "primary-fixed-dim": "#dcb8fc",
+                    "on-primary-fixed": "#290a45",
+                    "on-primary-container": "#60427d",
+                    "on-error-container": "#93000a",
+                    "surface-container-high": "#ede6ec",
+                    "secondary": "#795465",
+                    "surface-container-low": "#f9f1f7",
+                    "surface-container": "#f3ecf2",
+                    "tertiary": "#616211",
+                    "on-secondary-fixed-variant": "#5f3c4d",
+                    "on-surface-variant": "#4b454e",
+                    "surface-variant": "#e7e0e6",
+                    "outline": "#7c747f",
+                    "on-tertiary": "#ffffff",
+                    "surface-dim": "#dfd8de",
+                    "surface": "#fff7fd",
+                    "error-container": "#ffdad6",
+                    "primary": "#70518d",
+                    "tertiary-fixed": "#e8e78a",
+                    "on-surface": "#1d1b1f",
+                    "on-secondary-fixed": "#2e1221",
+                    "on-primary": "#ffffff",
+                    "error": "#ba1a1a",
+                    "tertiary-container": "#c7c76d",
+                    "secondary-fixed": "#ffd8e7",
+                    "on-tertiary-container": "#525300",
+                    "surface-bright": "#fff7fd",
+                    "on-tertiary-fixed-variant": "#494900",
+                    "surface-tint": "#70518d",
+                    "on-primary-fixed-variant": "#573974",
+                    "inverse-on-surface": "#f6eff5",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary-fixed": "#1d1d00",
+                    "on-secondary-container": "#795465",
+                    "surface-container-highest": "#e7e0e6",
+                    "inverse-primary": "#dcb8fc",
+                    "secondary-container": "#fdcde1",
+                    "primary-fixed": "#f0dbff",
+                    "inverse-surface": "#322f34",
+                    "on-background": "#1d1b1f",
+                    "background": "#fff7fd",
+                    "on-secondary": "#ffffff",
+                    "secondary-fixed-dim": "#e9bacd",
+                    "tertiary-fixed-dim": "#cbcb71",
+                    "primary-container": "#d8b4f8",
+                    "on-error": "#ffffff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack-sm": "8px",
+                    "margin-mobile": "16px",
+                    "inset-card": "16px",
+                    "stack-md": "16px",
+                    "gutter": "16px",
+                    "base": "8px",
+                    "stack-lg": "24px"
+            },
+            "fontFamily": {
+                    "title-md": [
+                            "Manrope"
+                    ],
+                    "body-md": [
+                            "Manrope"
+                    ],
+                    "subtitle-md": [
+                            "Manrope"
+                    ],
+                    "subtitle-lg": [
+                            "Manrope"
+                    ],
+                    "body-lg": [
+                            "Manrope"
+                    ],
+                    "title-lg": [
+                            "Manrope"
+                    ],
+                    "label-md": [
+                            "Manrope"
+                    ],
+                    "label-lg": [
+                            "Manrope"
+                    ]
+            },
+            "fontSize": {
+                    "title-md": [
+                            "24px",
+                            {
+                                    "lineHeight": "32px",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "body-md": [
+                            "14px",
+                            {
+                                    "lineHeight": "20px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "subtitle-md": [
+                            "18px",
+                            {
+                                    "lineHeight": "26px",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "subtitle-lg": [
+                            "20px",
+                            {
+                                    "lineHeight": "28px",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "body-lg": [
+                            "16px",
+                            {
+                                    "lineHeight": "24px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "title-lg": [
+                            "28px",
+                            {
+                                    "lineHeight": "36px",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "label-md": [
+                            "12px",
+                            {
+                                    "lineHeight": "16px",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "label-lg": [
+                            "13px",
+                            {
+                                    "lineHeight": "18px",
+                                    "fontWeight": "500"
+                            }
+                    ]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        /* Base styles */
+        body {
+            background-color: theme('colors.background');
+            color: theme('colors.on-background');
+            font-family: 'Manrope', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Ambient Shadows */
+        .shadow-level-1 {
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        .shadow-level-2 {
+            box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.12);
+        }
+
+        /* Utilities */
+        .pb-safe {
+            padding-bottom: env(safe-area-inset-bottom, 24px);
+        }
+        .pt-safe {
+            padding-top: env(safe-area-inset-top, 0px);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+
+    <!-- Firebase CDN SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <!-- Bella Flora Custom Modules -->
+    <script src="navigation.js" defer></script>
+    <script src="sync.js" defer></script>
+</head>
+
+<body class="min-h-screen flex flex-col pb-[80px] md:pb-0 relative">
+<!-- JSON Component: TopAppBar -->
+<header class="bg-surface dark:bg-surface-container-high text-primary dark:text-primary-fixed-dim font-title-md text-title-md h-[64px] w-full top-0 sticky bg-surface dark:bg-surface-container-high shadow-sm shadow-[0px_4px_12px_rgba(0,0,0,0.08)] flex items-center justify-between px-margin-mobile w-full z-50 pt-safe">
+<button class="hover:bg-primary-container/20 transition-colors active:scale-95 duration-200 p-2 rounded-full flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 0;">arrow_back</span>
+</button>
+<h1 class="font-title-lg text-title-lg text-primary dark:text-primary-fixed-dim truncate px-4" style="opacity: 0;">Prontuário</h1>
+<button class="hover:bg-primary-container/20 transition-colors active:scale-95 duration-200 p-2 rounded-full flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 0;">more_vert</span>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 w-full max-w-4xl mx-auto md:px-margin-mobile md:py-stack-lg">
+<!-- Patient Profile Summary (Consistency with SCREEN_21) -->
+<section class="bg-surface-container-lowest shadow-level-1 mx-margin-mobile md:mx-0 mt-stack-md rounded-xl p-inset-card flex items-center gap-gutter">
+<div class="relative w-16 h-16 rounded-full overflow-hidden bg-surface-variant shrink-0">
+<img alt="Mariana Silva" class="w-full h-full object-cover" data-alt="A close-up portrait of a young woman with a soft, warm smile, representing a patient in a wellness setting. The lighting is bright and natural, creating a gentle and welcoming mood. The background is softly blurred with a hint of lavender, perfectly complementing the modern, clean, and tranquil UI design of the healthcare application." src="assets/img/mariana_silva.png">
+<button aria-label="Chat with patient" class="flex items-center justify-center hover:bg-primary-container/80 transition-colors active:scale-95 duration-200 text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 0;">chat</span>
+</button></div>
+<div class="flex-1 min-w-0">
+<h2 class="font-subtitle-lg text-subtitle-lg text-on-surface truncate">Mariana Silva</h2>
+<div class="flex items-center gap-2 mt-1">
+<span class="font-body-md text-body-md text-on-surface-variant">32 anos</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="font-body-md text-body-md text-on-surface-variant">ID: 8492-A</span>
+</div>
+</div>
+<div class="shrink-0">
+<button aria-label="Chat with patient" class="flex items-center justify-center hover:bg-primary-container/80 transition-colors active:scale-95 duration-200 text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 0;">chat</span>
+</button></div>
+</section>
+<!-- Prontuário Tabs -->
+<nav class="flex border-b border-surface-variant md:mx-0 mt-stack-lg overflow-x-auto no-scrollbar px-4 gap-4"><a class="flex-1 min-w-fit text-center pb-3 font-subtitle-md text-subtitle-md text-on-surface-variant border-b-2 border-transparent hover:text-primary transition-colors" href="#">Histórico</a>
+<a class="flex-1 min-w-fit text-center pb-3 font-subtitle-md text-subtitle-md text-on-surface-variant border-b-2 border-transparent hover:text-primary transition-colors" href="#">Documentos</a>
+<a class="flex-1 min-w-fit text-center pb-3 font-subtitle-md text-subtitle-md text-primary border-b-2 border-primary" href="#">Evolução</a>
+<a class="flex-1 min-w-fit text-center pb-3 font-subtitle-md text-subtitle-md text-on-surface-variant border-b-2 border-transparent hover:text-primary transition-colors" href="#">Para Casa</a></nav>
+<!-- Evolução Content -->
+<div class="px-margin-mobile md:px-0 py-stack-lg relative">
+<!-- Quick Actions / Header -->
+<div class="flex justify-between items-center mb-stack-md">
+<h3 class="font-subtitle-lg text-subtitle-lg text-on-surface">Sessões Anteriores</h3>
+<button class="hidden md:flex items-center gap-2 bg-primary text-on-primary h-[52px] px-6 rounded-[16px] font-label-lg text-label-lg hover:bg-primary/90 transition-colors shadow-level-1" onclick="document.getElementById('new-evolution-draft-card').classList.remove('hidden'); document.getElementById('new-evolution-draft-card').scrollIntoView({behavior: 'smooth', block: 'center'});">
+<span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 0;">add</span>
+                    Nova Evolução
+                </button>
+</div>
+<!-- Session List (Chronological) -->
+<div class="space-y-stack-md relative before:absolute before:inset-y-0 before:left-[15px] before:w-px before:bg-surface-variant ml-2 md:ml-0"><!-- Draft Evolution Card -->
+<div class="relative pl-10 hidden" id="new-evolution-draft-card">
+<div class="absolute left-[-5px] top-4 w-10 flex justify-center">
+<div class="w-4 h-4 rounded-full bg-primary border-4 border-background shadow-sm animate-pulse"></div>
+</div>
+<div class="bg-surface-container-lowest rounded-xl p-inset-card shadow-level-2 border-2 border-primary">
+<div class="flex justify-between items-start mb-3">
+<div>
+<span class="font-label-lg text-label-lg text-primary">Nova Sessão (#13)</span>
+<div class="flex items-center gap-2 mt-1 text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]">calendar_today</span>
+<span class="font-body-md text-body-md">01/11/2023 - 14:00</span>
+</div>
+</div>
+</div>
+<textarea class="w-full p-3 rounded-lg border border-outline-variant bg-transparent text-on-surface font-body-lg focus:border-primary focus:ring-1 focus:ring-primary transition-colors resize-none mb-4" placeholder="Escreva aqui a nova evolução..." rows="4"></textarea>
+<div class="flex justify-end gap-2"><button class="px-4 py-2 text-primary font-label-lg hover:bg-primary-container/20 rounded-lg" onclick="document.getElementById('new-evolution-draft-card').classList.add('hidden')">Cancelar</button><button class="px-6 py-2 bg-primary text-on-primary rounded-lg font-label-lg shadow-sm hover:bg-primary/90 transition-colors" onclick="alert('Evolução salva!'); document.getElementById('new-evolution-draft-card').classList.add('hidden'); window.location.reload();">Salvar Evolução</button></div>
+</div>
+</div>
+<!-- Session Card 1 -->
+<div class="relative pl-10" id="session-12-container"><div class="absolute left-[-5px] top-4 w-10 flex justify-center"><div class="w-4 h-4 rounded-full bg-primary border-4 border-background shadow-sm"></div></div><div class="bg-surface-container-lowest rounded-xl p-inset-card shadow-level-1" id="session-12-view"><div class="flex justify-between items-start mb-3"><div><span class="font-label-lg text-label-lg text-secondary">Sessão #12</span><div class="flex items-center gap-2 mt-1 text-on-surface-variant"><span class="material-symbols-outlined text-[16px]">calendar_today</span><span class="font-body-md text-body-md">25/10/2023 - 14:30</span></div></div><button class="text-on-surface-variant hover:bg-surface-variant p-1 rounded-full transition-colors" onclick="document.getElementById('session-12-view').classList.add('hidden'); document.getElementById('session-12-edit').classList.remove('hidden');"><span class="material-symbols-outlined">edit</span></button></div><p class="font-body-lg text-body-lg text-on-surface mt-2 leading-relaxed" id="session-12-text-display">Mobilização articular de quadril, exercícios de fortalecimento de assoalho pélvico com biofeedback. Paciente relatou melhora na dor (EVA 3/10) e maior controle durante atividades de esforço.</p><div class="mt-4 flex gap-2 flex-wrap"><span class="inline-flex items-center justify-center h-8 px-3 rounded-full bg-surface-variant text-on-surface-variant font-label-md text-label-md">Biofeedback</span><span class="inline-flex items-center justify-center h-8 px-3 rounded-full bg-surface-variant text-on-surface-variant font-label-md text-label-md">Mobilização</span></div></div><div class="bg-surface-container-lowest rounded-xl p-inset-card shadow-level-2 border-2 border-primary hidden" id="session-12-edit"><h4 class="font-label-lg text-label-lg text-primary mb-3">Editar Sessão #12</h4><textarea class="w-full p-3 rounded-lg border border-outline-variant bg-transparent text-on-surface font-body-lg focus:border-primary focus:ring-1 focus:ring-primary transition-colors resize-none mb-4" id="session-12-textarea" rows="4">Mobilização articular de quadril, exercícios de fortalecimento de assoalho pélvico com biofeedback. Paciente relatou melhora na dor (EVA 3/10) e maior controle durante atividades de esforço.</textarea><div class="flex justify-end gap-2"><button class="px-4 py-2 text-primary font-label-lg hover:bg-primary-container/20 rounded-lg" onclick="document.getElementById('session-12-edit').classList.add('hidden'); document.getElementById('session-12-view').classList.remove('hidden');">Cancelar</button><button class="px-6 py-2 bg-primary text-on-primary rounded-lg font-label-lg shadow-sm hover:bg-primary/90 transition-colors" onclick="document.getElementById('session-12-text-display').innerText = document.getElementById('session-12-textarea').value; document.getElementById('session-12-edit').classList.add('hidden'); document.getElementById('session-12-view').classList.remove('hidden');">Salvar Alterações</button></div></div></div>
+<!-- Session Card 2 -->
+<div class="relative pl-10" id="session-11-container"><div class="absolute left-[-5px] top-4 w-10 flex justify-center"><div class="w-3 h-3 rounded-full bg-outline-variant border-2 border-background"></div></div><div class="bg-surface-container-lowest rounded-xl p-inset-card shadow-level-1 opacity-90 hover:opacity-100 transition-opacity" id="session-11-view"><div class="flex justify-between items-start mb-3"><div><span class="font-label-lg text-label-lg text-secondary">Sessão #11</span><div class="flex items-center gap-2 mt-1 text-on-surface-variant"><span class="material-symbols-outlined text-[16px]">calendar_today</span><span class="font-body-md text-body-md">18/10/2023 - 10:00</span></div></div><button class="text-on-surface-variant hover:bg-surface-variant p-1 rounded-full transition-colors" onclick="document.getElementById('session-11-view').classList.add('hidden'); document.getElementById('session-11-edit').classList.remove('hidden');"><span class="material-symbols-outlined">edit</span></button></div><p class="font-body-lg text-body-lg text-on-surface mt-2 leading-relaxed" id="session-11-text-display">Avaliação reavaliativa intermediária. Treino de propriocepção lombo-pélvica. Leve desconforto relatado ao final da sessão, aplicada crioterapia.</p></div><div class="bg-surface-container-lowest rounded-xl p-inset-card shadow-level-2 border-2 border-primary hidden" id="session-11-edit"><h4 class="font-label-lg text-label-lg text-primary mb-3">Editar Sessão #11</h4><textarea class="w-full p-3 rounded-lg border border-outline-variant bg-transparent text-on-surface font-body-lg focus:border-primary focus:ring-1 focus:ring-primary transition-colors resize-none mb-4" id="session-11-textarea" rows="4">Avaliação reavaliativa intermediária. Treino de propriocepção lombo-pélvica. Leve desconforto relatado ao final da sessão, aplicada crioterapia.</textarea><div class="flex justify-end gap-2"><button class="px-4 py-2 text-primary font-label-lg hover:bg-primary-container/20 rounded-lg" onclick="document.getElementById('session-11-edit').classList.add('hidden'); document.getElementById('session-11-view').classList.remove('hidden');">Cancelar</button><button class="px-6 py-2 bg-primary text-on-primary rounded-lg font-label-lg shadow-sm hover:bg-primary/90 transition-colors" onclick="document.getElementById('session-11-text-display').innerText = document.getElementById('session-11-textarea').value; document.getElementById('session-11-edit').classList.add('hidden'); document.getElementById('session-11-view').classList.remove('hidden');">Salvar Alterações</button></div></div></div>
+<!-- Session Card 3 -->
+<div class="relative pl-10" id="session-10-container">
+<!-- Timeline Dot -->
+<div class="absolute left-[-5px] top-4 w-10 flex justify-center">
+<div class="w-3 h-3 rounded-full bg-outline-variant border-2 border-background"></div>
+</div>
+<div class="bg-surface-container-lowest rounded-xl p-inset-card shadow-level-1 opacity-80 hover:opacity-100 transition-opacity" id="session-10-view">
+<div class="flex justify-between items-start mb-3">
+<div>
+<span class="font-label-lg text-label-lg text-secondary">Sessão #10</span>
+<div class="flex items-center gap-2 mt-1 text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]">calendar_today</span>
+<span class="font-body-md text-body-md">11/10/2023 - 15:00</span>
+</div>
+</div>
+<button class="text-on-surface-variant hover:bg-surface-variant p-1 rounded-full transition-colors" onclick="document.getElementById('session-10-view').classList.add('hidden'); document.getElementById('session-10-edit').classList.remove('hidden');">
+<span class="material-symbols-outlined">edit</span>
+</button>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface mt-2 leading-relaxed" id="session-10-text-display">
+                            Foco em relaxamento miofascial global. Exercícios respiratórios associados à contração do transverso abdominal.
+                        </p>
+</div>
+<div class="bg-surface-container-lowest rounded-xl p-inset-card shadow-level-2 border-2 border-primary hidden" id="session-10-edit">
+<h4 class="font-label-lg text-label-lg text-primary mb-3">Editar Sessão #10</h4>
+<textarea class="w-full p-3 rounded-lg border border-outline-variant bg-transparent text-on-surface font-body-lg focus:border-primary focus:ring-1 focus:ring-primary transition-colors resize-none mb-4" id="session-10-textarea" rows="4">Foco em relaxamento miofascial global. Exercícios respiratórios associados à contração do transverso abdominal.</textarea>
+<div class="flex justify-end gap-2">
+<button class="px-4 py-2 text-primary font-label-lg hover:bg-primary-container/20 rounded-lg" onclick="document.getElementById('session-10-edit').classList.add('hidden'); document.getElementById('session-10-view').classList.remove('hidden');">Cancelar</button>
+<button class="px-6 py-2 bg-primary text-on-primary rounded-lg font-label-lg shadow-sm hover:bg-primary/90 transition-colors" onclick="document.getElementById('session-10-text-display').innerText = document.getElementById('session-10-textarea').value; document.getElementById('session-10-edit').classList.add('hidden'); document.getElementById('session-10-view').classList.remove('hidden');">Salvar Alterações</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Load More -->
+<div class="mt-stack-lg text-center pl-10">
+<button class="text-primary font-subtitle-md text-subtitle-md hover:underline">Carregar sessões anteriores</button>
+</div>
+</div>
+</main>
+<!-- Mobile FAB (Visible only on mobile) -->
+<button class="md:hidden fixed bottom-[90px] right-margin-mobile w-14 h-14 bg-primary text-on-primary rounded-2xl shadow-level-2 flex items-center justify-center hover:bg-primary/90 transition-transform active:scale-95 z-40" onclick="document.getElementById('new-evolution-draft-card').classList.remove('hidden'); document.getElementById('new-evolution-draft-card').scrollIntoView({behavior: 'smooth', block: 'center'});"><span class="material-symbols-outlined text-title-lg">add</span></button>
+<!-- Modal: Write Evolution -->
+<div class="fixed inset-0 z-[100] flex items-center justify-center bg-scrim/40 backdrop-blur-sm p-margin-mobile hidden" id="new-evolution-modal">
+<div class="bg-surface-container-lowest w-full max-w-lg rounded-2xl shadow-level-2 overflow-hidden flex flex-col max-h-[795px]">
+<div class="p-inset-card border-b border-surface-variant flex justify-between items-center bg-surface">
+<h2 class="font-subtitle-lg text-subtitle-lg text-on-surface">Nova Evolução - Sessão #13</h2>
+<button class="text-on-surface-variant hover:bg-surface-variant p-2 rounded-full transition-colors" onclick="document.getElementById('new-evolution-modal').classList.add('hidden')">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<div class="p-inset-card overflow-y-auto flex-1 space-y-stack-md bg-surface-container-lowest">
+<div class="flex gap-gutter">
+<div class="flex-1">
+<label class="block font-label-lg text-label-lg text-primary mb-1">Data</label>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-on-surface-variant">calendar_today</span>
+<input class="w-full h-[48px] pl-10 pr-3 rounded-lg border border-outline-variant bg-transparent text-on-surface font-body-lg focus:border-primary focus:ring-1 focus:ring-primary transition-colors" type="date" value="2023-11-01">
+</div>
+</div>
+<div class="flex-1">
+<label class="block font-label-lg text-label-lg text-primary mb-1">Horário</label>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-on-surface-variant">schedule</span>
+<input class="w-full h-[48px] pl-10 pr-3 rounded-lg border border-outline-variant bg-transparent text-on-surface font-body-lg focus:border-primary focus:ring-1 focus:ring-primary transition-colors" type="time" value="14:00">
+</div>
+</div>
+</div>
+<div>
+<label class="block font-label-lg text-label-lg text-primary mb-1">Descrição do Atendimento</label>
+<textarea class="w-full p-3 rounded-lg border border-outline-variant bg-transparent text-on-surface font-body-lg focus:border-primary focus:ring-1 focus:ring-primary transition-colors resize-none" placeholder="Descreva os procedimentos realizados, relato da paciente e observações clínicas..." rows="6"></textarea>
+</div>
+<div>
+<label class="block font-label-lg text-label-lg text-primary mb-2">Tags / Intervenções Rápidas</label>
+<div class="flex gap-2 flex-wrap">
+<button class="h-8 px-3 rounded-full border border-outline-variant text-on-surface-variant font-label-md text-label-md hover:bg-surface-variant transition-colors">+ Terapia Manual</button>
+<button class="h-8 px-3 rounded-full border border-outline-variant text-on-surface-variant font-label-md text-label-md hover:bg-surface-variant transition-colors">+ Eletroterapia</button>
+<button class="h-8 px-3 rounded-full border border-outline-variant text-on-surface-variant font-label-md text-label-md hover:bg-surface-variant transition-colors">+ Exercício Terapêutico</button>
+</div>
+</div>
+</div>
+<div class="p-inset-card border-t border-surface-variant bg-surface flex justify-end gap-3">
+<button class="h-[52px] px-6 rounded-[16px] font-label-lg text-label-lg text-primary hover:bg-primary-container/20 transition-colors" onclick="document.getElementById('new-evolution-modal').classList.add('hidden')">
+                    Cancelar
+                </button>
+<button class="h-[52px] px-6 rounded-[16px] bg-primary text-on-primary font-label-lg text-label-lg hover:bg-primary/90 transition-colors shadow-sm" onclick="document.getElementById('new-evolution-modal').classList.add('hidden')">
+                    Salvar Evolução
+                </button>
+</div>
+</div>
+</div>
+<!-- JSON Component: BottomNavBar (Visible only on Mobile) -->
+<nav class="md:hidden bg-surface dark:bg-inverse-surface text-primary dark:text-primary-fixed-dim font-label-lg text-label-lg h-[72px] fixed bottom-0 w-full z-50 bg-surface dark:bg-inverse-surface shadow-[0px_-2px_10px_rgba(0,0,0,0.05)] shadow-lg flex justify-around items-center px-4 pb-safe">
+<a class="flex flex-col items-center justify-center text-secondary hover:bg-secondary-container/30 active:scale-95 transition-transform w-16 h-full" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 0;">home</span>
+<span class="mt-1 text-[11px] leading-tight font-medium">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary hover:bg-secondary-container/30 active:scale-95 transition-transform w-16 h-full" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 0;">calendar_today</span>
+<span class="mt-1 text-[11px] leading-tight font-medium">Schedule</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-2xl px-4 py-1 hover:bg-secondary-container/30 active:scale-95 transition-transform w-20 h-14 mt-1" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 1;">groups</span>
+<span class="mt-1 text-[11px] leading-tight font-medium">Patients</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary hover:bg-secondary-container/30 active:scale-95 transition-transform w-16 h-full" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 0;">person</span>
+<span class="mt-1 text-[11px] leading-tight font-medium">Profile</span>
+</a>
+</nav>
+</body></html>

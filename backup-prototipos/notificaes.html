@@ -1,0 +1,249 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Bella Flora Fisio - Notificações</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-tint": "#70518d",
+                    "surface-container-low": "#f9f1f7",
+                    "surface-variant": "#e7e0e6",
+                    "inverse-surface": "#322f34",
+                    "surface-container-lowest": "#ffffff",
+                    "secondary-container": "#fdcde1",
+                    "on-primary-fixed": "#290a45",
+                    "on-surface-variant": "#4b454e",
+                    "primary-fixed": "#f0dbff",
+                    "on-tertiary": "#ffffff",
+                    "inverse-on-surface": "#f6eff5",
+                    "on-primary": "#ffffff",
+                    "secondary-fixed": "#ffd8e7",
+                    "surface-container-high": "#ede6ec",
+                    "on-background": "#1d1b1f",
+                    "on-primary-fixed-variant": "#573974",
+                    "primary-container": "#d8b4f8",
+                    "outline-variant": "#cdc3cf",
+                    "on-error": "#ffffff",
+                    "surface-container-highest": "#e7e0e6",
+                    "secondary-fixed-dim": "#e9bacd",
+                    "on-tertiary-fixed": "#1d1d00",
+                    "on-tertiary-container": "#525300",
+                    "background": "#fff7fd",
+                    "secondary": "#795465",
+                    "inverse-primary": "#dcb8fc",
+                    "tertiary": "#616211",
+                    "primary-fixed-dim": "#dcb8fc",
+                    "on-surface": "#1d1b1f",
+                    "on-primary-container": "#60427d",
+                    "error": "#ba1a1a",
+                    "on-secondary-container": "#795465",
+                    "on-error-container": "#93000a",
+                    "tertiary-container": "#c7c76d",
+                    "outline": "#7c747f",
+                    "on-secondary": "#ffffff",
+                    "surface-container": "#f3ecf2",
+                    "on-secondary-fixed": "#2e1221",
+                    "tertiary-fixed-dim": "#cbcb71",
+                    "surface": "#fff7fd",
+                    "on-tertiary-fixed-variant": "#494900",
+                    "surface-dim": "#dfd8de",
+                    "primary": "#70518d",
+                    "on-secondary-fixed-variant": "#5f3c4d",
+                    "tertiary-fixed": "#e8e78a",
+                    "surface-bright": "#fff7fd",
+                    "error-container": "#ffdad6"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack-sm": "8px",
+                    "stack-md": "16px",
+                    "margin-mobile": "16px",
+                    "inset-card": "16px",
+                    "gutter": "16px",
+                    "stack-lg": "24px",
+                    "base": "8px"
+            },
+            "fontFamily": {
+                    "subtitle-md": ["Manrope"],
+                    "title-lg": ["Manrope"],
+                    "label-md": ["Manrope"],
+                    "subtitle-lg": ["Manrope"],
+                    "body-lg": ["Manrope"],
+                    "body-md": ["Manrope"],
+                    "title-md": ["Manrope"],
+                    "label-lg": ["Manrope"]
+            },
+            "fontSize": {
+                    "subtitle-md": ["18px", {"lineHeight": "26px", "fontWeight": "500"}],
+                    "title-lg": ["28px", {"lineHeight": "36px", "fontWeight": "600"}],
+                    "label-md": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "subtitle-lg": ["20px", {"lineHeight": "28px", "fontWeight": "500"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "title-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "label-lg": ["13px", {"lineHeight": "18px", "fontWeight": "500"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        body { font-family: 'Manrope', sans-serif; }
+    </style>
+
+    <!-- Firebase CDN SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <!-- Bella Flora Custom Modules -->
+    <script src="navigation.js" defer></script>
+    <script src="sync.js" defer></script>
+</head>
+
+<body class="bg-background min-h-screen text-on-background pb-[100px]">
+<!-- TopAppBar -->
+<header class="bg-surface shadow-[0px_4px_12px_rgba(0,0,0,0.08)] h-[64px] w-full top-0 sticky z-40 flex items-center justify-between px-margin-mobile">
+<button class="text-primary hover:bg-primary-container/20 transition-colors rounded-full p-2 active:scale-95 duration-200">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="font-title-lg text-title-lg text-primary text-center flex-1">Bella Flora Fisio</h1>
+<button class="text-primary hover:bg-primary-container/20 transition-colors rounded-full p-2 active:scale-95 duration-200">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</header>
+<!-- Page Content -->
+<main class="w-full max-w-3xl mx-auto md:pt-stack-lg">
+<!-- Screen Header -->
+<div class="px-margin-mobile pt-[12vh] pb-stack-lg">
+<div class="flex items-center gap-2">
+<span class="text-2xl">🔔</span>
+<h2 class="font-title-lg text-title-lg text-on-surface">NOTIFICAÇÕES</h2>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">Mantenha-se atualizado com seus agendamentos e documentos.</p>
+</div>
+<!-- Notifications List -->
+<div class="px-margin-mobile flex flex-col gap-stack-md">
+<!-- Unread Notification: Appointment -->
+<div class="bg-surface-container-lowest p-inset-card rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.08)] flex gap-stack-md items-start relative overflow-hidden group hover:shadow-[0px_8px_24px_rgba(0,0,0,0.12)] transition-shadow">
+<!-- Unread Indicator -->
+<div class="absolute top-4 left-4 w-2 h-2 rounded-full bg-primary shadow-sm"></div>
+<div class="w-12 h-12 rounded-full bg-primary-container/30 flex items-center justify-center flex-shrink-0 text-primary ml-4">
+<span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 1;">calendar_clock</span>
+</div>
+<div class="flex-1 min-w-0 pt-1">
+<div class="flex justify-between items-start gap-2">
+<h3 class="font-subtitle-md text-subtitle-md text-on-surface truncate">Lembrete de Consulta</h3>
+<span class="font-label-md text-label-md text-primary whitespace-nowrap">Agora</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1 leading-relaxed">
+                        Sua sessão de fisioterapia pélvica com a Dra. Ana está confirmada para amanhã às 14:00.
+                    </p>
+</div>
+</div>
+<!-- Unread Notification: Document with Image -->
+<div class="bg-surface-container-lowest p-inset-card rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.08)] flex gap-stack-md items-start relative hover:shadow-[0px_8px_24px_rgba(0,0,0,0.12)] transition-shadow">
+<!-- Unread Indicator -->
+<div class="absolute top-4 left-4 w-2 h-2 rounded-full bg-primary shadow-sm"></div>
+<div class="w-12 h-12 rounded-full bg-secondary-container/30 flex items-center justify-center flex-shrink-0 text-secondary ml-4">
+<span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 1;">description</span>
+</div>
+<div class="flex-1 min-w-0 pt-1">
+<div class="flex justify-between items-start gap-2">
+<h3 class="font-subtitle-md text-subtitle-md text-on-surface truncate">Novo Documento</h3>
+<span class="font-label-md text-label-md text-primary whitespace-nowrap">2h atrás</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1 mb-3 leading-relaxed">
+                        Seu plano de exercícios domiciliares foi atualizado. Confira o novo material de apoio.
+                    </p>
+<!-- Embedded Canvas Image for Document preview -->
+<div class="w-full max-w-[200px] rounded-lg overflow-hidden border border-surface-variant/50 relative">
+<img alt="preview" class="w-full object-cover aspect-square" data-alt="A clean, modern healthcare illustration featuring soft pastel colors, primarily light lavender and soft pink, showing a stylized anatomical diagram or exercise chart in a minimalist style. The lighting is soft and natural, emphasizing a clinical yet warm and welcoming environment. The composition is neat, framed perfectly within a subtle digital tablet interface, reflecting a premium wellness aesthetic." src="assets/img/healthcare_illustration.png">
+<div class="absolute bottom-0 left-0 right-0 bg-surface/80 backdrop-blur-sm p-2 flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-primary">download</span>
+<span class="font-label-md text-label-md text-primary">Baixar PDF</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Read Notification: Message -->
+<div class="bg-surface-container-low p-inset-card rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.04)] flex gap-stack-md items-start opacity-75">
+<div class="w-12 h-12 rounded-full bg-surface-variant/50 flex items-center justify-center flex-shrink-0 text-on-surface-variant ml-4">
+<span class="material-symbols-outlined">forum</span>
+</div>
+<div class="flex-1 min-w-0 pt-1">
+<div class="flex justify-between items-start gap-2">
+<h3 class="font-subtitle-md text-subtitle-md text-on-surface-variant truncate">Mensagem da Terapeuta</h3>
+<span class="font-label-md text-label-md text-outline whitespace-nowrap">Ontem</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1 leading-relaxed">
+                        "Olá! Como você se sentiu após os exercícios de ontem? Lembre-se de não forçar..."
+                    </p>
+</div>
+</div>
+<!-- Read Notification: System -->
+<div class="bg-surface-container-low p-inset-card rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.04)] flex gap-stack-md items-start opacity-75">
+<div class="w-12 h-12 rounded-full bg-surface-variant/50 flex items-center justify-center flex-shrink-0 text-on-surface-variant ml-4">
+<span class="material-symbols-outlined">verified_user</span>
+</div>
+<div class="flex-1 min-w-0 pt-1">
+<div class="flex justify-between items-start gap-2">
+<h3 class="font-subtitle-md text-subtitle-md text-on-surface-variant truncate">Perfil Atualizado</h3>
+<span class="font-label-md text-label-md text-outline whitespace-nowrap">2 dias atrás</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1 leading-relaxed">
+                        Suas informações de contato foram atualizadas com sucesso em nosso sistema.
+                    </p>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="bg-surface shadow-[0px_-2px_10px_rgba(0,0,0,0.05)] h-[72px] fixed bottom-0 w-full z-50 flex justify-around items-center px-4 pb-safe md:hidden md:max-w-3xl md:left-1/2 md:-translate-x-1/2">
+  <a href="#" class="flex flex-col items-center justify-center min-w-[64px] transition-all text-on-surface-variant hover:text-primary">
+    <div class="px-5 py-1 mb-1">
+      <span class="material-symbols-outlined">home</span>
+    </div>
+    <span class="font-label-lg text-label-lg">Incio</span>
+  </a>
+
+  <a href="#" class="flex flex-col items-center justify-center min-w-[64px] transition-all text-on-surface-variant hover:text-primary">
+    <div class="px-5 py-1 mb-1">
+      <span class="material-symbols-outlined">medical_services</span>
+    </div>
+    <span class="font-label-lg text-label-lg">Tratamento</span>
+  </a>
+
+  <a href="#" class="flex flex-col items-center justify-center min-w-[64px] transition-all text-on-surface-variant hover:text-primary">
+    <div class="px-5 py-1 mb-1">
+      <span class="material-symbols-outlined">person_search</span>
+    </div>
+    <span class="font-label-lg text-label-lg">Profissional</span>
+  </a>
+
+  <a href="#" class="flex flex-col items-center justify-center min-w-[64px] transition-all">
+    <div class="bg-primary-container text-on-primary-container rounded-full px-5 py-1 mb-1">
+      <span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 1;">person</span>
+    </div>
+    <span class="font-label-lg text-label-lg text-on-surface font-semibold">Perfil</span>
+  </a>
+</nav>
+
+
+
+
+
+
+
+
+</body></html>

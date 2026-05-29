@@ -1,0 +1,163 @@
+<!DOCTYPE html><html lang="pt-BR"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Sobre Nós - Bella Flora Fisioterapia</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'bella-lavender': '#D8B4F8',
+            'bella-dark-lavender': '#B088D8',
+            'bella-text': '#4A4A4A',
+            'bella-light-bg': '#FAF8FC',
+          },
+          fontFamily: {
+            'sans': ['Manrope', 'sans-serif'],
+            'serif': ['"Playfair Display"', 'serif'],
+          }
+        }
+      }
+    }
+  </script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600;700&amp;family=Playfair+Display:ital,wght@0,400;0,600;1,400&amp;display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style data-purpose="custom-styles">body {
+    background-color: #FAF8FC;
+    color: #4A4A4A;
+    /* Mimicking the floral background from the original image subtly */
+    background-image: radial-gradient(circle at top right, rgba(216, 180, 248, 0.15), transparent 40%), radial-gradient(circle at bottom left, rgba(216, 180, 248, 0.1), transparent 50%);
+    background-attachment: fixed
+    }
+.floral-bg-top {
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    width: 200px;
+    height: 200px;
+    background-image: url(https://lh3.googleusercontent.com/aida/ADBb0uhe3t8iCtVm1MGH1CcxU2Spub1tUISM3EAYWbeDeZ9cTyOm43ZrprI41VRZjWfI94UYZczYz-_0LBKwKzzhoOsyWY33y2Zw-DYla0BDaVwMQnwz5WDaieFRJDyuVVftMPmQUPngNwBIVfd1mTylUWkx4DZ34P2Ua3ARrUiFmqT5tpYHi0D9uG8ocFfX40LFyg-op7goNnm9MFC80l09h6ZXLRbVaFxU12_nCJ9LpI7QSJPiGkNk6vbDzXqOnHB1D3hc56cuTlDrnQ);
+    /* Using provided image as source for a slice, though in practice a separate transparent PNG is better */
+    background-size: cover;
+    background-position: top right;
+    opacity: 0.3;
+    z-index: -1;
+    border-radius: 50%;
+    filter: blur(10px)
+    }
+.floral-bg-bottom {
+    position: absolute;
+    bottom: 50px;
+    left: -20px;
+    width: 250px;
+    height: 250px;
+    background-image: url(https://lh3.googleusercontent.com/aida/ADBb0uhe3t8iCtVm1MGH1CcxU2Spub1tUISM3EAYWbeDeZ9cTyOm43ZrprI41VRZjWfI94UYZczYz-_0LBKwKzzhoOsyWY33y2Zw-DYla0BDaVwMQnwz5WDaieFRJDyuVVftMPmQUPngNwBIVfd1mTylUWkx4DZ34P2Ua3ARrUiFmqT5tpYHi0D9uG8ocFfX40LFyg-op7goNnm9MFC80l09h6ZXLRbVaFxU12_nCJ9LpI7QSJPiGkNk6vbDzXqOnHB1D3hc56cuTlDrnQ);
+    background-size: cover;
+    background-position: bottom left;
+    opacity: 0.2;
+    z-index: -1;
+    border-radius: 50%;
+    filter: blur(15px)
+    }
+/* Letter spacing for the specific style in the image */
+.tracking-widest-xl {
+    letter-spacing: 0.2em
+    }
+.tracking-widest-2xl {
+    letter-spacing: 0.3em
+    }</style>
+
+    <!-- Firebase CDN SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <!-- Bella Flora Custom Modules -->
+    <script src="navigation.js" defer></script>
+    <script src="sync.js" defer></script>
+</head>
+
+<body class="font-sans antialiased flex flex-col min-h-screen relative overflow-x-hidden">
+<!-- Decorative Background Elements -->
+<div aria-hidden="true" class="floral-bg-top"></div>
+<div aria-hidden="true" class="floral-bg-bottom"></div>
+<!-- BEGIN: TopAppBar -->
+<header class="bg-white/80 backdrop-blur-md sticky top-0 z-10 shadow-sm border-b border-bella-lavender/20" data-purpose="top-app-bar">
+<div class="max-w-md mx-auto px-4 h-14 flex items-center justify-between">
+<button aria-label="Voltar" class="p-2 -ml-2 text-bella-text hover:text-bella-dark-lavender transition-colors rounded-full">
+<i class="fa-solid fa-arrow-left"></i>
+</button>
+<h1 class="text-sm font-semibold tracking-widest uppercase text-bella-text">Sobre Nós</h1>
+<div class="w-8"></div> <!-- Spacer for center alignment -->
+</div>
+</header>
+<!-- END: TopAppBar -->
+<!-- BEGIN: MainContent -->
+<main class="flex-grow flex flex-col items-center justify-center p-6 pb-24 max-w-md mx-auto w-full relative z-0" data-purpose="about-us-content">
+<!-- Title Section -->
+<div class="text-center mb-10 w-full">
+<h2 class="font-serif text-lg tracking-widest-xl text-gray-800 uppercase leading-relaxed">
+        Bella Flora<br>Fisioterapia
+      </h2>
+<div class="w-12 h-[1px] bg-bella-lavender mx-auto mt-4"></div>
+</div>
+<!-- Origin Story Section -->
+<section aria-labelledby="origin-story" class="mb-8 text-center">
+<p class="text-xs md:text-sm leading-[2.2] tracking-widest text-gray-700 font-medium px-2">
+        A BELA FLORA NASCEU A PARTIR DE<br>
+        UM PROJETO ACADÊMICO,<br>
+        IDEALIZADO E DESENVOLVIDO POR<br>
+        ESTUDANTES COM O OBJETIVO DE<br>
+        SIMULAR, NA PRÁTICA, A<br>
+        CONSTRUÇÃO E O FUNCIONAMENTO<br>
+        DE UMA CLÍNICA VOLTADA À SAÚDE<br>
+        E BEM-ESTAR. MAIS DO QUE UMA<br>
+        PROPOSTA FICTÍCIA, SOMOS UM<br>
+        GRUPO COMPROMETIDO COM<br>
+        APRENDIZADO, CUIDADO<br>
+        HUMANIZADO E A PROMOÇÃO DA<br>
+        SAÚDE.
+      </p>
+</section>
+<!-- Purpose Statement Section -->
+<section aria-labelledby="purpose-statement" class="mb-12 text-center">
+<div class="flex justify-center items-center gap-2 mb-2">
+<i class="fa-solid fa-heart text-bella-dark-lavender text-xs"></i>
+<h3 class="text-xs md:text-sm font-semibold tracking-widest text-gray-800 uppercase">Nosso Propósito</h3>
+</div>
+<p class="text-xs md:text-sm leading-[2.2] tracking-widest text-gray-700 font-medium px-4">
+        É UNIR CONHECIMENTO CIENTÍFICO COM<br>
+        ACOLHIMENTO, SEMPRE PENSANDO<br>
+        NO PACIENTE DE FORMA INTEGRAL.
+      </p>
+</section>
+<!-- Social Handle -->
+<div class="mt-auto pt-8 text-center w-full border-t border-bella-lavender/20">
+<a class="inline-flex items-center gap-2 text-xs font-semibold tracking-widest-xl text-bella-dark-lavender hover:text-purple-700 transition-colors" href="#">
+<i class="fa-brands fa-instagram text-sm"></i>
+        @BELLAFLORAFISIO
+      </a>
+</div>
+</main>
+<!-- END: MainContent -->
+<!-- BEGIN: BottomNavBar -->
+<nav class="bg-white border-t border-gray-200 fixed bottom-0 w-full pb-safe z-10" data-purpose="bottom-navigation">
+<div class="max-w-md mx-auto flex justify-around items-center h-16 px-2">
+<a class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-bella-dark-lavender transition-colors" href="#">
+<i class="fa-solid fa-house mb-1 text-lg"></i>
+<span class="text-[10px] font-medium">Início</span>
+</a>
+<a class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-bella-dark-lavender transition-colors" href="#">
+<i class="fa-regular fa-calendar-check mb-1 text-lg"></i>
+<span class="text-[10px] font-medium">Agenda</span>
+</a>
+<a class="flex flex-col items-center justify-center w-full h-full text-bella-dark-lavender" href="#">
+<i class="fa-solid fa-heart-pulse mb-1 text-lg"></i>
+<span class="text-[10px] font-medium">Sobre</span>
+</a>
+<a class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-bella-dark-lavender transition-colors" href="#">
+<i class="fa-regular fa-user mb-1 text-lg"></i>
+<span class="text-[10px] font-medium">Perfil</span>
+</a>
+</div>
+</nav>
+<!-- END: BottomNavBar -->
+</body></html>
