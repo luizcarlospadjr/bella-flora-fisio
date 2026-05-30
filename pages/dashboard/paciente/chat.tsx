@@ -141,12 +141,14 @@ export default function PatientChatHub() {
   useEffect(() => {
     if (viewMode !== 'chat' || !selectedTherapist || !currentUser) return
 
+    const activeTherapistId = selectedTherapist.id
+
     async function fetchChatHistory() {
       try {
         const { data: chatMsgs } = await supabase
           .from('chat_messages')
           .select('*')
-          .or(`and(sender_id.eq.${currentUser.id},receiver_id.eq.${selectedTherapist.id}),and(sender_id.eq.${selectedTherapist.id},receiver_id.eq.${currentUser.id})`)
+          .or(`and(sender_id.eq.${currentUser.id},receiver_id.eq.${activeTherapistId}),and(sender_id.eq.${activeTherapistId},receiver_id.eq.${currentUser.id})`)
           .order('created_at', { ascending: true })
 
         if (chatMsgs) {
@@ -168,7 +170,7 @@ export default function PatientChatHub() {
 
     // Realtime Postgres DB changes subscriber for new messages
     const messagesSub = supabase
-      .channel(`chat-realtime-${selectedTherapist.id}`)
+      .channel(`chat-realtime-${activeTherapistId}`)
       .on('postgres_changes', {
         event: 'INSERT',
         schema: 'public',
@@ -176,8 +178,8 @@ export default function PatientChatHub() {
       }, (payload) => {
         const newMsg = payload.new as Message
         if (
-          (newMsg.sender_id === currentUser.id && newMsg.receiver_id === selectedTherapist.id) ||
-          (newMsg.sender_id === selectedTherapist.id && newMsg.receiver_id === currentUser.id)
+          (newMsg.sender_id === currentUser.id && newMsg.receiver_id === activeTherapistId) ||
+          (newMsg.sender_id === activeTherapistId && newMsg.receiver_id === currentUser.id)
         ) {
           setMessages((prev) => {
             if (prev.some((m) => m.id === newMsg.id)) return prev
