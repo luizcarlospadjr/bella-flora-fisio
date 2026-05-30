@@ -189,7 +189,7 @@ export default function DashboardPaciente({
                   </div>
                   
                   <Link 
-                    href="/dashboard/paciente/chat"
+                    href={`/dashboard/paciente/chat?therapist_id=${appointment.therapist?.id || ''}`}
                     className="w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center active:scale-90 transition-transform"
                   >
                     <MessageSquare className="w-4 h-4 text-white" />
@@ -296,7 +296,7 @@ export default function DashboardPaciente({
 
               {/* Chat com Terapeuta - Full Width Quick Banner */}
               <Link 
-                href="/dashboard/paciente/chat"
+                href={`/dashboard/paciente/chat?therapist_id=${appointment?.therapist?.id || ''}`}
                 className="w-full bg-white p-4 rounded-2xl border border-purple-100/15 shadow-sm flex items-center justify-between hover:scale-[1.01] active:scale-[0.99] transition-all"
               >
                 <div className="flex items-center gap-3.5">
