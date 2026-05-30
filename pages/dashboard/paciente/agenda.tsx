@@ -48,6 +48,8 @@ export default function PatientAgenda() {
   const [bookingSuccess, setBookingSuccess] = useState(false)
 
   useEffect(() => {
+    if (!router.isReady) return
+
     async function loadData() {
       try {
         // 1. Obtém o usuário logado do Supabase Auth
@@ -65,7 +67,8 @@ export default function PatientAgenda() {
           .eq('id', user.id)
           .single()
 
-        let therapistId = userProfile?.therapist_id
+        // Prioriza o therapist_id vindo na URL query (para o fluxo de remarcar)
+        let therapistId = router.query.therapist_id as string || userProfile?.therapist_id
 
         // Se não houver terapeuta vinculado, busca a partir de agendamentos passados
         if (!therapistId) {
@@ -122,7 +125,7 @@ export default function PatientAgenda() {
     }
 
     loadData()
-  }, [router])
+  }, [router.isReady, router.query])
 
   // Monitora alterações na data selecionada ou fisioterapeuta para buscar conflitos de horários
   useEffect(() => {

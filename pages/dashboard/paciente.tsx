@@ -51,6 +51,7 @@ export default function PatientDashboardPage() {
             status,
             notes,
             therapist:profiles!appointments_therapist_id_fkey (
+              id,
               full_name,
               avatar_url,
               phone

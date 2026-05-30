@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { LogOut, User, ClipboardList, Calendar, Heart, Bell, MessageSquare, ChevronRight, Check, RefreshCw } from 'lucide-react'
 
 interface Therapist {
+  id: string
   full_name: string | null
   avatar_url: string | null
   phone: string | null
@@ -214,7 +215,7 @@ export default function DashboardPaciente({
                       </button>
                       
                       <Link
-                        href="/dashboard/paciente/agenda"
+                        href={`/dashboard/paciente/agenda?therapist_id=${appointment.therapist?.id || ''}`}
                         className="flex-grow h-9 rounded-xl bg-white/5 hover:bg-white/15 text-purple-100 flex items-center justify-center gap-1.5 text-[10px] font-bold tracking-tight active:scale-95 transition-all border border-white/5"
                       >
                         <RefreshCw className="w-3.5 h-3.5 text-purple-200" />
