@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { ArrowLeft, ChevronLeft, ChevronRight, Loader2, Sparkles, Check, Heart } from 'lucide-react'
+import { ArrowLeft, ChevronLeft, ChevronRight, Loader2, Sparkles, Check, Heart, ShieldAlert } from 'lucide-react'
 import { supabase } from '../../../lib/supabaseClient'
 
 interface TherapistProfile {
@@ -13,12 +13,15 @@ interface TherapistProfile {
   role: string
 }
 
-const services = [
-  { id: 'pelvica', name: 'Fisioterapia Pélvica', icon: 'pregnant_woman', price: 'R$ 180,00', duration: '50 minutos' },
-  { id: 'massoterapia', name: 'Massoterapia', icon: 'spa', price: 'R$ 150,00', duration: '60 minutos' },
-  { id: 'acupuntura', name: 'Acupuntura', icon: 'acupuncture', price: 'R$ 160,00', duration: '50 minutos' },
-  { id: 'pilates', name: 'Pilates Clínico', icon: 'fitness_center', price: 'R$ 140,00', duration: '45 minutos' }
-]
+interface Service {
+  id: string
+  name: string
+  icon: string
+  price: number
+  duration: string | null
+  summary: string | null
+  therapist_id: string | null
+}
 
 const timeSlots = ['08:00', '09:30', '14:00', '16:30', '18:00']
 
@@ -29,12 +32,16 @@ export default function PatientAgenda() {
   const [selectedTherapist, setSelectedTherapist] = useState<TherapistProfile | null>(null)
   
   // Selection states
-  const [selectedService, setSelectedService] = useState(services[0])
-  const [selectedTimeSlot, setSelectedTimeSlot] = useState('14:00')
+  const [services, setServices] = useState<Service[]>([])
+  const [selectedService, setSelectedService] = useState<Service | null>(null)
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState('')
   const [currentDate, setCurrentDate] = useState(new Date()) // Month navigator date
   const [selectedDay, setSelectedDay] = useState<number>(new Date().getDate() + 1) // default to tomorrow
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth())
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear())
+
+  // Booked appointments in the selected day (for conflict check)
+  const [bookedSlots, setBookedSlots] = useState<string[]>([])
 
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
@@ -51,15 +58,61 @@ export default function PatientAgenda() {
         }
         setCurrentUser(user)
 
-        // 2. Busca os perfis de terapeutas cadastrados no banco
-        const { data: therapistList } = await supabase
+        // 2. Busca o perfil do paciente para obter o therapist_id
+        const { data: userProfile } = await supabase
           .from('profiles')
           .select('*')
-          .eq('role', 'therapist')
+          .eq('id', user.id)
+          .single()
 
-        if (therapistList && therapistList.length > 0) {
-          setTherapists(therapistList)
-          setSelectedTherapist(therapistList[0]) // seleciona a primeira por padrão
+        let therapistId = userProfile?.therapist_id
+
+        // Se não houver terapeuta vinculado, busca a partir de agendamentos passados
+        if (!therapistId) {
+          const { data: latestApp } = await supabase
+            .from('appointments')
+            .select('therapist_id')
+            .eq('patient_id', user.id)
+            .order('date', { ascending: false })
+            .limit(1)
+            .maybeSingle()
+          therapistId = latestApp?.therapist_id
+        }
+
+        // Se ainda assim não houver, busca a primeira terapeuta cadastrada como fallback
+        if (!therapistId) {
+          const { data: firstTherapist } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('role', 'therapist')
+            .limit(1)
+            .maybeSingle()
+          therapistId = firstTherapist?.id
+        }
+
+        // 3. Carrega o perfil da fisioterapeuta responsável
+        if (therapistId) {
+          const { data: therapist } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', therapistId)
+            .single()
+
+          if (therapist) {
+            setTherapists([therapist])
+            setSelectedTherapist(therapist)
+          }
+        }
+
+        // 4. Carrega os serviços dinamicamente da tabela clinic_services
+        const { data: servicesList } = await supabase
+          .from('clinic_services')
+          .select('*')
+          .order('name', { ascending: true })
+
+        if (servicesList && servicesList.length > 0) {
+          setServices(servicesList)
+          setSelectedService(servicesList[0])
         }
       } catch (err) {
         console.error('Erro ao carregar dados de agendamento:', err)
@@ -70,6 +123,64 @@ export default function PatientAgenda() {
 
     loadData()
   }, [router])
+
+  // Monitora alterações na data selecionada ou fisioterapeuta para buscar conflitos de horários
+  useEffect(() => {
+    async function fetchBookedSlots() {
+      if (!selectedTherapist) return
+
+      try {
+        const startOfDay = new Date(selectedYear, selectedMonth, selectedDay, 0, 0, 0, 0).toISOString()
+        const endOfDay = new Date(selectedYear, selectedMonth, selectedDay, 23, 59, 59, 999).toISOString()
+
+        const { data: appts } = await supabase
+          .from('appointments')
+          .select('date, status')
+          .eq('therapist_id', selectedTherapist.id)
+          .gte('date', startOfDay)
+          .lte('date', endOfDay)
+          .neq('status', 'canceled')
+
+        setBookedSlots(appts?.map(a => a.date) || [])
+      } catch (err) {
+        console.error('Erro ao buscar consultas reservadas:', err)
+      }
+    }
+
+    fetchBookedSlots()
+  }, [selectedDay, selectedMonth, selectedYear, selectedTherapist])
+
+  // Atualiza automaticamente o selectedTimeSlot escolhido para o primeiro slot válido disponível
+  useEffect(() => {
+    const isToday = new Date().getDate() === selectedDay && 
+                    new Date().getMonth() === selectedMonth && 
+                    new Date().getFullYear() === selectedYear
+    
+    const now = new Date()
+
+    const firstValidSlot = timeSlots.find(slot => {
+      const [slotHour, slotMinute] = slot.split(':').map(Number)
+      const isSlotExpired = isToday && (
+        slotHour < now.getHours() || 
+        (slotHour === now.getHours() && slotMinute <= now.getMinutes())
+      )
+
+      const isSlotBooked = bookedSlots.some(bTime => {
+        const bDate = new Date(bTime)
+        const h = String(bDate.getHours()).padStart(2, '0')
+        const m = String(bDate.getMinutes()).padStart(2, '0')
+        return `${h}:${m}` === slot
+      })
+
+      return !isSlotExpired && !isSlotBooked
+    })
+
+    if (firstValidSlot) {
+      setSelectedTimeSlot(firstValidSlot)
+    } else {
+      setSelectedTimeSlot('')
+    }
+  }, [selectedDay, selectedMonth, selectedYear, bookedSlots])
 
   // Lógica para gerar os dias do calendário do mês corrente
   const getDaysInMonth = (month: number, year: number) => {
@@ -108,7 +219,7 @@ export default function PatientAgenda() {
 
   // Confirma o agendamento no Supabase
   const handleConfirmBooking = async () => {
-    if (!currentUser || !selectedTherapist || submitting) return
+    if (!currentUser || !selectedTherapist || !selectedService || !selectedTimeSlot || submitting) return
 
     setSubmitting(true)
 
@@ -128,6 +239,9 @@ export default function PatientAgenda() {
           therapist_id: selectedTherapist.id,
           date: dateISO,
           status: 'scheduled',
+          service: selectedService.name,
+          price: selectedService.price,
+          duration_minutes: parseInt(selectedService.duration || '50') || 50,
           notes: selectedService.name
         })
 
@@ -170,7 +284,7 @@ export default function PatientAgenda() {
       const isSelected = selectedDay === day
       const isToday = new Date().getDate() === day && new Date().getMonth() === selectedMonth && new Date().getFullYear() === selectedYear
       
-      // Regra simples: não permite agendar no passado ou aos domingos
+      // Não permite agendar no passado ou aos domingos
       const dayDate = new Date(selectedYear, selectedMonth, day)
       const isPast = dayDate < new Date(new Date().setHours(0,0,0,0))
       const isSunday = dayDate.getDay() === 0
@@ -284,7 +398,7 @@ export default function PatientAgenda() {
               </h2>
               <div className="flex overflow-x-auto gap-3 pb-2 -mx-5 px-5 scrollbar-none">
                 {services.map((service) => {
-                  const isSelected = selectedService.id === service.id
+                  const isSelected = selectedService?.id === service.id
                   return (
                     <button
                       key={service.id}
@@ -353,14 +467,38 @@ export default function PatientAgenda() {
               <div className="grid grid-cols-3 gap-3">
                 {timeSlots.map((slot) => {
                   const isSelected = selectedTimeSlot === slot
+                  
+                  const isToday = new Date().getDate() === selectedDay && 
+                                  new Date().getMonth() === selectedMonth && 
+                                  new Date().getFullYear() === selectedYear
+                  
+                  const [slotHour, slotMinute] = slot.split(':').map(Number)
+                  const now = new Date()
+                  const isSlotExpired = isToday && (
+                    slotHour < now.getHours() || 
+                    (slotHour === now.getHours() && slotMinute <= now.getMinutes())
+                  )
+
+                  const isSlotBooked = bookedSlots.some(bTime => {
+                    const bDate = new Date(bTime)
+                    const h = String(bDate.getHours()).padStart(2, '0')
+                    const m = String(bDate.getMinutes()).padStart(2, '0')
+                    return `${h}:${m}` === slot
+                  })
+
+                  const isDisabled = isSlotExpired || isSlotBooked
+
                   return (
                     <button
                       key={slot}
+                      disabled={isDisabled}
                       onClick={() => setSelectedTimeSlot(slot)}
                       className={`h-12 rounded-2xl border flex items-center justify-center active:scale-95 transition-all text-xs font-bold ${
                         isSelected
                           ? 'bg-[#70518d]/10 text-[#70518d] border-[#70518d] shadow-md font-bold'
-                          : 'bg-white border-purple-100/40 text-[#1d1b1f] hover:border-[#70518d]/50 shadow-sm'
+                          : isDisabled
+                            ? 'bg-purple-50/10 border-purple-100/20 text-[#795465]/30 cursor-not-allowed line-through'
+                            : 'bg-white border-purple-100/40 text-[#1d1b1f] hover:border-[#70518d]/50 shadow-sm'
                       }`}
                     >
                       {slot}
@@ -371,8 +509,8 @@ export default function PatientAgenda() {
             </section>
 
             {/* Profissional Responsável e Resumo */}
-            {selectedTherapist && (
-              <section className="flex flex-col gap-4">
+            {selectedTherapist && selectedService && (
+              <section className="flex flex-col gap-4 animate-in fade-in duration-200">
                 <div className="bg-[#70518d]/10 p-4 rounded-2xl flex items-center gap-4 border border-[#70518d]/10">
                   <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 border-2 border-[#70518d]/20">
                     <img 
@@ -387,17 +525,24 @@ export default function PatientAgenda() {
                   </div>
                 </div>
                 
+                {selectedService.summary && (
+                  <div className="bg-white p-4 rounded-2xl border border-purple-100/20 shadow-sm text-xs text-[#795465] font-semibold leading-relaxed">
+                    <p className="font-bold text-[#70518d] mb-1.5 uppercase text-[9px] tracking-wider">Sobre a Especialidade</p>
+                    {selectedService.summary}
+                  </div>
+                )}
+                
                 <div className="grid grid-cols-2 gap-3">
                   <div className="bg-white p-4 rounded-2xl border border-purple-100/20 shadow-sm">
                     <span className="material-symbols-outlined text-[#795465] mb-1">spa</span>
-                    <p className="text-xs text-[#795465] font-bold">Tipo de Atendimento</p>
-                    <p className="text-xs text-[#795465]/70 font-medium mt-0.5">{selectedService.duration}</p>
+                    <p className="text-xs text-[#795465] font-bold">Duração Estimada</p>
+                    <p className="text-xs text-[#795465]/70 font-semibold mt-0.5">{selectedService.duration || '50 minutos'}</p>
                   </div>
                   
                   <div className="bg-white p-4 rounded-2xl border border-purple-100/20 shadow-sm">
                     <span className="material-symbols-outlined text-[#795465] mb-1">payments</span>
                     <p className="text-xs text-[#70518d] font-bold">Investimento</p>
-                    <p className="text-xs text-[#795465]/70 font-medium mt-0.5">{selectedService.price}</p>
+                    <p className="text-xs text-[#795465]/70 font-semibold mt-0.5">R$ {Number(selectedService.price).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
                   </div>
                 </div>
               </section>
@@ -405,15 +550,17 @@ export default function PatientAgenda() {
 
             {/* Confirm Booking Button - inside main content flow */}
             <button 
-              disabled={submitting}
+              disabled={submitting || !selectedTimeSlot || !selectedService}
               onClick={handleConfirmBooking}
-              className="w-full h-[52px] rounded-2xl bg-[#70518d] text-white font-bold text-sm flex items-center justify-center shadow-md active:scale-95 transition-all hover:bg-[#573974] disabled:opacity-50 disabled:pointer-events-none mt-1"
+              className="w-full h-[52px] rounded-2xl bg-[#70518d] text-white font-bold text-sm flex items-center justify-center shadow-md active:scale-95 transition-all hover:bg-[#573974] disabled:opacity-40 disabled:pointer-events-none mt-1"
             >
               {submitting ? (
                 <span className="flex items-center gap-2">
                   <Loader2 className="w-4 h-4 animate-spin text-white" />
                   Agendando...
                 </span>
+              ) : !selectedTimeSlot ? (
+                'Nenhum horário disponível para hoje'
               ) : (
                 'Confirmar Agendamento'
               )}
@@ -463,3 +610,4 @@ export default function PatientAgenda() {
     </>
   )
 }
+

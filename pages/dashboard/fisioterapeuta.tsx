@@ -58,16 +58,22 @@ export default function TherapistDashboard() {
         }
 
         // Load real database metrics for this therapist
+        const { data: therapistPatients } = await supabase
+          .from('profiles')
+          .select('id')
+          .eq('role', 'patient')
+          .eq('therapist_id', user.id)
+
+        if (therapistPatients) {
+          setPatientsCount(therapistPatients.length)
+        }
+
         const { data: dbRecords } = await supabase
           .from('medical_records')
           .select('patient_id, prescribed_exercises')
           .eq('therapist_id', user.id)
 
         if (dbRecords) {
-          // Unique patients
-          const uniquePatients = new Set(dbRecords.map(r => r.patient_id))
-          setPatientsCount(uniquePatients.size)
-
           // Total sessions
           setSessionsCount(dbRecords.length)
 

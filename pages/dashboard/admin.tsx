@@ -230,6 +230,23 @@ export default function AdminDashboard() {
             <section className="flex flex-col gap-3.5">
               <h3 className="text-xs font-bold text-[#70518d] uppercase tracking-wider pl-1 select-none">Atalhos Administrativos</h3>
               
+              {/* Navigate: Services */}
+              <div 
+                onClick={() => router.push('/dashboard/admin/servicos')}
+                className="bg-white border border-purple-100/20 p-4 rounded-2xl shadow-sm hover:border-[#70518d]/30 transition-all flex items-center justify-between cursor-pointer active:scale-[0.99] group"
+              >
+                <div className="flex items-center gap-3.5">
+                  <div className="w-10 h-10 rounded-xl bg-purple-50 text-[#70518d] flex items-center justify-center group-hover:scale-105 transition-transform">
+                    <span className="material-symbols-outlined text-lg">spa</span>
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-[#1d1b1f] text-sm">Cadastrar Serviços</h4>
+                    <p className="text-[10px] text-[#795465] font-semibold">Gerenciar catálogo de especialidades, preços e durações</p>
+                  </div>
+                </div>
+                <ChevronRight className="w-4 h-4 text-[#795465]" />
+              </div>
+
               {/* Navigate: Therapists */}
               <div 
                 onClick={() => router.push('/dashboard/admin/terapeutas')}
