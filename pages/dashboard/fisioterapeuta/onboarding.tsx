@@ -244,9 +244,9 @@ export default function TherapistOnboarding() {
     const exercisesToImport = exercises.filter(e => selectedIds.includes(e.id))
 
     try {
-      // 1. Insert into Supabase table public.exercises_catalog
+      // 1. Insert into Supabase table public.exercises_catalog (id is unique per therapist to avoid primary key collisions)
       const insertData = exercisesToImport.map(ex => ({
-        id: ex.id,
+        id: `${ex.id}_${therapist.id}`,
         therapist_id: therapist.id,
         name: ex.name,
         subtitle: ex.subtitle,
@@ -267,7 +267,7 @@ export default function TherapistOnboarding() {
         // If table doesn't exist, we fallback silently to localStorage to guarantee review functionality
         if (error.code === '42P01') {
           console.warn('Table exercises_catalog missing in Supabase, utilizing localStorage fallback.')
-          localStorage.setItem('bella_flora_custom_exercises', JSON.stringify(exercisesToImport))
+          localStorage.setItem('bella_flora_custom_exercises', JSON.stringify(insertData))
         } else {
           throw error
         }
