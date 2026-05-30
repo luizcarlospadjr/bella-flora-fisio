@@ -215,7 +215,7 @@ export default function DashboardPaciente({
                       </button>
                       
                       <Link
-                        href={`/dashboard/paciente/agenda?therapist_id=${appointment.therapist?.id || ''}`}
+                        href={`/dashboard/paciente/agenda?therapist_id=${appointment.therapist?.id || ''}&reschedule_appt_id=${appointment.id}`}
                         className="flex-grow h-9 rounded-xl bg-white/5 hover:bg-white/15 text-purple-100 flex items-center justify-center gap-1.5 text-[10px] font-bold tracking-tight active:scale-95 transition-all border border-white/5"
                       >
                         <RefreshCw className="w-3.5 h-3.5 text-purple-200" />

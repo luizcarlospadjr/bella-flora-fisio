@@ -113,9 +113,27 @@ export default function PatientAgenda() {
           .select('*')
           .order('name', { ascending: true })
 
+        // Se for remarcação, tenta buscar o serviço do agendamento antigo para pré-selecionar
+        let preselectedServiceName = null
+        const rescheduleApptId = router.query.reschedule_appt_id as string
+        if (rescheduleApptId) {
+          const { data: oldAppt } = await supabase
+            .from('appointments')
+            .select('service')
+            .eq('id', rescheduleApptId)
+            .maybeSingle()
+          
+          if (oldAppt && oldAppt.service) {
+            preselectedServiceName = oldAppt.service
+          }
+        }
+
         if (servicesList && servicesList.length > 0) {
           setServices(servicesList)
-          setSelectedService(servicesList[0])
+          const matchedService = preselectedServiceName 
+            ? servicesList.find(s => s.name === preselectedServiceName)
+            : null
+          setSelectedService(matchedService || servicesList[0])
         }
       } catch (err) {
         console.error('Erro ao carregar dados de agendamento:', err)
@@ -250,9 +268,22 @@ export default function PatientAgenda() {
 
       if (error) throw error
 
+      // 3. Se for um fluxo de remarcação, cancela a consulta antiga no banco
+      const rescheduleApptId = router.query.reschedule_appt_id as string
+      if (rescheduleApptId) {
+        const { error: cancelError } = await supabase
+          .from('appointments')
+          .update({ status: 'canceled' })
+          .eq('id', rescheduleApptId)
+
+        if (cancelError) {
+          console.error('Erro ao cancelar consulta anterior:', cancelError)
+        }
+      }
+
       setBookingSuccess(true)
       
-      // 3. Redireciona com feedback visual de sucesso após 2 segundos
+      // 4. Redireciona com feedback visual de sucesso após 2 segundos
       setTimeout(() => {
         router.push('/dashboard/paciente')
       }, 2000)
