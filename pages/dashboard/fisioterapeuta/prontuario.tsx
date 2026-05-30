@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { Loader2, ArrowLeft, Search, Plus, Save, MessageSquare, Award, Clock, Heart, Sparkles, X, ChevronRight, Check } from 'lucide-react'
+import { Loader2, ArrowLeft, Search, Plus, Save, MessageSquare, Award, Clock, Heart, Sparkles, X, ChevronRight, Check, Users } from 'lucide-react'
 import { supabase } from '../../../lib/supabaseClient'
 
 interface PrescribedExercise {

@@ -12,7 +12,7 @@ Para testar o fluxo de ponta a ponta (comunicação, prontuários, prescrição 
 
 ### 1. Perfil Fisioterapeuta
 * **E-mail Sugerido:** `fisioterapeuta@teste.com`
-* **Senha Sugerida:** `123456` *(ou qualquer senha com mais de 6 caracteres)*
+* **Senha Sugerida:** `BellaFloraFisio2026!` *(ou qualquer senha com mais de 6 caracteres)*
 * **Papel:** `therapist` (Fisioterapeuta)
 * **O que testar nesta visão:**
   - Visualizar a lista de pacientes ativos na clínica.
@@ -22,7 +22,7 @@ Para testar o fluxo de ponta a ponta (comunicação, prontuários, prescrição 
 
 ### 2. Perfil Paciente
 * **E-mail Sugerido:** `paciente@teste.com`
-* **Senha Sugerida:** `123456`
+* **Senha Sugerida:** `BellaFloraFisio2026!`
 * **Papel:** `patient` (Paciente)
 * **O que testar nesta visão:**
   - Acessar a agenda de consultas pélvicas.
@@ -32,7 +32,7 @@ Para testar o fluxo de ponta a ponta (comunicação, prontuários, prescrição 
 
 ### 3. Perfil Gestor (Administrador da Clínica)
 * **E-mail Sugerido:** `gestor@teste.com`
-* **Senha Sugerida:** `123456`
+* **Senha Sugerida:** `BellaFloraFisio2026!`
 * **Papel:** `admin` (Gestor de Clínica)
 * **O que testar nesta visão:**
   - Analisar o faturamento total e metas de crescimento da clínica.
@@ -50,20 +50,20 @@ Como a aplicação está integrada em tempo real ao Supabase Auth, você pode cr
    Abra o link [https://bella-flora-fisio.vercel.app/register](https://bella-flora-fisio.vercel.app/register) no seu navegador.
    
 2. **Crie a Fisioterapeuta:**
-   - Preencha com o e-mail `fisioterapeuta@teste.com` e a senha `123456`.
+   - Preencha com o e-mail `fisioterapeuta@teste.com` e a senha `BellaFloraFisio2026!`.
    - Escolha a opção **"Fisioterapeuta"** no seletor de cargo.
    - Clique em **Cadastrar**. Você será redirecionado para o onboarding clínico.
 
 3. **Crie o Paciente:**
    - Faça logout (ou abra uma **aba anônima** no navegador).
    - Acesse novamente [https://bella-flora-fisio.vercel.app/register](https://bella-flora-fisio.vercel.app/register).
-   - Preencha com o e-mail `paciente@teste.com` e a senha `123456`.
+   - Preencha com o e-mail `paciente@teste.com` e a senha `BellaFloraFisio2026!`.
    - Escolha a opção **"Paciente"** no seletor e conclua.
 
 4. **Crie o Gestor / Admin:**
    - Abra mais uma aba anônima (ou faça logout).
    - Acesse [https://bella-flora-fisio.vercel.app/register](https://bella-flora-fisio.vercel.app/register).
-   - Preencha com o e-mail `gestor@teste.com` e a senha `123456`.
+   - Preencha com o e-mail `gestor@teste.com` e a senha `BellaFloraFisio2026!`.
    - Clique em **Cadastrar**. Na tela de **Escolha de Perfil**, clique no botão **"Sou Gestor de Clínica"**.
    - Você será imediatamente direcionado para a central administrativa `/dashboard/admin`!
 
