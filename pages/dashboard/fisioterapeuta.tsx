@@ -9,6 +9,9 @@ export default function TherapistDashboard() {
   const router = useRouter()
   const [profile, setProfile] = useState<any>(null)
   const [loading, setLoading] = useState(true)
+  const [patientsCount, setPatientsCount] = useState(0)
+  const [sessionsCount, setSessionsCount] = useState(0)
+  const [prescriptionsCount, setPrescriptionsCount] = useState(0)
 
   useEffect(() => {
     async function loadData() {
@@ -52,6 +55,30 @@ export default function TherapistDashboard() {
           } else {
             localStorage.setItem('bella_flora_onboarding_completed', 'true')
           }
+        }
+
+        // Load real database metrics for this therapist
+        const { data: dbRecords } = await supabase
+          .from('medical_records')
+          .select('patient_id, prescribed_exercises')
+          .eq('therapist_id', user.id)
+
+        if (dbRecords) {
+          // Unique patients
+          const uniquePatients = new Set(dbRecords.map(r => r.patient_id))
+          setPatientsCount(uniquePatients.size)
+
+          // Total sessions
+          setSessionsCount(dbRecords.length)
+
+          // Total prescriptions (records with non-empty exercises)
+          let pCount = 0
+          dbRecords.forEach(r => {
+            if (r.prescribed_exercises && Array.isArray(r.prescribed_exercises) && r.prescribed_exercises.length > 0) {
+              pCount++
+            }
+          })
+          setPrescriptionsCount(pCount)
         }
 
         setProfile(userProfile)
@@ -145,15 +172,15 @@ export default function TherapistDashboard() {
             <section className="grid grid-cols-3 gap-3">
               <div className="bg-white border border-purple-100/20 p-3 rounded-2xl shadow-sm flex flex-col items-center justify-center text-center">
                 <span className="text-[9px] font-bold text-[#795465] uppercase tracking-wider block mb-1">Pacientes</span>
-                <span className="font-extrabold text-base text-[#1d1b1f]">12</span>
+                <span className="font-extrabold text-base text-[#1d1b1f]">{patientsCount}</span>
               </div>
               <div className="bg-white border border-purple-100/20 p-3 rounded-2xl shadow-sm flex flex-col items-center justify-center text-center">
                 <span className="text-[9px] font-bold text-[#795465] uppercase tracking-wider block mb-1">Sessões</span>
-                <span className="font-extrabold text-base text-[#1d1b1f]">4</span>
+                <span className="font-extrabold text-base text-[#1d1b1f]">{sessionsCount}</span>
               </div>
               <div className="bg-white border border-purple-100/20 p-3 rounded-2xl shadow-sm flex flex-col items-center justify-center text-center">
                 <span className="text-[9px] font-bold text-[#795465] uppercase tracking-wider block mb-1">Prescrições</span>
-                <span className="font-extrabold text-base text-[#1d1b1f]">38</span>
+                <span className="font-extrabold text-base text-[#1d1b1f]">{prescriptionsCount}</span>
               </div>
             </section>
 
