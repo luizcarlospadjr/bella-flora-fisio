@@ -50,6 +50,11 @@ export default function TherapistProntuario() {
   const [patients, setPatients] = useState<PatientProfile[]>([])
   const [searchQuery, setSearchQuery] = useState('')
 
+  // Unassigned patients state for linking
+  const [unassignedPatients, setUnassignedPatients] = useState<PatientProfile[]>([])
+  const [showLinkModal, setShowLinkModal] = useState(false)
+  const [linkingId, setLinkingId] = useState<string | null>(null)
+
   // Active patient details
   const [activePatient, setActivePatient] = useState<PatientProfile | null>(null)
   const [activeTab, setActiveTab] = useState<'evolucao' | 'para_casa' | 'historico' | 'documentos'>('evolucao')
@@ -168,15 +173,28 @@ export default function TherapistProntuario() {
         }
         setTherapist(user)
 
-        // 2. Fetch list of patients
+        // 2. Fetch list of patients associated with this therapist
         const { data: patientList } = await supabase
           .from('profiles')
           .select('*')
           .eq('role', 'patient')
+          .eq('therapist_id', user.id)
           .order('full_name', { ascending: true })
 
         if (patientList) {
           setPatients(patientList)
+        }
+
+        // Fetch list of unassigned clinic patients
+        const { data: unassignedList } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('role', 'patient')
+          .is('therapist_id', null)
+          .order('full_name', { ascending: true })
+
+        if (unassignedList) {
+          setUnassignedPatients(unassignedList)
         }
 
         // 1.5. Load Therapist's Catalog (from database exercises_catalog or localStorage fallback)
@@ -293,6 +311,34 @@ export default function TherapistProntuario() {
       hour: '2-digit',
       minute: '2-digit'
     })
+  }
+
+  // Link an unassigned patient to this therapist
+  const handleLinkPatient = async (patientId: string) => {
+    if (!therapist) return
+    try {
+      setLinkingId(patientId)
+      const { error } = await supabase
+        .from('profiles')
+        .update({ therapist_id: therapist.id })
+        .eq('id', patientId)
+
+      if (error) throw error
+
+      const linkedPatient = unassignedPatients.find(p => p.id === patientId)
+      if (linkedPatient) {
+        setPatients(prev => [...prev, { ...linkedPatient, therapist_id: therapist.id }].sort((a, b) => (a.full_name || '').localeCompare(b.full_name || '')))
+        setUnassignedPatients(prev => prev.filter(p => p.id !== patientId))
+      }
+      
+      setShowLinkModal(false)
+      router.push(`/dashboard/fisioterapeuta/prontuario?patient_id=${patientId}`)
+    } catch (err) {
+      console.error('Erro ao vincular paciente:', err)
+      alert('Erro ao vincular paciente. Tente novamente.')
+    } finally {
+      setLinkingId(null)
+    }
   }
 
   // Create a new evolution session
@@ -575,9 +621,18 @@ export default function TherapistProntuario() {
           {/* 1. SELECTION SCREEN VIEW (When no patient_id is selected) */}
           {!activePatient ? (
             <main className="flex-1 overflow-y-auto px-5 py-5 flex flex-col gap-5 scrollbar-none pb-24">
-              <section className="flex flex-col gap-1">
-                <h2 className="text-xl font-extrabold text-[#1d1b1f]">Pacientes Ativas</h2>
-                <p className="text-[11px] text-[#795465] font-medium">Selecione uma paciente para evoluir o prontuário.</p>
+              <section className="flex items-center justify-between pl-1">
+                <div>
+                  <h2 className="text-xl font-extrabold text-[#1d1b1f]">Pacientes Ativas</h2>
+                  <p className="text-[11px] text-[#795465] font-medium">Selecione uma paciente para evoluir.</p>
+                </div>
+                <button
+                  onClick={() => setShowLinkModal(true)}
+                  className="flex items-center gap-1.5 bg-[#70518d] hover:bg-[#573974] text-white px-3.5 py-1.5 rounded-full text-[10px] font-bold shadow-sm transition-all active:scale-95 shrink-0"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  Vincular Paciente
+                </button>
               </section>
 
               {/* Search Input Bar */}
@@ -1240,6 +1295,74 @@ export default function TherapistProntuario() {
                     Adicionar e Prescrever
                   </button>
                 </form>
+              </div>
+            </div>
+          )}
+
+          {/* Vincular Paciente da Clínica Modal */}
+          {showLinkModal && (
+            <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[60] flex items-center justify-center p-4">
+              <div className="bg-white w-full max-w-sm rounded-3xl p-5 shadow-2xl transition-all scale-100 opacity-100 flex flex-col gap-4 max-h-[80vh]">
+                
+                <div className="flex justify-between items-center pb-2 border-b border-purple-100/10">
+                  <div>
+                    <h3 className="text-sm font-extrabold text-[#1d1b1f]">
+                      Vincular Paciente da Clínica
+                    </h3>
+                    <p className="text-[9px] text-[#795465] font-semibold mt-0.5">
+                      Pacientes cadastrados sem fisioterapeuta responsável
+                    </p>
+                  </div>
+                  <button 
+                    onClick={() => setShowLinkModal(false)}
+                    className="text-[#795465] p-1 rounded-full hover:bg-purple-50 flex items-center justify-center shrink-0"
+                  >
+                    <X className="w-4.5 h-4.5 text-[#795465]" />
+                  </button>
+                </div>
+
+                <div className="flex-1 overflow-y-auto space-y-2.5 pr-1 scrollbar-thin">
+                  {unassignedPatients.length > 0 ? (
+                    unassignedPatients.map(patient => (
+                      <div 
+                        key={patient.id} 
+                        className="p-3 bg-[#fff7fd]/40 border border-purple-100/10 rounded-xl flex items-center justify-between gap-3 text-left"
+                      >
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          <img 
+                            alt={patient.full_name || 'Paciente'} 
+                            className="w-9 h-9 rounded-full object-cover shrink-0 border border-purple-100/20" 
+                            src={patient.avatar_url || '/assets/img/mariana_silva.png'} 
+                          />
+                          <div className="min-w-0">
+                            <h4 className="font-extrabold text-xs text-[#1d1b1f] truncate">
+                              {patient.full_name || 'Paciente sem Nome'}
+                            </h4>
+                            <p className="text-[8px] text-[#795465] font-semibold mt-0.5 truncate">
+                              Tel: {patient.phone || 'Sem telefone'}
+                            </p>
+                          </div>
+                        </div>
+
+                        <button
+                          onClick={() => handleLinkPatient(patient.id)}
+                          disabled={linkingId !== null}
+                          className="bg-[#70518d] hover:bg-[#573974] disabled:opacity-50 text-white font-extrabold text-[9px] px-3 py-1.5 rounded-lg active:scale-95 transition-all shrink-0 shadow-sm"
+                        >
+                          {linkingId === patient.id ? 'Vinculando...' : 'Vincular a Mim'}
+                        </button>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="py-6 text-center text-slate-400 flex flex-col items-center gap-2">
+                      <Users className="w-8 h-8 text-[#795465] opacity-40" />
+                      <p className="text-xs font-bold text-[#1d1b1f]">Nenhum paciente pendente</p>
+                      <p className="text-[9px] text-[#795465] max-w-[200px] leading-relaxed">
+                        Todos os pacientes cadastrados na clínica já possuem uma fisioterapeuta responsável designada.
+                      </p>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           )}

@@ -58,11 +58,12 @@ export default function TherapistChat() {
           setTherapistProfile(profile)
         }
 
-        // 3. Busca o primeiro paciente cadastrado para simular o chat
+        // 3. Busca o primeiro paciente cadastrado vinculado a esta fisioterapeuta
         const { data: activePatient } = await supabase
           .from('profiles')
           .select('*')
           .eq('role', 'patient')
+          .eq('therapist_id', user.id)
           .limit(1)
           .maybeSingle()
 
