@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
-import { LogOut, User, ClipboardList, Calendar, Heart, Bell, MessageSquare, ChevronRight } from 'lucide-react'
+import { LogOut, User, ClipboardList, Calendar, Heart, Bell, MessageSquare, ChevronRight, Check, RefreshCw } from 'lucide-react'
 
 interface Therapist {
   full_name: string | null
@@ -44,6 +44,22 @@ export default function DashboardPaciente({
   appointment,
   onLogout
 }: DashboardPacienteProps) {
+
+  const [isConfirmed, setIsConfirmed] = useState(false)
+
+  useEffect(() => {
+    if (appointment) {
+      const confirmed = localStorage.getItem(`confirmed_appt_${appointment.id}`) === 'true'
+      setIsConfirmed(confirmed)
+    }
+  }, [appointment])
+
+  const handleConfirmPresence = () => {
+    if (appointment) {
+      localStorage.setItem(`confirmed_appt_${appointment.id}`, 'true')
+      setIsConfirmed(true)
+    }
+  }
 
 
   // Formata a data do agendamento de acordo com o padrão do protótipo
@@ -177,6 +193,35 @@ export default function DashboardPaciente({
                   >
                     <MessageSquare className="w-4 h-4 text-white" />
                   </Link>
+                </div>
+
+                {/* Confirm / Reschedule glassmorphic action buttons */}
+                <div className="mt-4 pt-4 border-t border-white/10 flex gap-2.5 relative z-10">
+                  {isConfirmed ? (
+                    <div className="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-3 py-2 rounded-2xl flex items-center justify-center gap-2 text-xs font-bold w-full backdrop-blur-sm animate-in fade-in zoom-in-95 duration-200">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+                      <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+                      Presença Confirmada!
+                    </div>
+                  ) : (
+                    <>
+                      <button
+                        onClick={handleConfirmPresence}
+                        className="flex-grow h-9 rounded-xl bg-white/20 hover:bg-emerald-500/30 text-white flex items-center justify-center gap-1.5 text-[10px] font-bold tracking-tight active:scale-95 transition-all border border-white/10"
+                      >
+                        <Check className="w-3.5 h-3.5 text-white" />
+                        Confirmar
+                      </button>
+                      
+                      <Link
+                        href="/dashboard/paciente/agenda"
+                        className="flex-grow h-9 rounded-xl bg-white/5 hover:bg-white/15 text-purple-100 flex items-center justify-center gap-1.5 text-[10px] font-bold tracking-tight active:scale-95 transition-all border border-white/5"
+                      >
+                        <RefreshCw className="w-3.5 h-3.5 text-purple-200" />
+                        Remarcar
+                      </Link>
+                    </>
+                  )}
                 </div>
               </section>
             ) : (
