@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { Loader2, ArrowLeft, Search, Plus, Save, MessageSquare, Award, Clock, Heart, Sparkles, X, ChevronRight, Check, Users } from 'lucide-react'
+import { Loader2, ArrowLeft, Search, Plus, Save, MessageSquare, Award, Clock, Sparkles, X, ChevronRight, Check, Users } from 'lucide-react'
 import { supabase } from '../../../lib/supabaseClient'
 
 interface PrescribedExercise {
@@ -902,7 +902,7 @@ export default function TherapistProntuario() {
             )}
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#70518d] to-[#573974] flex items-center justify-center text-white shadow-sm">
-                <Heart className="w-4 h-4 text-white fill-current" />
+                <span className="material-symbols-outlined text-white text-base" style={{ fontVariationSettings: "'FILL' 1" }}>spa</span>
               </div>
               <div>
                 <span className="font-extrabold text-sm tracking-tight text-[#70518d]">

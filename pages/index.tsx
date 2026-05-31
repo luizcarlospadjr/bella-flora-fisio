@@ -6,7 +6,6 @@ import {
   Calendar, 
   MessageSquare, 
   Users, 
-  Heart, 
   CheckCircle2, 
   ArrowRight,
   TrendingUp
@@ -28,7 +27,7 @@ export default function Home() {
           <div className="max-w-6xl mx-auto flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#70518d] to-[#573974] flex items-center justify-center shadow-md">
-                <Heart className="w-5 h-5 text-white" />
+                <span className="material-symbols-outlined text-white text-[20px]" style={{ fontVariationSettings: "'FILL' 1" }}>spa</span>
               </div>
               <div>
                 <span className="font-extrabold text-xl tracking-tight text-[#70518d]">

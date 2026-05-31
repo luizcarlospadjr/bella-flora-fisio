@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
-import { Heart, Plus, Search, Edit2, Check, X, ShieldAlert, ArrowLeft, Loader2, Sparkles } from 'lucide-react'
+import { Plus, Search, Edit2, Check, X, ShieldAlert, ArrowLeft, Loader2, Sparkles } from 'lucide-react'
 
 interface Therapist {
   id: string

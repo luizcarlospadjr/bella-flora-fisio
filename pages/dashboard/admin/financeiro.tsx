@@ -1,7 +1,7 @@
 import React from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
-import { Heart, ArrowLeft, TrendingUp, DollarSign, Wallet, ShieldCheck, Calendar } from 'lucide-react'
+import { ArrowLeft, TrendingUp, DollarSign, Wallet, ShieldCheck, Calendar } from 'lucide-react'
 
 interface TherapistBilling {
   name: string

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import { Heart, Loader2, Sparkles, Check, ChevronRight, AlertCircle, Info, Database } from 'lucide-react'
+import { Loader2, Sparkles, Check, ChevronRight, AlertCircle, Info, Database, User, Award, Phone } from 'lucide-react'
 import { supabase } from '../../../lib/supabaseClient'
 
 interface ExerciseTemplate {
@@ -18,7 +18,14 @@ interface ExerciseTemplate {
   icon?: string
 }
 
-// Curated high-quality PT-BR pelvic rehab exercises for immediate fallback and default import
+const PRESET_AVATARS = [
+  'https://images.unsplash.com/photo-1594824813573-246434de83fb?auto=format&fit=crop&q=80&w=150', // Female doctor/therapist 1
+  'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=150', // Professional woman 1
+  'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=150', // Female doctor/therapist 2
+  'https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&q=80&w=150', // Male professional 1
+  'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=150', // Male professional 2
+]
+
 const premiumPelvicExercises: ExerciseTemplate[] = [
   {
     id: 'kegel_basico',
@@ -121,12 +128,26 @@ const premiumPelvicExercises: ExerciseTemplate[] = [
 export default function TherapistOnboarding() {
   const router = useRouter()
   const [therapist, setTherapist] = useState<any>(null)
+  
+  // Navigation wizard steps
+  const [currentStep, setCurrentStep] = useState<1 | 2>(1)
+
+  // Step 1: Profile form fields
+  const [fullName, setFullName] = useState('')
+  const [phone, setPhone] = useState('')
+  const [crefito, setCrefito] = useState('')
+  const [specialty, setSpecialty] = useState('Fisioterapia Pélvica')
+  const [selectedAvatar, setSelectedAvatar] = useState(PRESET_AVATARS[0])
+
+  // Step 2: Exercises catalog states
   const [exercises, setExercises] = useState<ExerciseTemplate[]>([])
   const [selectedIds, setSelectedIds] = useState<string[]>([])
-  const [loading, setLoading] = useState(true)
-  const [importing, setImporting] = useState(false)
-  const [errorMsg, setErrorMsg] = useState<string | null>(null)
   const [apiSource, setApiSource] = useState<'local' | 'wger'>('local')
+
+  // Global UX states
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+  const [errorMsg, setErrorMsg] = useState<string | null>(null)
 
   useEffect(() => {
     async function checkTherapist() {
@@ -149,6 +170,17 @@ export default function TherapistOnboarding() {
         }
 
         setTherapist(profile)
+        
+        // Pre-populate fields from existing database profiles
+        setFullName(profile.full_name || '')
+        setPhone(profile.phone || '')
+        setSelectedAvatar(profile.avatar_url || PRESET_AVATARS[0])
+        
+        // Check user auth metadata fallback
+        const userMeta = user.user_metadata || {}
+        setCrefito(userMeta.crefito || '')
+        setSpecialty(userMeta.specialty || 'Fisioterapia Pélvica')
+
         await loadExercises()
       } catch (err) {
         console.error('Erro no onboarding:', err)
@@ -160,12 +192,10 @@ export default function TherapistOnboarding() {
     checkTherapist()
   }, [])
 
-  // Dynamic fetch to wger API with immediate PT-BR template fallbacks
   const loadExercises = async () => {
     setLoading(true)
     setErrorMsg(null)
     
-    // We pre-populate with our high-quality PT-BR pelvic templates
     const combinedList: ExerciseTemplate[] = [...premiumPelvicExercises]
     setSelectedIds(premiumPelvicExercises.map(e => e.id)) // Pre-select all by default
 
@@ -178,9 +208,7 @@ export default function TherapistOnboarding() {
       if (res.ok) {
         const data = await res.json()
         if (data && data.results && data.results.length > 0) {
-          // Format wger results and filter out duplicates
           const wgerExercises = data.results.slice(0, 4).map((item: any) => {
-            // Strip HTML tags from description
             const cleanDesc = (item.description || '')
               .replace(/<[^>]*>/g, '')
               .replace(/\s+/g, ' ')
@@ -205,18 +233,17 @@ export default function TherapistOnboarding() {
             }
           })
 
-          // Merge wger exercises into list (avoiding any duplicate names just in case)
           wgerExercises.forEach((we: ExerciseTemplate) => {
             if (!combinedList.some(e => e.name.toLowerCase() === we.name.toLowerCase())) {
               combinedList.push(we)
-              setSelectedIds(prev => [...prev, we.id]) // Pre-select wger too
+              setSelectedIds(prev => [...prev, we.id])
             }
           })
           setApiSource('wger')
         }
       }
     } catch (apiErr) {
-      console.warn('Wger API unreachable (possibly CORS or down). Using premium local templates.', apiErr)
+      console.warn('Wger API unreachable. Using premium local templates.', apiErr)
       setApiSource('local')
     } finally {
       setExercises(combinedList)
@@ -232,19 +259,64 @@ export default function TherapistOnboarding() {
     }
   }
 
-  const handleImport = async () => {
+  const handleSaveProfileStep = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!fullName.trim() || !phone.trim() || !crefito.trim()) {
+      setErrorMsg('Por favor, preencha todos os campos obrigatórios (Nome, Telefone e CREFITO).')
+      return
+    }
+
+    setSaving(true)
+    setErrorMsg(null)
+
+    try {
+      // 1. Update public.profiles in database
+      const { error: profileErr } = await supabase
+        .from('profiles')
+        .update({
+          full_name: fullName.trim(),
+          phone: phone.trim(),
+          avatar_url: selectedAvatar
+        })
+        .eq('id', therapist.id)
+
+      if (profileErr) throw profileErr
+
+      // 2. Update user auth metadata
+      const { error: authErr } = await supabase.auth.updateUser({
+        data: {
+          crefito: crefito.trim(),
+          specialty: specialty
+        }
+      })
+
+      if (authErr) throw authErr
+
+      // Save to localStorage for immediate session hydration
+      localStorage.setItem('bella_flora_therapist_crefito', crefito.trim())
+      localStorage.setItem('bella_flora_therapist_specialty', specialty)
+
+      setCurrentStep(2)
+    } catch (err: any) {
+      console.error('Erro ao atualizar dados do perfil:', err)
+      setErrorMsg(err.message || 'Erro ao salvar dados do perfil. Tente novamente.')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const handleImportExercises = async () => {
     if (selectedIds.length === 0) {
       setErrorMsg('Por favor, selecione pelo menos 1 exercício para importar.')
       return
     }
 
-    setImporting(true)
+    setSaving(true)
     setErrorMsg(null)
 
     const exercisesToImport = exercises.filter(e => selectedIds.includes(e.id))
 
     try {
-      // 1. Insert into Supabase table public.exercises_catalog (id is unique per therapist to avoid primary key collisions)
       const insertData = exercisesToImport.map(ex => ({
         id: `${ex.id}_${therapist.id}`,
         therapist_id: therapist.id,
@@ -264,7 +336,6 @@ export default function TherapistOnboarding() {
         .insert(insertData)
 
       if (error) {
-        // If table doesn't exist, we fallback silently to localStorage to guarantee review functionality
         if (error.code === '42P01') {
           console.warn('Table exercises_catalog missing in Supabase, utilizing localStorage fallback.')
           localStorage.setItem('bella_flora_custom_exercises', JSON.stringify(insertData))
@@ -272,7 +343,6 @@ export default function TherapistOnboarding() {
           throw error
         }
       } else {
-        // Clear any old local storage items if DB write succeeded
         localStorage.removeItem('bella_flora_custom_exercises')
       }
 
@@ -284,7 +354,7 @@ export default function TherapistOnboarding() {
     } catch (err: any) {
       console.error('Erro ao importar exercícios:', err)
       setErrorMsg(err.message || 'Houve um erro técnico ao salvar os exercícios no banco de dados.')
-      setImporting(false)
+      setSaving(false)
     }
   }
 
@@ -293,7 +363,7 @@ export default function TherapistOnboarding() {
       <div className="min-h-screen bg-[#fff7fd] flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
           <Loader2 className="w-10 h-10 animate-spin text-[#70518d]" />
-          <p className="text-sm font-medium text-[#795465]">Consultando catálogo da API wger...</p>
+          <p className="text-sm font-medium text-[#795465]">Consultando catálogo da clínica...</p>
         </div>
       </div>
     )
@@ -302,7 +372,7 @@ export default function TherapistOnboarding() {
   return (
     <>
       <Head>
-        <title>Onboarding Clínica | Bella Flora Fisio</title>
+        <title>Completar Cadastro Profissional | Bella Flora Fisio</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
         <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
         <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
@@ -321,7 +391,7 @@ export default function TherapistOnboarding() {
           <header className="bg-white px-5 py-4 border-b border-purple-100/30 flex items-center justify-between sticky top-0 z-50 shadow-sm">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#70518d] to-[#573974] flex items-center justify-center text-white shadow-sm">
-                <Heart className="w-4 h-4 text-white fill-current animate-pulse" />
+                <span className="material-symbols-outlined text-white text-base animate-pulse" style={{ fontVariationSettings: "'FILL' 1" }}>spa</span>
               </div>
               <div>
                 <span className="font-extrabold text-sm tracking-tight text-[#70518d]">
@@ -335,35 +405,25 @@ export default function TherapistOnboarding() {
           </header>
 
           <main className="flex-1 px-5 py-5 flex flex-col gap-4">
+            
             {/* Step Welcome Card */}
-            <section className="bg-gradient-to-br from-[#70518d] to-[#573974] p-5 rounded-2xl shadow-md text-white border border-[#70518d]/30 relative overflow-hidden">
+            <section className="bg-gradient-to-br from-[#70518d] to-[#573974] p-5 rounded-2xl shadow-md text-white border border-[#70518d]/30 relative overflow-hidden select-none">
               <div className="absolute -bottom-6 -right-6 w-24 h-24 bg-white/5 rounded-full blur-xl pointer-events-none"></div>
               <div className="relative z-10">
                 <div className="inline-flex items-center px-2 py-0.5 bg-white/20 rounded-full text-[9px] font-bold text-purple-100 mb-2.5 backdrop-blur-sm">
                   <Sparkles className="w-3 h-3 mr-1" />
-                  PASSO 1 DE 1: SEU CATÁLOGO
+                  PASSO {currentStep} DE 2: {currentStep === 1 ? 'SEU REGISTRO' : 'BIBLIOTECA'}
                 </div>
-                <h2 className="font-extrabold text-lg leading-tight">Monte sua Biblioteca!</h2>
+                <h2 className="font-extrabold text-lg leading-tight">
+                  {currentStep === 1 ? 'Complete seu Registro!' : 'Monte seu Catálogo!'}
+                </h2>
                 <p className="text-[11px] text-purple-200/90 font-medium mt-1 leading-relaxed">
-                  Selecione abaixo os modelos de exercícios padrão que deseja importar para prescrever aos seus pacientes na clínica.
+                  {currentStep === 1 
+                    ? 'Preencha seus dados de contato, registro do CREFITO e escolha uma foto profissional para seus pacientes identificarem você.'
+                    : 'Selecione abaixo os modelos de exercícios padrão que deseja importar para prescrever aos seus pacientes na clínica.'}
                 </p>
               </div>
             </section>
-
-            {/* API Status Alert */}
-            <div className="flex items-center gap-2 p-3 bg-purple-50 border border-purple-100/30 rounded-xl text-[10px] text-[#795465] font-medium select-none">
-              {apiSource === 'wger' ? (
-                <>
-                  <Database className="w-4 h-4 text-[#70518d] shrink-0" />
-                  <span>Conectado à <strong>API Aberta wger</strong>. Exercícios de mobilidade e core adicionais importados com sucesso!</span>
-                </>
-              ) : (
-                <>
-                  <Info className="w-4 h-4 text-[#70518d] shrink-0" />
-                  <span>Modo local ativado. 6 exercícios especializados em Reabilitação Pélvica estão prontos para importação.</span>
-                </>
-              )}
-            </div>
 
             {errorMsg && (
               <div className="w-full p-3 bg-red-50 border border-red-200 text-red-600 rounded-xl text-xs font-semibold flex items-start gap-2 select-none">
@@ -372,91 +432,255 @@ export default function TherapistOnboarding() {
               </div>
             )}
 
-            {/* Exercise Catalog Grid */}
-            <section className="flex flex-col gap-3">
-              <h3 className="text-[10px] font-extrabold text-[#70518d] uppercase tracking-wider pl-1 select-none">
-                Exercícios Disponíveis ({exercises.length})
-              </h3>
+            {/* STEP 1: FORM FLOW */}
+            {currentStep === 1 ? (
+              <form onSubmit={handleSaveProfileStep} className="flex flex-col gap-4">
+                
+                {/* Full Name */}
+                <div className="flex flex-col gap-1.5 bg-white p-4 rounded-2xl border border-purple-100/20 shadow-sm">
+                  <label className="text-[10px] font-bold text-[#70518d] uppercase tracking-wider pl-0.5 flex items-center gap-1">
+                    <User className="w-3 h-3 text-[#70518d]" />
+                    Nome Completo
+                  </label>
+                  <input 
+                    type="text"
+                    required
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    placeholder="Ex: Dra. Amanda Cardoso"
+                    className="h-11 px-3.5 rounded-xl border border-purple-100/40 text-xs font-semibold focus:outline-none focus:border-[#70518d] w-full bg-slate-50/50 shadow-xs"
+                  />
+                </div>
 
-              <div className="space-y-3">
-                {exercises.map((ex) => {
-                  const isSelected = selectedIds.includes(ex.id)
-                  return (
-                    <div
-                      key={ex.id}
-                      onClick={() => toggleSelect(ex.id)}
-                      className={`p-4 rounded-2xl border transition-all cursor-pointer flex gap-3 relative select-none ${
-                        isSelected 
-                          ? 'bg-white border-[#70518d] shadow-[0px_4px_16px_rgba(112,81,141,0.06)]' 
-                          : 'bg-white/70 border-purple-100/20 hover:border-[#70518d]/30 hover:bg-white'
-                      }`}
-                    >
-                      {/* Checkbox Icon Indicator */}
-                      <div className={`w-5 h-5 rounded-full shrink-0 flex items-center justify-center border transition-all ${
-                        isSelected 
-                          ? 'bg-[#70518d] border-[#70518d] text-white' 
-                          : 'border-purple-200 bg-transparent'
-                      }`}>
-                        {isSelected && <Check className="w-3.5 h-3.5 stroke-[3px]" />}
-                      </div>
+                {/* Contact Phone & CREFITO */}
+                <div className="grid grid-cols-2 gap-3">
+                  {/* Phone */}
+                  <div className="flex flex-col gap-1.5 bg-white p-4 rounded-2xl border border-purple-100/20 shadow-sm">
+                    <label className="text-[10px] font-bold text-[#70518d] uppercase tracking-wider pl-0.5 flex items-center gap-1">
+                      <Phone className="w-3 h-3 text-[#70518d]" />
+                      Celular / WhatsApp
+                    </label>
+                    <input 
+                      type="tel"
+                      required
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      placeholder="Ex: (11) 98888-8888"
+                      className="h-11 px-3.5 rounded-xl border border-purple-100/40 text-xs font-semibold focus:outline-none focus:border-[#70518d] w-full bg-slate-50/50 shadow-xs"
+                    />
+                  </div>
 
-                      {/* Info Text */}
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-1.5 flex-wrap">
-                          <h4 className="font-bold text-[#1d1b1f] text-sm leading-tight">
-                            {ex.name}
-                          </h4>
-                          {ex.id.startsWith('wger_') && (
-                            <span className="text-[8px] font-extrabold bg-[#70518d]/10 text-[#70518d] px-1 rounded">wger API</span>
-                          )}
+                  {/* CREFITO */}
+                  <div className="flex flex-col gap-1.5 bg-white p-4 rounded-2xl border border-purple-100/20 shadow-sm">
+                    <label className="text-[10px] font-bold text-[#70518d] uppercase tracking-wider pl-0.5 flex items-center gap-1">
+                      <Award className="w-3 h-3 text-[#70518d]" />
+                      Registro CREFITO
+                    </label>
+                    <input 
+                      type="text"
+                      required
+                      value={crefito}
+                      onChange={(e) => setCrefito(e.target.value)}
+                      placeholder="Ex: 123456-F"
+                      className="h-11 px-3.5 rounded-xl border border-purple-100/40 text-xs font-semibold focus:outline-none focus:border-[#70518d] w-full bg-slate-50/50 shadow-xs"
+                    />
+                  </div>
+                </div>
+
+                {/* Principal Specialty */}
+                <div className="flex flex-col gap-1.5 bg-white p-4 rounded-2xl border border-purple-100/20 shadow-sm">
+                  <label className="text-[10px] font-bold text-[#70518d] uppercase tracking-wider pl-0.5 flex items-center gap-1">
+                    <Sparkles className="w-3 h-3 text-[#70518d]" />
+                    Especialidade Principal
+                  </label>
+                  <select
+                    value={specialty}
+                    onChange={(e) => setSpecialty(e.target.value)}
+                    className="h-11 px-3.5 rounded-xl border border-purple-100/40 text-xs font-semibold focus:outline-none focus:border-[#70518d] w-full bg-slate-50/50 cursor-pointer shadow-xs"
+                  >
+                    <option value="Fisioterapia Pélvica">Fisioterapia Pélvica & Uroginecologia</option>
+                    <option value="Saúde da Mulher">Saúde da Mulher & Obstetrícia</option>
+                    <option value="Pilates Clínico">Pilates Clínico & Reabilitação</option>
+                    <option value="Osteopatia Pélvica">Osteopatia Lombopélvica</option>
+                  </select>
+                </div>
+
+                {/* Avatar Selection Grid */}
+                <div className="flex flex-col gap-3 bg-white p-4 rounded-2xl border border-purple-100/20 shadow-sm">
+                  <label className="text-[10px] font-bold text-[#70518d] uppercase tracking-wider pl-0.5 select-none">
+                    Escolha sua Foto de Perfil
+                  </label>
+                  
+                  <div className="flex justify-between items-center gap-2 px-1 select-none">
+                    {PRESET_AVATARS.map((avatar, idx) => {
+                      const isSelected = selectedAvatar === avatar
+                      return (
+                        <button
+                          key={idx}
+                          type="button"
+                          onClick={() => setSelectedAvatar(avatar)}
+                          className={`w-14 h-14 rounded-full overflow-hidden border-2 transition-all active:scale-95 ${
+                            isSelected 
+                              ? 'border-[#70518d] ring-2 ring-[#70518d]/20 scale-105' 
+                              : 'border-purple-100/35 opacity-70 hover:opacity-100'
+                          }`}
+                        >
+                          <img 
+                            src={avatar} 
+                            alt={`Avatar ${idx}`} 
+                            className="w-full h-full object-cover"
+                          />
+                        </button>
+                      )
+                    })}
+                  </div>
+
+                  {/* Input link optional fallback */}
+                  <div className="flex flex-col gap-1 mt-2.5 pt-2.5 border-t border-purple-100/10">
+                    <span className="text-[9px] font-bold text-[#795465] uppercase pl-0.5 select-none">Ou utilize seu próprio link de imagem</span>
+                    <input 
+                      type="text"
+                      value={selectedAvatar}
+                      onChange={(e) => setSelectedAvatar(e.target.value)}
+                      placeholder="Cole a URL da sua foto..."
+                      className="h-8 px-2.5 rounded-lg border border-purple-100/40 text-[10px] font-semibold focus:outline-none focus:border-[#70518d] w-full bg-slate-50/20"
+                    />
+                  </div>
+                </div>
+
+                {/* Sticky/Fixed bottom action */}
+                <div className="fixed bottom-0 left-0 right-0 p-4 bg-white/95 border-t border-purple-100/30 backdrop-blur-md z-45 max-w-md mx-auto select-none">
+                  <button
+                    type="submit"
+                    disabled={saving}
+                    className="w-full h-12 bg-[#70518d] hover:bg-[#573974] text-white font-extrabold text-sm rounded-2xl shadow-md transition-all active:scale-[0.98] flex items-center justify-center gap-2"
+                  >
+                    {saving ? (
+                      <>
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                        Salvando dados de registro...
+                      </>
+                    ) : (
+                      <>
+                        Salvar e Escolher Exercícios
+                        <ChevronRight className="w-4 h-4" />
+                      </>
+                    )}
+                  </button>
+                </div>
+              </form>
+            ) : (
+              /* STEP 2: EXERCISES FLOW */
+              <div className="flex flex-col gap-4">
+                {/* API Status Alert */}
+                <div className="flex items-center gap-2 p-3 bg-purple-50 border border-purple-100/30 rounded-xl text-[10px] text-[#795465] font-medium select-none">
+                  {apiSource === 'wger' ? (
+                    <>
+                      <Database className="w-4 h-4 text-[#70518d] shrink-0" />
+                      <span>Conectado à <strong>API Aberta wger</strong>. Exercícios de mobilidade e core adicionais importados com sucesso!</span>
+                    </>
+                  ) : (
+                    <>
+                      <Info className="w-4 h-4 text-[#70518d] shrink-0" />
+                      <span>Modo local ativado. 6 exercícios especializados em Reabilitação Pélvica estão prontos para importação.</span>
+                    </>
+                  )}
+                </div>
+
+                {/* Exercise Catalog Grid */}
+                <section className="flex flex-col gap-3">
+                  <h3 className="text-[10px] font-extrabold text-[#70518d] uppercase tracking-wider pl-1 select-none">
+                    Exercícios Disponíveis ({exercises.length})
+                  </h3>
+
+                  <div className="space-y-3">
+                    {exercises.map((ex) => {
+                      const isSelected = selectedIds.includes(ex.id)
+                      return (
+                        <div
+                          key={ex.id}
+                          onClick={() => toggleSelect(ex.id)}
+                          className={`p-4 rounded-2xl border transition-all cursor-pointer flex gap-3 relative select-none ${
+                            isSelected 
+                              ? 'bg-white border-[#70518d] shadow-[0px_4px_16px_rgba(112,81,141,0.06)]' 
+                              : 'bg-white/70 border-purple-100/20 hover:border-[#70518d]/30 hover:bg-white'
+                          }`}
+                        >
+                          <div className={`w-5 h-5 rounded-full shrink-0 flex items-center justify-center border transition-all ${
+                            isSelected 
+                              ? 'bg-[#70518d] border-[#70518d] text-white' 
+                              : 'border-purple-200 bg-transparent'
+                          }`}>
+                            {isSelected && <Check className="w-3.5 h-3.5 stroke-[3px]" />}
+                          </div>
+
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-1.5 flex-wrap">
+                              <h4 className="font-bold text-[#1d1b1f] text-sm leading-tight">
+                                {ex.name}
+                              </h4>
+                              {ex.id.startsWith('wger_') && (
+                                <span className="text-[8px] font-extrabold bg-[#70518d]/10 text-[#70518d] px-1 rounded">wger API</span>
+                              )}
+                            </div>
+                            <p className="text-[10px] text-[#795465] font-semibold mt-0.5">
+                              {ex.subtitle}
+                            </p>
+                            <p className="text-[11px] text-[#4b454e] mt-2 leading-relaxed">
+                              {ex.description}
+                            </p>
+
+                            <div className="flex gap-2 flex-wrap mt-3 text-[9px] font-bold text-[#795465] uppercase tracking-wider">
+                              <span className="bg-[#fff7fd] border border-purple-100/20 px-2 py-0.5 rounded-md">
+                                {ex.series} séries
+                              </span>
+                              <span className="bg-[#fff7fd] border border-purple-100/20 px-2 py-0.5 rounded-md">
+                                {ex.repetitions}
+                              </span>
+                              <span className="bg-[#fff7fd] border border-purple-100/20 px-2 py-0.5 rounded-md">
+                                Pausa: {ex.pause}
+                              </span>
+                            </div>
+                          </div>
                         </div>
-                        <p className="text-[10px] text-[#795465] font-semibold mt-0.5">
-                          {ex.subtitle}
-                        </p>
-                        <p className="text-[11px] text-[#4b454e] mt-2 leading-relaxed">
-                          {ex.description}
-                        </p>
+                      )
+                    })}
+                  </div>
+                </section>
 
-                        {/* Prescription specs tags preview */}
-                        <div className="flex gap-2 flex-wrap mt-3 text-[9px] font-bold text-[#795465] uppercase tracking-wider">
-                          <span className="bg-[#fff7fd] border border-purple-100/20 px-2 py-0.5 rounded-md">
-                            {ex.series} séries
-                          </span>
-                          <span className="bg-[#fff7fd] border border-purple-100/20 px-2 py-0.5 rounded-md">
-                            {ex.repetitions}
-                          </span>
-                          <span className="bg-[#fff7fd] border border-purple-100/20 px-2 py-0.5 rounded-md">
-                            Pausa: {ex.pause}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  )
-                })}
+                {/* Sticky Bottom Actions */}
+                <div className="fixed bottom-0 left-0 right-0 p-4 bg-white/95 border-t border-purple-100/30 backdrop-blur-md z-45 max-w-md mx-auto select-none flex gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setCurrentStep(1)}
+                    disabled={saving}
+                    className="flex-1 h-12 border border-purple-100 text-[#795465] font-bold text-sm rounded-2xl transition-all active:scale-[0.98] flex items-center justify-center gap-1 disabled:opacity-50"
+                  >
+                    Voltar
+                  </button>
+
+                  <button
+                    onClick={handleImportExercises}
+                    disabled={saving || selectedIds.length === 0}
+                    className="flex-[2] h-12 bg-[#70518d] hover:bg-[#573974] text-white font-extrabold text-sm rounded-2xl shadow-md transition-all active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-50"
+                  >
+                    {saving ? (
+                      <>
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                        Finalizando...
+                      </>
+                    ) : (
+                      <>
+                        Importar & Concluir
+                        <ChevronRight className="w-4 h-4" />
+                      </>
+                    )}
+                  </button>
+                </div>
               </div>
-            </section>
-          </main>
+            )}
 
-          {/* Sticky Bottom Actions */}
-          <div className="fixed bottom-0 left-0 right-0 p-4 bg-white/95 border-t border-purple-100/30 backdrop-blur-md z-45 max-w-md mx-auto select-none">
-            <button
-              onClick={handleImport}
-              disabled={importing || selectedIds.length === 0}
-              className="w-full h-12 bg-[#70518d] hover:bg-[#573974] text-white font-extrabold text-sm rounded-2xl shadow-md transition-all active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-50 disabled:pointer-events-none"
-            >
-              {importing ? (
-                <>
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                  Importando exercícios...
-                </>
-              ) : (
-                <>
-                  Importar selecionados ({selectedIds.length})
-                  <ChevronRight className="w-4 h-4" />
-                </>
-              )}
-            </button>
-          </div>
+          </main>
 
         </div>
       </div>

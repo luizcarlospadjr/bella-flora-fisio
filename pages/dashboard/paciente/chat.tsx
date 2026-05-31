@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { 
   Loader2, Mic, StopCircle, Plus, Send, X, ArrowLeft, Video, Phone, 
-  Paperclip, Smile, Image as ImageIcon, FileText, Activity, Heart, 
+  Paperclip, Smile, Image as ImageIcon, FileText, Activity, 
   Search, Star, Award, GraduationCap, ArrowRight, UserCheck, MessageSquare 
 } from 'lucide-react'
 import { supabase } from '../../../lib/supabaseClient'

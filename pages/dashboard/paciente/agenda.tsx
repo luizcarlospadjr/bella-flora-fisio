@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { ArrowLeft, ChevronLeft, ChevronRight, Loader2, Sparkles, Check, Heart, ShieldAlert } from 'lucide-react'
+import { ArrowLeft, ChevronLeft, ChevronRight, Loader2, Sparkles, Check, ShieldAlert } from 'lucide-react'
 import { supabase } from '../../../lib/supabaseClient'
 
 interface TherapistProfile {
@@ -407,7 +407,7 @@ export default function PatientAgenda() {
             </Link>
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#70518d] to-[#573974] flex items-center justify-center text-white shadow-sm">
-                <Heart className="w-4 h-4 text-white fill-current" />
+                <span className="material-symbols-outlined text-white text-base" style={{ fontVariationSettings: "'FILL' 1" }}>spa</span>
               </div>
               <div>
                 <span className="font-extrabold text-sm tracking-tight text-[#70518d]">

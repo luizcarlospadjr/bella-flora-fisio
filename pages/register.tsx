@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { Heart, Mail, Lock, User, Phone, Eye, EyeOff, Loader2, AlertCircle } from 'lucide-react'
+import { Mail, Lock, User, Phone, Eye, EyeOff, Loader2, AlertCircle } from 'lucide-react'
 import { supabase } from '../lib/supabaseClient'
 
 export default function Register() {
@@ -64,7 +64,7 @@ export default function Register() {
           {/* Logo Section */}
           <div className="flex flex-col items-center justify-center mb-6">
             <div className="h-11 w-11 rounded-full bg-[#f0dbff] flex items-center justify-center mb-3 text-[#70518d] shadow-sm">
-              <Heart className="w-5.5 h-5.5 fill-current" />
+              <span className="material-symbols-outlined text-[22px]" style={{ fontVariationSettings: "'FILL' 1" }}>spa</span>
             </div>
             <h1 className="font-display font-bold text-xl tracking-tight text-[#70518d]">
               Bella Flora <span className="text-[#795465]">Fisio</span>

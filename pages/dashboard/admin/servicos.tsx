@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { ArrowLeft, Plus, Trash2, Loader2, Heart, Award, Sparkles, AlertCircle, Check, X, ShieldAlert } from 'lucide-react'
+import { ArrowLeft, Plus, Trash2, Loader2, Award, Sparkles, AlertCircle, Check, X, ShieldAlert } from 'lucide-react'
 import { supabase } from '../../../lib/supabaseClient'
 
 interface Therapist {

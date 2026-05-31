@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import { Heart, User, Stethoscope, HelpCircle, Loader2, AlertCircle, ShieldAlert } from 'lucide-react'
+import { User, Stethoscope, HelpCircle, Loader2, AlertCircle, ShieldAlert } from 'lucide-react'
 import { supabase } from '../lib/supabaseClient'
 
 export default function EscolhaPerfil() {
@@ -116,7 +116,7 @@ export default function EscolhaPerfil() {
           {/* Botanical / Spa Header Graphic */}
           <div className="w-full h-44 bg-[#f9f1f7] rounded-2xl mb-6 overflow-hidden flex items-center justify-center relative border border-[#cdc3cf]/30">
             <div className="absolute inset-0 bg-gradient-to-tr from-[#d8b4f8]/20 to-[#fdcde1]/20"></div>
-            <Heart className="w-16 h-16 text-[#70518d]/30 fill-current animate-pulse" />
+            <span className="material-symbols-outlined text-[64px] text-[#70518d]/30 animate-pulse" style={{ fontVariationSettings: "'FILL' 1" }}>spa</span>
           </div>
 
           <p className="text-sm text-[#4b454e] text-center mb-6 leading-relaxed">
