@@ -1,6 +1,6 @@
 # 🔑 Usuários e Guia de Teste - Bella Flora Fisio
 
-Este documento contém as credenciais de teste sugeridas e o passo a passo para você experimentar as diferentes visões (Fisioterapeuta, Paciente e Gestor de Clínica) no seu sistema publicado em produção.
+Este documento contém as credenciais de teste ativas e o passo a passo para você experimentar as diferentes visões (Fisioterapeuta, Paciente e Gestor de Clínica) no seu sistema publicado em produção.
 
 * **URL do Sistema:** [https://bella-flora-fisio.vercel.app/](https://bella-flora-fisio.vercel.app/)
 
@@ -8,77 +8,65 @@ Este documento contém as credenciais de teste sugeridas e o passo a passo para 
 
 ## 👥 Perfis de Teste Recomendados
 
-Para testar o fluxo de ponta a ponta (comunicação, prontuários, prescrição de exercícios e gerenciamento de clínica), recomendamos utilizar ou cadastrar três contas separadas:
+Para testar o fluxo de ponta a ponta (comunicação, prontuários, controle de sessões, prescrição de exercícios e gerenciamento de clínica), recomendamos utilizar as três contas de teste pré-configuradas e homologadas abaixo:
 
 ### 1. Perfil Fisioterapeuta
-* **E-mail Sugerido:** `fisioterapeuta@teste.com`
-* **Senha Sugerida:** `BellaFloraFisio2026!` *(ou qualquer senha com mais de 6 caracteres)*
+* **E-mail:** `fisioterapeuta@teste.com`
+* **Senha:** `123456`
 * **Papel:** `therapist` (Fisioterapeuta)
 * **O que testar nesta visão:**
-  - Visualizar a lista de pacientes ativos na clínica.
+  - Visualizar a lista de pacientes ativos na clínica vinculados à sua responsabilidade.
+  - Vincular novos pacientes da clínica pendentes de fisioterapeuta responsável.
   - Abrir o prontuário de um paciente, registrar evolução clínica e pontuação de AFA.
-  - Prescrever exercícios pélvicos personalizados.
-  - Acessar o chat e enviar mensagens com orientações para o paciente.
+  - Prescrever exercícios pélvicos domiciliares para a paciente.
+  - Configurar o Plano Clínico na aba "Histórico" (total de sessões, frequência e notas confidenciais).
+  - Enviar e responder dúvidas de pacientes via Chat em tempo real.
 
 ### 2. Perfil Paciente
-* **E-mail Sugerido:** `paciente@teste.com`
-* **Senha Sugerida:** `BellaFloraFisio2026!`
+* **E-mail:** `paciente_test_novo@gmail.com`
+* **Senha:** `BellaFloraFisio2026!`
 * **Papel:** `patient` (Paciente)
 * **O que testar nesta visão:**
-  - Acessar a agenda de consultas pélvicas.
-  - Visualizar o plano de tratamento e a lista de exercícios para casa.
-  - Executar um exercício prescrito (com contador de tempo dinâmico e micro-animações).
-  - Enviar mensagens e dúvidas no chat para a fisioterapeuta.
+  - Acessar o atalho **"Meu Tratamento"** no dashboard: conferir contagem dinâmica de sessões (com base em evoluções reais do prontuário) e cronograma visual de frequência, comprovando a **privacidade absoluta** das notas confidenciais do prontuário.
+  - Acessar a **"Rotina em Casa"** (feed de treinos domiciliares) e visualizar a barra de progresso do dia.
+  - Executar e concluir o player de exercícios (ex: *Ponte Pélvica*), retornando à lista e confirmando a marcação verde de **`✓ Feito Hoje`** e o avanço da porcentagem diária de hoje.
+  - Acessar a aba **"Profissional"**: filtrar profissionais por chips de especialidade e ver o atalho direto para o chat (liberado apenas para terapeutas que já acompanham o paciente).
 
 ### 3. Perfil Gestor (Administrador da Clínica)
-* **E-mail Sugerido:** `gestor@teste.com`
-* **Senha Sugerida:** `BellaFloraFisio2026!`
+* **E-mail:** `gestor@teste.com`
+* **Senha:** `123456`
 * **Papel:** `admin` (Gestor de Clínica)
 * **O que testar nesta visão:**
-  - Analisar o faturamento total e metas de crescimento da clínica.
-  - Visualizar a equipe de profissionais ativos (fisioterapeutas).
-  - Consultar alertas importantes de lotação de agenda e métricas de sessões.
-  - Gerenciar atalhos de equipe, diretórios de pacientes e financeiro geral.
+  - Analisar o faturamento total da clínica gerado dinamicamente com base nas consultas cadastradas.
+  - Monitorar a contagem em tempo real da Equipe Clínica (profissionais) e Pacientes ativos.
+  - Cadastrar novos serviços clínicos com nome, preço, duração e terapeuta responsável.
 
 ---
 
-## 🚀 Como Cadastrar e Testar os 3 Perfis
+## 🚀 Como Logar e Testar os 3 Perfis
 
-Como a aplicação está integrada em tempo real ao Supabase Auth, você pode criar essas contas diretamente pela interface visual em segundos. Siga o roteiro:
+Como a aplicação está integrada em tempo real ao Supabase Auth, você pode efetuar login diretamente pelas credenciais acima. Siga o roteiro de testes:
 
-1. **Acesse a Página de Cadastro:**
-   Abra o link [https://bella-flora-fisio.vercel.app/register](https://bella-flora-fisio.vercel.app/register) no seu navegador.
-   
-2. **Crie a Fisioterapeuta:**
-   - Preencha com o e-mail `fisioterapeuta@teste.com` e a senha `BellaFloraFisio2026!`.
-   - Escolha a opção **"Fisioterapeuta"** no seletor de cargo.
-   - Clique em **Cadastrar**. Você será redirecionado para o onboarding clínico.
+1. **Teste da Fisioterapeuta:**
+   - Acesse [https://bella-flora-fisio.vercel.app/login](https://bella-flora-fisio.vercel.app/login).
+   - Entre com `fisioterapeuta@teste.com` / `123456`.
+   - Acesse **Prontuário** -> Selecione Mariana Silva (ou crie nova evolução) e configure o Plano de Tratamento na aba **Histórico**. Salve e veja a confirmação verde em tela.
+   - Faça logout.
 
-3. **Crie o Paciente:**
-   - Faça logout (ou abra uma **aba anônima** no navegador).
-   - Acesse novamente [https://bella-flora-fisio.vercel.app/register](https://bella-flora-fisio.vercel.app/register).
-   - Preencha com o e-mail `paciente@teste.com` e a senha `BellaFloraFisio2026!`.
-   - Escolha a opção **"Paciente"** no seletor e conclua.
+2. **Teste da Paciente:**
+   - Faça login com `paciente_test_novo@gmail.com` / `BellaFloraFisio2026!`.
+   - Clique no atalho **Meu Tratamento** e verifique se as sessões e dias da semana correspondem à configuração feita pela Fisioterapeuta. Certifique-se de que a nota confidencial digitada pela fisioterapeuta **não** é apresentada, garantindo segurança e privacidade.
+   - Vá para a tela **Rotina em Casa**, clique em "Play" em *Ponte Pélvica*, conclua as sessões e verifique o badge verde de feito hoje na volta.
+   - Faça logout.
 
-4. **Crie o Gestor / Admin:**
-   - Abra mais uma aba anônima (ou faça logout).
-   - Acesse [https://bella-flora-fisio.vercel.app/register](https://bella-flora-fisio.vercel.app/register).
-   - Preencha com o e-mail `gestor@teste.com` e a senha `BellaFloraFisio2026!`.
-   - Clique em **Cadastrar**. Na tela de **Escolha de Perfil**, clique no botão **"Sou Gestor de Clínica"**.
+3. **Teste do Gestor / Admin:**
+   - Faça login com `gestor@teste.com` / `123456`.
    - Você será imediatamente direcionado para a central administrativa `/dashboard/admin`!
-
-5. **Experimente o Middleware de Segurança:**
-   - Tente entrar na rota `/dashboard/admin` usando a conta de Paciente ou Fisioterapeuta.
-   - O Middleware da aplicação identificará que o papel não é autorizado e redirecionará você de volta com total segurança para seu painel correto!
+   - Navegue por `/dashboard/admin/servicos` para verificar o faturamento real e cadastrar novos serviços.
 
 ---
 
-## 🛡️ Usuários Atuais Registrados
-Se você deseja utilizar as contas criadas pelo subagente nos testes de homologação automatizados, a conta ativa no banco de dados de produção é:
+## 🛡️ Usuários Adicionais Registrados no Banco
+Se você deseja experimentar novas combinações, o banco também conta com:
 
-| Nome do Usuário | E-mail | Cargo (Papel) |
-| :--- | :--- | :--- |
-| **Dra. Doutora Amanda** | `amanda_test@gmail.com` | Fisioterapeuta (`therapist`) |
-
-*(Nota: Como o e-mail `amanda_test@gmail.com` foi confirmado pelo painel administrativo durante os testes internos, você pode usar essa conta ou criar novas contas utilizando qualquer e-mail no fluxo acima para simular novas clínicas e pacientes).*
-
+* **Fisioterapeuta Amanda:** `amanda_test@gmail.com` / `BellaFloraFisio2026!`
