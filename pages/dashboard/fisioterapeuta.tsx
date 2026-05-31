@@ -12,6 +12,46 @@ export default function TherapistDashboard() {
   const [patientsCount, setPatientsCount] = useState(0)
   const [sessionsCount, setSessionsCount] = useState(0)
   const [prescriptionsCount, setPrescriptionsCount] = useState(0)
+  const [unreadCount, setUnreadCount] = useState(0)
+
+  useEffect(() => {
+    let messagesSub: any = null
+
+    async function setupUnreadTracking() {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) return
+
+      const { count } = await supabase
+        .from('chat_messages')
+        .select('*', { count: 'exact', head: true })
+        .eq('receiver_id', user.id)
+        .is('read_at', null)
+
+      setUnreadCount(count || 0)
+
+      messagesSub = supabase
+        .channel('dashboard-unread-realtime')
+        .on('postgres_changes', {
+          event: '*',
+          schema: 'public',
+          table: 'chat_messages'
+        }, async () => {
+          const { count: updatedCount } = await supabase
+            .from('chat_messages')
+            .select('*', { count: 'exact', head: true })
+            .eq('receiver_id', user.id)
+            .is('read_at', null)
+          setUnreadCount(updatedCount || 0)
+        })
+        .subscribe()
+    }
+
+    setupUnreadTracking()
+
+    return () => {
+      if (messagesSub) supabase.removeChannel(messagesSub)
+    }
+  }, [])
 
   useEffect(() => {
     async function loadData() {
@@ -260,11 +300,21 @@ export default function TherapistDashboard() {
                 className="bg-white border border-purple-100/20 p-4 rounded-2xl shadow-sm hover:border-[#70518d]/30 transition-all flex items-center justify-between cursor-pointer active:scale-[0.99] group"
               >
                 <div className="flex items-center gap-3.5">
-                  <div className="w-10 h-10 rounded-xl bg-purple-50 text-[#70518d] flex items-center justify-center group-hover:scale-105 transition-transform">
+                  <div className="w-10 h-10 rounded-xl bg-purple-50 text-[#70518d] flex items-center justify-center group-hover:scale-105 transition-transform relative">
                     <MessageSquare className="w-5 h-5" />
+                    {unreadCount > 0 && (
+                      <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-red-500 rounded-full border border-white animate-pulse"></span>
+                    )}
                   </div>
                   <div>
-                    <h4 className="font-bold text-[#1d1b1f] text-sm">Mensagens Direct</h4>
+                    <div className="flex items-center gap-1.5">
+                      <h4 className="font-bold text-[#1d1b1f] text-sm">Mensagens Direct</h4>
+                      {unreadCount > 0 && (
+                        <span className="bg-red-500 text-white rounded-full text-[8px] font-black px-1.5 py-0.2 animate-pulse select-none leading-none">
+                          {unreadCount}
+                        </span>
+                      )}
+                    </div>
                     <p className="text-[10px] text-[#795465] font-semibold">Chat pélvico direto com pacientes</p>
                   </div>
                 </div>
@@ -325,10 +375,13 @@ export default function TherapistDashboard() {
             
             <Link 
               href="/dashboard/fisioterapeuta/chat" 
-              className="flex flex-col items-center justify-center text-[#795465] hover:text-[#70518d] shrink-0"
+              className="flex flex-col items-center justify-center text-[#795465] hover:text-[#70518d] shrink-0 relative"
             >
               <span className="material-symbols-outlined text-lg mb-1">chat</span>
               <span className="text-[9px] font-semibold">Chat</span>
+              {unreadCount > 0 && (
+                <span className="absolute top-0.5 right-2 w-2 h-2 bg-red-500 rounded-full border border-white animate-pulse"></span>
+              )}
             </Link>
           </nav>
 
