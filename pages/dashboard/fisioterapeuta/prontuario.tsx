@@ -57,7 +57,7 @@ export default function TherapistProntuario() {
 
   // Active patient details
   const [activePatient, setActivePatient] = useState<PatientProfile | null>(null)
-  const [activeTab, setActiveTab] = useState<'evolucao' | 'para_casa' | 'historico' | 'documentos'>('evolucao')
+  const [activeTab, setActiveTab] = useState<'evolucao' | 'para_casa' | 'sessoes' | 'historico'>('evolucao')
   
   // Evolutions state
   const [records, setRecords] = useState<MedicalRecord[]>([])
@@ -81,6 +81,23 @@ export default function TherapistProntuario() {
   const [frequencyDays, setFrequencyDays] = useState<string[]>([])
   const [treatmentPlanNotes, setTreatmentPlanNotes] = useState<string>('')
   const [planSaveSuccess, setPlanSaveSuccess] = useState<boolean>(false)
+
+  // Clinical History & Documents Config States
+  const [anamnese, setAnamnese] = useState<string>('')
+  const [queixaPrincipal, setQueixaPrincipal] = useState<string>('')
+  const [historySaveSuccess, setHistorySaveSuccess] = useState<boolean>(false)
+
+  const [documents, setDocuments] = useState<any[]>([])
+  const [docName, setDocName] = useState<string>('')
+  const [docUrl, setDocUrl] = useState<string>('')
+  const [docCategory, setDocCategory] = useState<string>('Exame Complementar')
+  const [docSaveSuccess, setDocSaveSuccess] = useState<boolean>(false)
+
+  // Document Delete Confirmation
+  const [docToDelete, setDocToDelete] = useState<any | null>(null)
+  const [confirmPassword, setConfirmPassword] = useState<string>('')
+  const [showDeleteConfirmModal, setShowDeleteConfirmModal] = useState<boolean>(false)
+  const [isDeletingDoc, setIsDeletingDoc] = useState<boolean>(false)
 
   // Custom Exercise Builder States
   const [customExercises, setCustomExercises] = useState<PrescribedExercise[]>([])
@@ -278,6 +295,42 @@ export default function TherapistProntuario() {
             } catch (planErr) {
               console.error('Erro ao buscar plano de tratamento:', planErr)
             }
+
+            // Load clinical history (anamnese & queixa principal)
+            try {
+              const { data: historyData } = await supabase
+                .from('patient_histories')
+                .select('*')
+                .eq('patient_id', selectedPatient.id)
+                .maybeSingle()
+
+              if (historyData) {
+                setAnamnese(historyData.anamnese || '')
+                setQueixaPrincipal(historyData.queixa_principal || '')
+              } else {
+                setAnamnese('')
+                setQueixaPrincipal('')
+              }
+            } catch (histErr) {
+              console.error('Erro ao buscar histórico clínico:', histErr)
+            }
+
+            // Load patient documents
+            try {
+              const { data: docsData } = await supabase
+                .from('patient_documents')
+                .select('*')
+                .eq('patient_id', selectedPatient.id)
+                .order('created_at', { ascending: false })
+
+              if (docsData) {
+                setDocuments(docsData)
+              } else {
+                setDocuments([])
+              }
+            } catch (docsErr) {
+              console.error('Erro ao buscar documentos complementares:', docsErr)
+            }
             
             // 4. Fetch medical records / evolutions for this patient
             const { data: medRecords } = await supabase
@@ -320,6 +373,12 @@ export default function TherapistProntuario() {
           setTotalSessions(8)
           setFrequencyDays([])
           setTreatmentPlanNotes('')
+          setAnamnese('')
+          setQueixaPrincipal('')
+          setDocuments([])
+          setDocName('')
+          setDocUrl('')
+          setDocCategory('Exame Complementar')
         }
       } catch (err) {
         console.error('Erro ao carregar dados do prontuário:', err)
@@ -618,6 +677,110 @@ export default function TherapistProntuario() {
       setLoading(false)
     }
   }
+
+  const handleSaveClinicalHistory = async () => {
+    if (!activePatient || !therapist) return
+    try {
+      setLoading(true)
+      const { error } = await supabase
+        .from('patient_histories')
+        .upsert({
+          patient_id: activePatient.id,
+          therapist_id: therapist.id,
+          anamnese: anamnese,
+          queixa_principal: queixaPrincipal,
+          updated_at: new Date().toISOString()
+        }, { onConflict: 'patient_id' })
+
+      if (error) throw error
+
+      setHistorySaveSuccess(true)
+      setTimeout(() => setHistorySaveSuccess(false), 3000)
+    } catch (err) {
+      alert('Erro ao salvar histórico clínico')
+      console.error(err)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleSaveDocument = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!activePatient || !therapist || !docName.trim() || !docUrl.trim()) return
+
+    try {
+      setLoading(true)
+      const { data, error } = await supabase
+        .from('patient_documents')
+        .insert({
+          patient_id: activePatient.id,
+          therapist_id: therapist.id,
+          name: docName.trim(),
+          file_url: docUrl.trim(),
+          category: docCategory
+        })
+        .select()
+        .single()
+
+      if (error) throw error
+
+      if (data) {
+        setDocuments([data, ...documents])
+        setDocName('')
+        setDocUrl('')
+        setDocCategory('Exame Complementar')
+        setDocSaveSuccess(true)
+        setTimeout(() => setDocSaveSuccess(false), 3000)
+      }
+    } catch (err) {
+      alert('Erro ao salvar documento complementar')
+      console.error(err)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleDeleteDocumentClick = (doc: any) => {
+    setDocToDelete(doc)
+    setConfirmPassword('')
+    setShowDeleteConfirmModal(true)
+  }
+
+  const handleConfirmDeleteDocument = async () => {
+    if (!docToDelete || !therapist) return
+    setIsDeletingDoc(true)
+
+    try {
+      const { error: authError } = await supabase.auth.signInWithPassword({
+        email: therapist.email,
+        password: confirmPassword
+      })
+
+      if (authError) {
+        alert('Senha incorreta! Não foi possível excluir o documento de forma segura.')
+        setIsDeletingDoc(false)
+        return
+      }
+
+      const { error } = await supabase
+        .from('patient_documents')
+        .delete()
+        .eq('id', docToDelete.id)
+
+      if (error) throw error
+
+      setDocuments(documents.filter(d => d.id !== docToDelete.id))
+      setShowDeleteConfirmModal(false)
+      setDocToDelete(null)
+      setConfirmPassword('')
+      alert('Documento complementar excluído com sucesso!')
+    } catch (err) {
+      alert('Erro ao excluir documento complementar')
+      console.error(err)
+    } finally {
+      setIsDeletingDoc(false)
+    }
+  }
  
   if (loading && !activePatient && patients.length === 0) {
     return (
@@ -807,11 +970,21 @@ export default function TherapistProntuario() {
                   Para Casa ({prescribedExercises.length})
                 </button>
                 <button 
+                  onClick={() => setActiveTab('sessoes')}
+                  className={`pb-2 border-b-2 px-1 whitespace-nowrap transition-all ${
+                    activeTab === 'sessoes' 
+                      ? 'border-[#70518d] text-[#70518d] font-extrabold' 
+                      : 'border-transparent text-[#795465] hover:text-[#70518d]'
+                  }`}
+                >
+                  Sessões
+                </button>
+                <button 
                   onClick={() => setActiveTab('historico')}
                   className={`pb-2 border-b-2 px-1 whitespace-nowrap transition-all ${
                     activeTab === 'historico' 
                       ? 'border-[#70518d] text-[#70518d] font-extrabold' 
-                      : 'border-transparent text-[#795465]'
+                      : 'border-transparent text-[#795465] hover:text-[#70518d]'
                   }`}
                 >
                   Histórico
@@ -1089,10 +1262,16 @@ export default function TherapistProntuario() {
                 </section>
               )}
 
-              {/* TAB CONTENT: HISTORICO */}
-              {activeTab === 'historico' && (
+              {/* TAB CONTENT: SESSOES (Plan Config) */}
+              {activeTab === 'sessoes' && (
                 <section className="flex flex-col gap-4">
-                  <h3 className="text-xs font-bold text-[#70518d] uppercase tracking-wider pl-1">Resumo do Plano</h3>
+                  {/* 1. Progress / Clinician Summary Info Card */}
+                  <div className="flex items-center justify-between pl-1">
+                    <h3 className="text-xs font-bold text-[#70518d] uppercase tracking-wider">Resumo do Plano</h3>
+                    <span className="text-[9px] font-bold bg-purple-50 text-[#70518d] px-2 py-0.5 rounded border border-purple-100/20 select-none">
+                      Sessões Clínicas
+                    </span>
+                  </div>
                   
                   <div className="bg-white border border-purple-100/20 rounded-2xl p-4 shadow-sm flex flex-col gap-4">
                     <div className="flex items-start gap-3 border-b border-purple-100/10 pb-3">
@@ -1216,6 +1395,267 @@ export default function TherapistProntuario() {
                     </button>
                   </div>
                 </section>
+              )}
+
+              {/* TAB CONTENT: HISTORICO */}
+              {activeTab === 'historico' && (
+                <section className="flex flex-col gap-4">
+                  {/* 1. Anamnese Form Card */}
+                  <div className="flex items-center justify-between pl-1">
+                    <h3 className="text-xs font-bold text-[#70518d] uppercase tracking-wider">Histórico Clínico & Anamnese</h3>
+                    <span className="text-[8px] text-slate-400 font-semibold normal-case select-none">Acesso exclusivo profissional</span>
+                  </div>
+
+                  <div className="bg-white border border-purple-100/20 rounded-2xl p-5 shadow-sm flex flex-col gap-4">
+                    {historySaveSuccess && (
+                      <div className="p-3 bg-green-50 border border-green-200 text-green-600 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm select-none">
+                        <Check className="w-4.5 h-4.5 stroke-[3]" />
+                        <span>Histórico clínico salvo com sucesso!</span>
+                      </div>
+                    )}
+
+                    {/* Queixa Principal */}
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-[10px] font-bold text-[#70518d] uppercase tracking-wider pl-0.5 select-none">
+                        Queixa Principal
+                      </label>
+                      <input 
+                        type="text"
+                        value={queixaPrincipal}
+                        onChange={(e) => setQueixaPrincipal(e.target.value)}
+                        placeholder="Ex: Dificuldade na contração, dor pélvica crônica..."
+                        className="h-10 px-3 rounded-xl border border-purple-100/40 text-xs font-semibold focus:outline-none focus:border-[#70518d] w-full"
+                      />
+                    </div>
+
+                    {/* Anamnese Geral */}
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-[10px] font-bold text-[#70518d] uppercase tracking-wider pl-0.5 select-none">
+                        Anamnese & Histórico Geral
+                      </label>
+                      <textarea
+                        value={anamnese}
+                        onChange={(e) => setAnamnese(e.target.value)}
+                        placeholder="Ex: Paciente de 40 anos nasceu dia 15/08/1985, apresenta queixa de dificuldade na contração voluntária e perda urinária ao esforço..."
+                        className="p-3 rounded-xl border border-purple-100/40 text-xs font-semibold focus:outline-none focus:border-[#70518d] w-full resize-none h-28"
+                      />
+                    </div>
+
+                    <button
+                      onClick={handleSaveClinicalHistory}
+                      className="w-full py-3 bg-[#70518d] text-white rounded-full font-bold hover:bg-[#573974] transition-colors shadow-md mt-1 flex items-center justify-center gap-1.5 text-xs active:scale-95"
+                    >
+                      <Save className="w-4 h-4 text-white" />
+                      Salvar Histórico Clínico
+                    </button>
+                  </div>
+
+                  {/* 2. Documents & Exames Complementares Card */}
+                  <div className="flex items-center justify-between pl-1 mt-2">
+                    <h3 className="text-xs font-bold text-[#70518d] uppercase tracking-wider">Documentos & Exames</h3>
+                  </div>
+
+                  <div className="bg-white border border-purple-100/20 rounded-2xl p-5 shadow-sm flex flex-col gap-4">
+                    {docSaveSuccess && (
+                      <div className="p-3 bg-green-50 border border-green-200 text-green-600 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm select-none">
+                        <Check className="w-4.5 h-4.5 stroke-[3]" />
+                        <span>Documento adicionado com sucesso!</span>
+                      </div>
+                    )}
+
+                    {/* Document Addition Form */}
+                    <form onSubmit={handleSaveDocument} className="flex flex-col gap-3">
+                      <div className="flex flex-col gap-1">
+                        <label className="text-[10px] font-bold text-[#70518d] uppercase tracking-wider pl-0.5 select-none">
+                          Nome do Documento / Exame
+                        </label>
+                        <input 
+                          type="text"
+                          required
+                          value={docName}
+                          onChange={(e) => setDocName(e.target.value)}
+                          placeholder="Ex: Ultrassonografia Pélvica, Ressonância..."
+                          className="h-10 px-3 rounded-xl border border-purple-100/40 text-xs font-semibold focus:outline-none focus:border-[#70518d] w-full"
+                        />
+                      </div>
+
+                      <div className="flex flex-col gap-1">
+                        <label className="text-[10px] font-bold text-[#70518d] uppercase tracking-wider pl-0.5 select-none">
+                          Link do Documento (Imagem/PDF/Arquivo)
+                        </label>
+                        <input 
+                          type="text"
+                          required
+                          value={docUrl}
+                          onChange={(e) => setDocUrl(e.target.value)}
+                          placeholder="Ex: https://link-exame.com/ultrassonografia.png"
+                          className="h-10 px-3 rounded-xl border border-purple-100/40 text-xs font-semibold focus:outline-none focus:border-[#70518d] w-full"
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-3 items-end">
+                        <div className="flex flex-col gap-1">
+                          <label className="text-[10px] font-bold text-[#70518d] uppercase tracking-wider pl-0.5 select-none">
+                            Categoria
+                          </label>
+                          <select
+                            value={docCategory}
+                            onChange={(e) => setDocCategory(e.target.value)}
+                            className="h-10 px-3 rounded-xl border border-purple-100/40 text-xs font-semibold focus:outline-none focus:border-[#70518d] bg-white w-full"
+                          >
+                            <option value="Ultrassonografia">Ultrassonografia</option>
+                            <option value="Exame Complementar">Exame Complementar</option>
+                            <option value="Ressonância">Ressonância</option>
+                            <option value="Avaliação Urodinâmica">Avaliação Urodinâmica</option>
+                            <option value="Outro">Outro</option>
+                          </select>
+                        </div>
+
+                        <button
+                          type="submit"
+                          className="h-10 bg-[#70518d] text-white rounded-xl font-bold hover:bg-[#573974] transition-colors shadow-sm text-xs active:scale-95 flex items-center justify-center gap-1.5"
+                        >
+                          <Plus className="w-4 h-4" />
+                          Adicionar
+                        </button>
+                      </div>
+                    </form>
+
+                    {/* Documents List */}
+                    <div className="mt-2.5 pt-3 border-t border-purple-100/10 flex flex-col gap-3">
+                      <label className="text-[10px] font-bold text-[#70518d] uppercase tracking-wider pl-0.5 select-none">
+                        Documentos Cadastrados
+                      </label>
+
+                      {documents.length > 0 ? (
+                        <div className="flex flex-col gap-2.5">
+                          {documents.map((doc) => (
+                            <div 
+                              key={doc.id}
+                              className="p-3.5 bg-[#fff7fd]/40 border border-purple-100/20 rounded-xl flex items-center justify-between gap-3 shadow-sm"
+                            >
+                              <div className="min-w-0">
+                                <h4 className="font-extrabold text-xs text-[#1d1b1f] truncate flex items-center gap-1.5">
+                                  <span className="material-symbols-outlined text-[#70518d] text-sm select-none">description</span>
+                                  {doc.name}
+                                </h4>
+                                <p className="text-[9px] text-[#795465] font-semibold mt-0.5 flex items-center gap-2">
+                                  <span className="bg-purple-100/50 text-[#70518d] px-1.5 py-0.2 rounded border border-purple-100/20 text-[8px] uppercase font-bold tracking-wider">{doc.category}</span>
+                                  <span>•</span>
+                                  <span>{formatDate(doc.created_at)}</span>
+                                </p>
+                                <a 
+                                  href={doc.file_url} 
+                                  target="_blank" 
+                                  rel="noopener noreferrer"
+                                  className="text-[9px] text-[#70518d] font-bold hover:underline mt-1 inline-flex items-center gap-1"
+                                >
+                                  Ver Documento Original ↗
+                                </a>
+                              </div>
+
+                              <button
+                                onClick={() => handleDeleteDocumentClick(doc)}
+                                className="p-2 rounded-full hover:bg-red-50 text-slate-400 hover:text-red-600 transition-colors"
+                                title="Excluir documento de forma segura"
+                              >
+                                <span className="material-symbols-outlined text-base">delete</span>
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="py-6 text-center border border-dashed border-purple-100/30 rounded-xl text-slate-400 flex flex-col items-center gap-1.5 select-none">
+                          <span className="material-symbols-outlined text-xl">folder_zip</span>
+                          <p className="text-[10px] font-bold text-[#1d1b1f]">Nenhum exame cadastrado</p>
+                          <p className="text-[8px] text-[#795465] max-w-[180px] leading-normal">
+                            Nenhum documento ou exame complementar cadastrado para esta paciente.
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </section>
+              )}
+
+              {/* Modal de Confirmação Segura para Exclusão de Documento */}
+              {showDeleteConfirmModal && docToDelete && (
+                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[60] flex items-center justify-center p-4">
+                  <div className="bg-white w-full max-w-sm rounded-3xl p-5 shadow-2xl transition-all scale-100 opacity-100 flex flex-col gap-4">
+                    
+                    <div className="flex justify-between items-center pb-2 border-b border-purple-100/10 select-none">
+                      <h3 className="text-sm font-extrabold text-red-600 flex items-center gap-1.5">
+                        <span className="material-symbols-outlined text-red-600">warning</span>
+                        Confirmar Exclusão
+                      </h3>
+                      <button 
+                        onClick={() => {
+                          setShowDeleteConfirmModal(false)
+                          setDocToDelete(null)
+                          setConfirmPassword('')
+                        }}
+                        className="text-[#795465] p-1 rounded-full hover:bg-purple-50 flex items-center justify-center"
+                      >
+                        <X className="w-4.5 h-4.5 text-[#795465]" />
+                      </button>
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                      <p className="text-xs text-[#1d1b1f] font-bold">
+                        Deseja realmente excluir o documento <span className="text-[#70518d]">"{docToDelete.name}"</span>?
+                      </p>
+                      <p className="text-[10px] text-[#795465] font-semibold leading-relaxed">
+                        Esta ação é permanente e removerá o exame complementar do prontuário clínico. Para autorizar a exclusão de forma segura, digite sua senha de login abaixo:
+                      </p>
+                    </div>
+
+                    <div className="flex flex-col gap-1.5 mt-1">
+                      <label className="text-[10px] font-bold text-[#70518d] uppercase tracking-wider pl-0.5 select-none">
+                        Sua Senha de Acesso
+                      </label>
+                      <input 
+                        type="password"
+                        required
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        placeholder="Digite sua senha..."
+                        className="h-10 px-3 rounded-xl border border-purple-100/40 text-xs font-semibold focus:outline-none focus:border-[#70518d] w-full"
+                      />
+                    </div>
+
+                    <div className="flex gap-3 mt-2">
+                      <button
+                        onClick={() => {
+                          setShowDeleteConfirmModal(false)
+                          setDocToDelete(null)
+                          setConfirmPassword('')
+                        }}
+                        disabled={isDeletingDoc}
+                        className="flex-1 py-2.5 border border-purple-100 text-[#795465] font-bold rounded-xl text-xs active:scale-95 transition-all select-none"
+                      >
+                        Cancelar
+                      </button>
+                      <button
+                        onClick={handleConfirmDeleteDocument}
+                        disabled={isDeletingDoc || !confirmPassword.trim()}
+                        className="flex-1 py-2.5 bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white font-bold rounded-xl text-xs active:scale-95 transition-all flex items-center justify-center gap-1.5 shadow-sm"
+                      >
+                        {isDeletingDoc ? (
+                          <>
+                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                            <span>Excluindo...</span>
+                          </>
+                        ) : (
+                          <>
+                            <span className="material-symbols-outlined text-xs">delete</span>
+                            <span>Confirmar OK</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+
+                  </div>
+                </div>
               )}
             </main>
           )}
