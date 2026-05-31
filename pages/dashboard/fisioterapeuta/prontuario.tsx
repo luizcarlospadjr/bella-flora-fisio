@@ -226,16 +226,16 @@ export default function TherapistProntuario() {
           setPatients(patientList)
         }
 
-        // Fetch list of unassigned clinic patients
+        // Fetch list of unassigned clinic patients (only patients that have no therapist attending)
         const { data: unassignedList } = await supabase
           .from('profiles')
           .select('*')
           .eq('role', 'patient')
-          .is('therapist_id', null)
           .order('full_name', { ascending: true })
 
         if (unassignedList) {
-          setUnassignedPatients(unassignedList)
+          const unassigned = unassignedList.filter(p => !p.therapist_id || p.therapist_id === '')
+          setUnassignedPatients(unassigned)
         }
 
         // 1.5. Load Therapist's Catalog (from database exercises_catalog or localStorage fallback)
