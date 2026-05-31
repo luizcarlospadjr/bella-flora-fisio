@@ -211,7 +211,7 @@ export default function ExercisePlayer() {
       </Head>
 
       <div className="min-h-screen w-full bg-[#fff7fd] font-sans antialiased overflow-x-hidden">
-        <div className="relative w-full min-h-screen max-w-md mx-auto bg-[#fff7fd] flex flex-col">
+        <div className="relative w-full h-screen max-h-screen overflow-hidden max-w-md mx-auto bg-[#fff7fd] flex flex-col">
 
           {/* Sticky Header */}
           <header className="sticky top-0 z-50 bg-white px-5 py-3 border-b border-purple-100/30 flex items-center justify-between shrink-0 shadow-sm">

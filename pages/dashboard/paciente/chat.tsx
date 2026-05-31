@@ -896,7 +896,7 @@ export default function PatientChatHub() {
       </Head>
 
       <div className="min-h-screen w-full bg-[#fff7fd] font-sans antialiased overflow-x-hidden">
-        <div className="relative w-full min-h-screen max-w-md mx-auto bg-[#fff7fd] flex flex-col">
+        <div className="relative w-full h-screen max-h-screen overflow-hidden max-w-md mx-auto bg-[#fff7fd] flex flex-col">
           
           {/* Main conditional view router */}
           {viewMode === 'list' && renderListScreen()}
