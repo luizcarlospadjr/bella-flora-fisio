@@ -148,10 +148,12 @@ export default function TherapistOnboarding() {
   const [selectedIds, setSelectedIds] = useState<string[]>([])
   const [apiSource, setApiSource] = useState<'local' | 'wger'>('local')
 
-  // Global UX states
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
+  
+  // Custom uploaded file state
+  const [isUploadingCustom, setIsUploadingCustom] = useState<boolean>(false)
 
   useEffect(() => {
     async function checkTherapist() {
@@ -207,6 +209,52 @@ export default function TherapistOnboarding() {
 
     checkTherapist()
   }, [])
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    setErrorMsg(null)
+
+    // 1. Security Type Validation (Only JPEG, PNG, WEBP)
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp']
+    if (!allowedTypes.includes(file.type)) {
+      setErrorMsg('Arquivo inválido! Apenas imagens nos formatos JPG, PNG ou WEBP são permitidas.')
+      e.target.value = ''
+      return
+    }
+
+    // 2. Security Extension double check
+    const ext = file.name.split('.').pop()?.toLowerCase()
+    if (!ext || !['jpg', 'jpeg', 'png', 'webp'].includes(ext)) {
+      setErrorMsg('Arquivo inválido! Extensão de arquivo não permitida.')
+      e.target.value = ''
+      return
+    }
+
+    // 3. Security Size Validation (Limit to 1.5MB to prevent large payload attacks)
+    const maxSize = 1.5 * 1024 * 1024 // 1.5MB
+    if (file.size > maxSize) {
+      setErrorMsg('Imagem muito grande! O limite de tamanho é de 1.5MB por questões de segurança e performance.')
+      e.target.value = ''
+      return
+    }
+
+    // Convert file to Base64 safely
+    const reader = new FileReader()
+    reader.onloadstart = () => setIsUploadingCustom(true)
+    reader.onload = (event) => {
+      if (event.target?.result) {
+        setSelectedAvatar(event.target.result as string)
+      }
+      setIsUploadingCustom(false)
+    }
+    reader.onerror = () => {
+      setErrorMsg('Erro ao ler a imagem. Tente outro arquivo.')
+      setIsUploadingCustom(false)
+    }
+    reader.readAsDataURL(file)
+  }
 
   const loadExercises = async () => {
     setLoading(true)
@@ -669,6 +717,54 @@ export default function TherapistOnboarding() {
                         </button>
                       )
                     })}
+                  </div>
+
+                  {/* Custom File Upload Option */}
+                  <div className="flex flex-col gap-2 mt-4 pt-3.5 border-t border-purple-100/10 select-none">
+                    <span className="text-[10px] font-bold text-[#70518d] uppercase tracking-wider pl-0.5">Ou Envie sua Própria Foto</span>
+                    
+                    <div className="flex items-center gap-3.5 mt-1">
+                      {/* Avatar preview */}
+                      <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-purple-100/40 bg-slate-50 flex-shrink-0 shadow-sm">
+                        <img 
+                          src={selectedAvatar} 
+                          alt="Foto selecionada" 
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+
+                      {/* File input widget */}
+                      <div className="relative flex-grow">
+                        <input 
+                          type="file"
+                          accept="image/png, image/jpeg, image/jpg, image/webp"
+                          onChange={handleFileChange}
+                          className="hidden"
+                          id="avatar-file-upload"
+                          disabled={isUploadingCustom}
+                        />
+                        <label 
+                          htmlFor="avatar-file-upload"
+                          className="flex items-center justify-center gap-1.5 h-10 px-4 rounded-xl border border-dashed border-[#70518d]/50 bg-purple-50/30 text-[#70518d] font-bold text-[11px] cursor-pointer hover:bg-purple-50/50 transition-all active:scale-[0.98] text-center"
+                        >
+                          {isUploadingCustom ? (
+                            <>
+                              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                              Processando foto...
+                            </>
+                          ) : (
+                            <>
+                              <span className="material-symbols-outlined text-sm">upload</span>
+                              Enviar Foto do Computador
+                            </>
+                          )}
+                        </label>
+                      </div>
+                    </div>
+                    
+                    <p className="text-[8px] text-[#795465] font-semibold pl-0.5 leading-relaxed mt-1">
+                      🔒 <strong>Segurança ativada</strong>: Apenas JPG, PNG ou WEBP até 1.5MB são aceitos. O arquivo é verificado contra dados maliciosos e códigos ocultos.
+                    </p>
                   </div>
 
                   {/* Input link optional fallback */}
