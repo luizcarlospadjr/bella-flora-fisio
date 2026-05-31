@@ -239,6 +239,7 @@ export default function TherapistDashboard() {
 
               {/* Card 3: Agenda Clínica */}
               <div 
+                onClick={() => router.push('/dashboard/fisioterapeuta/agenda')}
                 className="bg-white border border-purple-100/20 p-4 rounded-2xl shadow-sm hover:border-[#70518d]/30 transition-all flex items-center justify-between cursor-pointer active:scale-[0.99] group"
               >
                 <div className="flex items-center gap-3.5">

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 import { LogOut, User, ClipboardList, Calendar, Heart, Bell, MessageSquare, ChevronRight, Check, RefreshCw } from 'lucide-react'
+import { supabase } from '../lib/supabaseClient'
 
 interface Therapist {
   id: string
@@ -55,10 +56,19 @@ export default function DashboardPaciente({
     }
   }, [appointment])
 
-  const handleConfirmPresence = () => {
+  const handleConfirmPresence = async () => {
     if (appointment) {
-      localStorage.setItem(`confirmed_appt_${appointment.id}`, 'true')
-      setIsConfirmed(true)
+      try {
+        localStorage.setItem(`confirmed_appt_${appointment.id}`, 'true')
+        setIsConfirmed(true)
+        
+        await supabase
+          .from('appointments')
+          .update({ patient_confirmed: true })
+          .eq('id', appointment.id)
+      } catch (err) {
+        console.error('Erro ao atualizar presença no banco:', err)
+      }
     }
   }
 
