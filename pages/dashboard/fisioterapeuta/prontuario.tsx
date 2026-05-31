@@ -111,6 +111,12 @@ export default function TherapistProntuario() {
   const [showDeleteConfirmModal, setShowDeleteConfirmModal] = useState<boolean>(false)
   const [isDeletingDoc, setIsDeletingDoc] = useState<boolean>(false)
 
+  // Record Delete Confirmation
+  const [recordToDelete, setRecordToDelete] = useState<MedicalRecord | null>(null)
+  const [confirmRecordPassword, setConfirmRecordPassword] = useState<string>('')
+  const [showRecordDeleteConfirmModal, setShowRecordDeleteConfirmModal] = useState<boolean>(false)
+  const [isDeletingRecord, setIsDeletingRecord] = useState<boolean>(false)
+
   // Custom Exercise Builder States
   const [customExercises, setCustomExercises] = useState<PrescribedExercise[]>([])
   const [showCustomModal, setShowCustomModal] = useState(false)
@@ -804,6 +810,49 @@ export default function TherapistProntuario() {
       setIsDeletingDoc(false)
     }
   }
+
+  const handleDeleteRecordClick = (rec: MedicalRecord) => {
+    setRecordToDelete(rec)
+    setConfirmRecordPassword('')
+    setShowRecordDeleteConfirmModal(true)
+  }
+
+  const handleConfirmDeleteRecord = async () => {
+    if (!recordToDelete || !therapist) return
+    setIsDeletingRecord(true)
+
+    try {
+      const { error: authError } = await supabase.auth.signInWithPassword({
+        email: therapist.email,
+        password: confirmRecordPassword
+      })
+
+      if (authError) {
+        alert('Senha incorreta! Não foi possível excluir a evolução de forma segura.')
+        setIsDeletingRecord(false)
+        return
+      }
+
+      const { error } = await supabase
+        .from('medical_records')
+        .delete()
+        .eq('id', recordToDelete.id)
+
+      if (error) throw error
+
+      setRecords(records.filter(r => r.id !== recordToDelete.id))
+      setShowRecordDeleteConfirmModal(false)
+      setRecordToDelete(null)
+      setConfirmRecordPassword('')
+      setEditingRecordId(null)
+      alert('Evolução clínica excluída com sucesso!')
+    } catch (err) {
+      alert('Erro ao excluir evolução clínica')
+      console.error(err)
+    } finally {
+      setIsDeletingRecord(false)
+    }
+  }
  
   if (loading && !activePatient && patients.length === 0) {
     return (
@@ -1059,20 +1108,29 @@ export default function TherapistProntuario() {
                                 className="w-full p-2.5 rounded-lg border border-purple-100/40 text-xs font-semibold focus:outline-none focus:border-[#70518d] resize-none h-20"
                                 placeholder="Notas da evolução..."
                               />
-                              <div className="flex justify-end gap-2 text-[10px]">
+                              <div className="flex justify-between items-center text-[10px]">
                                 <button 
-                                  onClick={() => setEditingRecordId(null)}
-                                  className="px-2.5 py-1.5 border border-purple-100 text-[#795465] font-bold rounded-lg"
+                                  type="button"
+                                  onClick={() => handleDeleteRecordClick(rec)}
+                                  className="px-2.5 py-1.5 border border-red-200 text-red-600 font-bold rounded-lg hover:bg-red-50 transition-colors"
                                 >
-                                  Cancelar
+                                  Excluir
                                 </button>
-                                <button 
-                                  onClick={() => saveEdit(rec.id)}
-                                  className="px-3.5 py-1.5 bg-[#70518d] text-white font-bold rounded-lg flex items-center gap-1"
-                                >
-                                  <Save className="w-3 h-3" />
-                                  Salvar
-                                </button>
+                                <div className="flex gap-2">
+                                  <button 
+                                    onClick={() => setEditingRecordId(null)}
+                                    className="px-2.5 py-1.5 border border-purple-100 text-[#795465] font-bold rounded-lg"
+                                  >
+                                    Cancelar
+                                  </button>
+                                  <button 
+                                    onClick={() => saveEdit(rec.id)}
+                                    className="px-3.5 py-1.5 bg-[#70518d] text-white font-bold rounded-lg flex items-center gap-1"
+                                  >
+                                    <Save className="w-3 h-3" />
+                                    Salvar
+                                  </button>
+                                </div>
                               </div>
                             </div>
                           ) : (
@@ -1769,6 +1827,86 @@ export default function TherapistProntuario() {
                         className="flex-1 py-2.5 bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white font-bold rounded-xl text-xs active:scale-95 transition-all flex items-center justify-center gap-1.5 shadow-sm"
                       >
                         {isDeletingDoc ? (
+                          <>
+                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                            <span>Excluindo...</span>
+                          </>
+                        ) : (
+                          <>
+                            <span className="material-symbols-outlined text-xs">delete</span>
+                            <span>Confirmar OK</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+
+                  </div>
+                </div>
+              )}
+
+              {/* Modal de Confirmação Segura para Exclusão de Evolução */}
+              {showRecordDeleteConfirmModal && recordToDelete && (
+                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[60] flex items-center justify-center p-4">
+                  <div className="bg-white w-full max-w-sm rounded-3xl p-5 shadow-2xl transition-all scale-100 opacity-100 flex flex-col gap-4">
+                    
+                    <div className="flex justify-between items-center pb-2 border-b border-purple-100/10 select-none">
+                      <h3 className="text-sm font-extrabold text-red-600 flex items-center gap-1.5">
+                        <span className="material-symbols-outlined text-red-600">warning</span>
+                        Confirmar Exclusão de Evolução
+                      </h3>
+                      <button 
+                        onClick={() => {
+                          setShowRecordDeleteConfirmModal(false)
+                          setRecordToDelete(null)
+                          setConfirmRecordPassword('')
+                        }}
+                        className="text-[#795465] p-1 rounded-full hover:bg-purple-50 flex items-center justify-center"
+                      >
+                        <X className="w-4.5 h-4.5 text-[#795465]" />
+                      </button>
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                      <p className="text-xs text-[#1d1b1f] font-bold">
+                        Deseja realmente excluir a <span className="text-[#70518d]">Sessão #{recordToDelete.session_number}</span>?
+                      </p>
+                      <p className="text-[10px] text-[#795465] font-semibold leading-relaxed">
+                        Esta ação é permanente e removerá a evolução clínica do prontuário. Para autorizar a exclusão de forma segura, digite sua senha de login abaixo:
+                      </p>
+                    </div>
+
+                    <div className="flex flex-col gap-1.5 mt-1">
+                      <label className="text-[10px] font-bold text-[#70518d] uppercase tracking-wider pl-0.5 select-none">
+                        Sua Senha de Acesso
+                      </label>
+                      <input 
+                        type="password"
+                        required
+                        value={confirmRecordPassword}
+                        onChange={(e) => setConfirmRecordPassword(e.target.value)}
+                        placeholder="Digite sua senha..."
+                        className="h-10 px-3 rounded-xl border border-purple-100/40 text-xs font-semibold focus:outline-none focus:border-[#70518d] w-full"
+                      />
+                    </div>
+
+                    <div className="flex gap-3 mt-2">
+                      <button
+                        onClick={() => {
+                          setShowRecordDeleteConfirmModal(false)
+                          setRecordToDelete(null)
+                          setConfirmRecordPassword('')
+                        }}
+                        disabled={isDeletingRecord}
+                        className="flex-1 py-2.5 border border-purple-100 text-[#795465] font-bold rounded-xl text-xs active:scale-95 transition-all select-none"
+                      >
+                        Cancelar
+                      </button>
+                      <button
+                        onClick={handleConfirmDeleteRecord}
+                        disabled={isDeletingRecord || !confirmRecordPassword.trim()}
+                        className="flex-1 py-2.5 bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white font-bold rounded-xl text-xs active:scale-95 transition-all flex items-center justify-center gap-1.5 shadow-sm"
+                      >
+                        {isDeletingRecord ? (
                           <>
                             <Loader2 className="w-3.5 h-3.5 animate-spin" />
                             <span>Excluindo...</span>
