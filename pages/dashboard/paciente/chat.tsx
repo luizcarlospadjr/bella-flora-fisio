@@ -205,43 +205,79 @@ export default function PatientChatHub() {
   // 3. Helper to determine metadata with fallbacks matching premium HTML prototype
   const getTherapistMetadata = (therapist: any) => {
     const name = therapist.full_name || '';
+    
+    // Read custom fields from therapist object (Supabase columns)
+    const dbSpecialization = therapist.specialty || therapist.specialization;
+    const dbEducation = therapist.education;
+    const dbBio = therapist.bio;
+    const dbCrefito = therapist.crefito;
+    const dbExperience = therapist.experience;
+    const dbCourses = therapist.courses;
+
+    // Standard high-quality defaults based on names
+    let defaultMeta = {
+      specialization: 'Fisioterapia Pélvica & Obstétrica',
+      education: 'Universidade Federal de São Paulo (UNIFESP)',
+      bio: 'Com mais de 10 anos de experiência, busco oferecer um atendimento humanizado e focado na saúde integral da mulher. Minha abordagem combina evidência científica com acolhimento.',
+      specialties: ['Saúde Pélvica', 'Pós-parto', 'Reabilitação Ortopédica', 'Uroginecologia'],
+      crefito: '28491-F',
+      experience: '10 anos de atuação',
+      courses: 'Pilates Clínico, Liberação Miofascial, Drenagem Pélvica',
+      rating: 4.9,
+      tags: 'pelvica pos-parto'
+    };
+
     if (name.includes('Ana') || name.includes('Amanda')) {
-      return {
-        specialization: therapist.specialization || 'Fisioterapia Pélvica & Obstétrica',
-        education: therapist.education || 'Universidade Federal de São Paulo (UNIFESP)',
-        bio: therapist.bio || 'Com mais de 10 anos de experiência, busco oferecer um atendimento humanizado e focado na saúde integral da mulher. Minha abordagem combina evidência científica com acolhimento.',
-        specialties: ['Saúde Pélvica', 'Pós-parto', 'Reabilitação Ortopédica', 'Uroginecologia'],
-        rating: 4.9,
-        tags: 'pelvica pos-parto'
-      }
+      // keeps defaultMeta
     } else if (name.includes('Beatriz') || name.includes('Silva')) {
-      return {
-        specialization: therapist.specialization || 'Pilates Clínico & Postura',
-        education: therapist.education || 'USP - Especialização em Disfunções Pélvicas',
-        bio: therapist.bio || 'Especialista em reabilitação postural e saúde da mulher através do método Pilates Clínico. Trabalho com foco em ergonomia e fortalecimento do assoalho pélvico.',
+      defaultMeta = {
+        specialization: 'Pilates Clínico & Postura',
+        education: 'USP - Especialização em Disfunções Pélvicas',
+        bio: 'Especialista em reabilitação postural e saúde da mulher através do método Pilates Clínico. Trabalho com foco em ergonomia e fortalecimento do assoalho pélvico.',
         specialties: ['Pilates Pélvico', 'Reabilitação Postural', 'Saúde da Mulher', 'Dores Crônicas'],
+        crefito: '39420-F',
+        experience: '6 anos de atuação',
+        courses: 'RPG, Pilates Clínico Avançado, Estabilização Segmentar',
         rating: 4.8,
         tags: 'pilates'
-      }
+      };
     } else if (name.includes('Carlos') || name.includes('Mendes')) {
-      return {
-        specialization: therapist.specialization || 'Osteopatia Clínica',
-        education: therapist.education || 'Santa Casa de São Paulo',
-        bio: therapist.bio || 'Especializado em osteopatia e liberação miofascial profunda. Atuo aliviando dores pélvicas crônicas, coccigodinia e disfunções musculoesqueléticas associadas.',
+      defaultMeta = {
+        specialization: 'Osteopatia Clínica',
+        education: 'Santa Casa de São Paulo',
+        bio: 'Especializado em osteopatia e liberação miofascial profunda. Atuo aliviando dores pélvicas crônicas, coccigodinia e disfunções musculoesqueléticas associadas.',
         specialties: ['Osteopatia', 'Dores Crônicas', 'Terapia Manual', 'Disfunção Muscular'],
+        crefito: '48210-F',
+        experience: '8 anos de atuação',
+        courses: 'Osteopatia Estrutural, Dores Pélvicas Crônicas',
         rating: 4.9,
         tags: 'pelvica'
-      }
+      };
     } else {
-      return {
-        specialization: therapist.specialization || 'Acupuntura & Saúde Íntima',
-        education: therapist.education || 'Universidade Estadual de Campinas (UNICAMP)',
-        bio: therapist.bio || 'Fisioterapeuta e acupunturista dedicada ao equilíbrio físico e energético. Utilizo técnicas milenares associadas ao cuidado pélvico moderno para promover bem-estar.',
+      defaultMeta = {
+        specialization: 'Acupuntura & Saúde Íntima',
+        education: 'Universidade Estadual de Campinas (UNICAMP)',
+        bio: 'Fisioterapeuta e acupunturista dedicada ao equilíbrio físico e energético. Utilizo técnicas milenares associadas ao cuidado pélvico moderno para promover bem-estar.',
         specialties: ['Acupuntura', 'Equilíbrio Energético', 'Saúde Íntima', 'Bem-estar'],
+        crefito: '59102-F',
+        experience: '5 anos de atuação',
+        courses: 'Acupuntura Sistêmica, Eletroacupuntura Pélvica',
         rating: 5.0,
         tags: 'acupuntura'
-      }
+      };
     }
+
+    return {
+      specialization: dbSpecialization || defaultMeta.specialization,
+      education: dbEducation || defaultMeta.education,
+      bio: dbBio || defaultMeta.bio,
+      crefito: dbCrefito || defaultMeta.crefito,
+      experience: dbExperience || defaultMeta.experience,
+      courses: dbCourses || defaultMeta.courses,
+      specialties: defaultMeta.specialties,
+      rating: defaultMeta.rating,
+      tags: defaultMeta.tags
+    };
   }
 
   // 4. Vínculo check: Has the patient booked/engaged with this therapist?
@@ -604,20 +640,44 @@ export default function PatientChatHub() {
               <div className="bg-[#70518d]/10 p-2.5 rounded-xl text-[#70518d] flex-shrink-0 flex items-center justify-center">
                 <GraduationCap className="w-5 h-5" />
               </div>
-              <div className="min-w-0">
-                <h4 className="font-extrabold text-[#1d1b1f] text-xs">Graduação Acadêmica</h4>
-                <p className="text-[10px] text-[#795465] font-semibold truncate mt-0.5">{meta.education}</p>
+              <div className="min-w-0 flex-1">
+                <h4 className="font-extrabold text-[#1d1b1f] text-xs">Formação / Graduação</h4>
+                <p className="text-[10px] text-[#795465] font-semibold mt-0.5 whitespace-pre-wrap">{meta.education}</p>
               </div>
             </div>
 
-            {/* Row 2: Specialization */}
+            {/* Row 2: Experience */}
             <div className="p-3.5 rounded-2xl bg-white border border-purple-100/20 flex gap-3 items-center shadow-sm">
-              <div className="bg-[#ffd8e7] p-2.5 rounded-xl text-[#795465] flex-shrink-0 flex items-center justify-center">
-                <Award className="w-5 h-5" />
+              <div className="bg-purple-50 p-2.5 rounded-xl text-[#70518d] flex-shrink-0 flex items-center justify-center">
+                <span className="material-symbols-outlined text-base">work</span>
               </div>
-              <div className="min-w-0">
-                <h4 className="font-extrabold text-[#1d1b1f] text-xs">Pós-Graduação & Mestrado</h4>
-                <p className="text-[10px] text-[#795465] font-semibold truncate mt-0.5">Especialização em Assoalho Pélvico Avançado</p>
+              <div className="min-w-0 flex-1">
+                <h4 className="font-extrabold text-[#1d1b1f] text-xs">Tempo de Atuação</h4>
+                <p className="text-[10px] text-[#795465] font-semibold mt-0.5 whitespace-pre-wrap">{meta.experience}</p>
+              </div>
+            </div>
+
+            {/* Row 3: Courses */}
+            {meta.courses && (
+              <div className="p-3.5 rounded-2xl bg-white border border-purple-100/20 flex gap-3 items-center shadow-sm">
+                <div className="bg-[#ffd8e7] p-2.5 rounded-xl text-[#795465] flex-shrink-0 flex items-center justify-center">
+                  <Award className="w-5 h-5" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <h4 className="font-extrabold text-[#1d1b1f] text-xs">Cursos & Certificações</h4>
+                  <p className="text-[10px] text-[#795465] font-semibold mt-0.5 whitespace-pre-wrap">{meta.courses}</p>
+                </div>
+              </div>
+            )}
+
+            {/* Row 4: CREFITO */}
+            <div className="p-3.5 rounded-2xl bg-white border border-purple-100/20 flex gap-3 items-center shadow-sm">
+              <div className="bg-emerald-50 p-2.5 rounded-xl text-emerald-600 flex-shrink-0 flex items-center justify-center">
+                <span className="material-symbols-outlined text-base">workspace_premium</span>
+              </div>
+              <div className="min-w-0 flex-1">
+                <h4 className="font-extrabold text-[#1d1b1f] text-xs">Registro CREFITO</h4>
+                <p className="text-[10px] text-[#795465] font-bold mt-0.5">{meta.crefito}</p>
               </div>
             </div>
           </div>

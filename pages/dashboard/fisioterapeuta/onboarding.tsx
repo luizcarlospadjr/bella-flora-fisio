@@ -138,6 +138,10 @@ export default function TherapistOnboarding() {
   const [crefito, setCrefito] = useState('')
   const [specialty, setSpecialty] = useState('Fisioterapia Pélvica')
   const [selectedAvatar, setSelectedAvatar] = useState(PRESET_AVATARS[0])
+  const [education, setEducation] = useState('')
+  const [experience, setExperience] = useState('')
+  const [courses, setCourses] = useState('')
+  const [bio, setBio] = useState('')
 
   // Step 2: Exercises catalog states
   const [exercises, setExercises] = useState<ExerciseTemplate[]>([])
@@ -175,11 +179,23 @@ export default function TherapistOnboarding() {
         setFullName(profile.full_name || '')
         setPhone(profile.phone || '')
         setSelectedAvatar(profile.avatar_url || PRESET_AVATARS[0])
+        setEducation(profile.education || '')
+        setExperience(profile.experience || '')
+        setCourses(profile.courses || '')
+        setBio(profile.bio || '')
         
         // Check user auth metadata fallback
         const userMeta = user.user_metadata || {}
-        setCrefito(userMeta.crefito || '')
-        setSpecialty(userMeta.specialty || 'Fisioterapia Pélvica')
+        if (!profile.crefito) setCrefito(userMeta.crefito || '')
+        else setCrefito(profile.crefito)
+        
+        if (!profile.specialty) setSpecialty(userMeta.specialty || 'Fisioterapia Pélvica')
+        else setSpecialty(profile.specialty)
+        
+        if (!profile.education) setEducation(userMeta.education || '')
+        if (!profile.experience) setExperience(userMeta.experience || '')
+        if (!profile.courses) setCourses(userMeta.courses || '')
+        if (!profile.bio) setBio(userMeta.bio || '')
 
         await loadExercises()
       } catch (err) {
@@ -261,8 +277,8 @@ export default function TherapistOnboarding() {
 
   const handleSaveProfileStep = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!fullName.trim() || !phone.trim() || !crefito.trim()) {
-      setErrorMsg('Por favor, preencha todos os campos obrigatórios (Nome, Telefone e CREFITO).')
+    if (!fullName.trim() || !phone.trim() || !crefito.trim() || !education.trim() || !experience.trim() || !bio.trim()) {
+      setErrorMsg('Por favor, preencha todos os campos obrigatórios (Nome, Celular, CREFITO, Formação, Tempo de Atuação e Bio).')
       return
     }
 
@@ -270,23 +286,63 @@ export default function TherapistOnboarding() {
     setErrorMsg(null)
 
     try {
-      // 1. Update public.profiles in database
-      const { error: profileErr } = await supabase
-        .from('profiles')
-        .update({
-          full_name: fullName.trim(),
-          phone: phone.trim(),
-          avatar_url: selectedAvatar
-        })
-        .eq('id', therapist.id)
+      // 1. Try to update public.profiles in database with all custom fields first
+      try {
+        const { error: profileErr } = await supabase
+          .from('profiles')
+          .update({
+            full_name: fullName.trim(),
+            phone: phone.trim(),
+            avatar_url: selectedAvatar,
+            crefito: crefito.trim(),
+            specialty: specialty,
+            education: education.trim(),
+            experience: experience.trim(),
+            courses: courses.trim(),
+            bio: bio.trim()
+          })
+          .eq('id', therapist.id)
 
-      if (profileErr) throw profileErr
+        if (profileErr) {
+          if (profileErr.message.includes('column') || profileErr.message.includes('schema cache')) {
+            console.warn('Custom columns missing in profiles table. Updating standard columns.')
+            const { error: fallbackErr } = await supabase
+              .from('profiles')
+              .update({
+                full_name: fullName.trim(),
+                phone: phone.trim(),
+                avatar_url: selectedAvatar
+              })
+              .eq('id', therapist.id)
+
+            if (fallbackErr) throw fallbackErr
+          } else {
+            throw profileErr
+          }
+        }
+      } catch (err) {
+        console.warn('Database profiles update failed, falling back to standard columns:', err)
+        const { error: fallbackErr } = await supabase
+          .from('profiles')
+          .update({
+            full_name: fullName.trim(),
+            phone: phone.trim(),
+            avatar_url: selectedAvatar
+          })
+          .eq('id', therapist.id)
+
+        if (fallbackErr) throw fallbackErr
+      }
 
       // 2. Update user auth metadata
       const { error: authErr } = await supabase.auth.updateUser({
         data: {
           crefito: crefito.trim(),
-          specialty: specialty
+          specialty: specialty,
+          education: education.trim(),
+          experience: experience.trim(),
+          courses: courses.trim(),
+          bio: bio.trim()
         }
       })
 
@@ -295,6 +351,10 @@ export default function TherapistOnboarding() {
       // Save to localStorage for immediate session hydration
       localStorage.setItem('bella_flora_therapist_crefito', crefito.trim())
       localStorage.setItem('bella_flora_therapist_specialty', specialty)
+      localStorage.setItem('bella_flora_therapist_education', education.trim())
+      localStorage.setItem('bella_flora_therapist_experience', experience.trim())
+      localStorage.setItem('bella_flora_therapist_courses', courses.trim())
+      localStorage.setItem('bella_flora_therapist_bio', bio.trim())
 
       setCurrentStep(2)
     } catch (err: any) {
@@ -419,7 +479,7 @@ export default function TherapistOnboarding() {
                 </h2>
                 <p className="text-[11px] text-purple-200/90 font-medium mt-1 leading-relaxed">
                   {currentStep === 1 
-                    ? 'Preencha seus dados de contato, registro do CREFITO e escolha uma foto profissional para seus pacientes identificarem você.'
+                    ? 'Preencha seus dados de contato, registro do CREFITO, currículo e escolha uma foto profissional para seus pacientes identificarem você.'
                     : 'Selecione abaixo os modelos de exercícios padrão que deseja importar para prescrever aos seus pacientes na clínica.'}
                 </p>
               </div>
@@ -436,76 +496,152 @@ export default function TherapistOnboarding() {
             {currentStep === 1 ? (
               <form onSubmit={handleSaveProfileStep} className="flex flex-col gap-4">
                 
-                {/* Full Name */}
-                <div className="flex flex-col gap-1.5 bg-white p-4 rounded-2xl border border-purple-100/20 shadow-sm">
-                  <label className="text-[10px] font-bold text-[#70518d] uppercase tracking-wider pl-0.5 flex items-center gap-1">
-                    <User className="w-3 h-3 text-[#70518d]" />
-                    Nome Completo
-                  </label>
-                  <input 
-                    type="text"
-                    required
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    placeholder="Ex: Dra. Amanda Cardoso"
-                    className="h-11 px-3.5 rounded-xl border border-purple-100/40 text-xs font-semibold focus:outline-none focus:border-[#70518d] w-full bg-slate-50/50 shadow-xs"
-                  />
-                </div>
+                {/* 1. Basic Info Card */}
+                <div className="flex flex-col gap-3.5 bg-white p-4 rounded-2xl border border-purple-100/20 shadow-sm">
+                  <h3 className="text-[10px] font-bold text-[#70518d] uppercase tracking-wider pl-0.5 select-none border-b border-purple-100/10 pb-2 flex items-center gap-1.5">
+                    <span className="material-symbols-outlined text-sm">badge</span>
+                    Identificação Básica
+                  </h3>
 
-                {/* Contact Phone & CREFITO */}
-                <div className="grid grid-cols-2 gap-3">
-                  {/* Phone */}
-                  <div className="flex flex-col gap-1.5 bg-white p-4 rounded-2xl border border-purple-100/20 shadow-sm">
-                    <label className="text-[10px] font-bold text-[#70518d] uppercase tracking-wider pl-0.5 flex items-center gap-1">
-                      <Phone className="w-3 h-3 text-[#70518d]" />
-                      Celular / WhatsApp
-                    </label>
-                    <input 
-                      type="tel"
-                      required
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      placeholder="Ex: (11) 98888-8888"
-                      className="h-11 px-3.5 rounded-xl border border-purple-100/40 text-xs font-semibold focus:outline-none focus:border-[#70518d] w-full bg-slate-50/50 shadow-xs"
-                    />
-                  </div>
-
-                  {/* CREFITO */}
-                  <div className="flex flex-col gap-1.5 bg-white p-4 rounded-2xl border border-purple-100/20 shadow-sm">
-                    <label className="text-[10px] font-bold text-[#70518d] uppercase tracking-wider pl-0.5 flex items-center gap-1">
-                      <Award className="w-3 h-3 text-[#70518d]" />
-                      Registro CREFITO
+                  {/* Full Name */}
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[9px] font-bold text-[#795465] uppercase tracking-wider pl-0.5 flex items-center gap-1">
+                      Nome Completo
                     </label>
                     <input 
                       type="text"
                       required
-                      value={crefito}
-                      onChange={(e) => setCrefito(e.target.value)}
-                      placeholder="Ex: 123456-F"
-                      className="h-11 px-3.5 rounded-xl border border-purple-100/40 text-xs font-semibold focus:outline-none focus:border-[#70518d] w-full bg-slate-50/50 shadow-xs"
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                      placeholder="Ex: Dra. Amanda Cardoso"
+                      className="h-10 px-3.5 rounded-xl border border-purple-100/40 text-xs font-semibold focus:outline-none focus:border-[#70518d] w-full bg-slate-50/30"
+                    />
+                  </div>
+
+                  {/* Phone & CREFITO */}
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="flex flex-col gap-1">
+                      <label className="text-[9px] font-bold text-[#795465] uppercase tracking-wider pl-0.5 flex items-center gap-1">
+                        Celular / WhatsApp
+                      </label>
+                      <input 
+                        type="tel"
+                        required
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        placeholder="Ex: (11) 98888-8888"
+                        className="h-10 px-3.5 rounded-xl border border-purple-100/40 text-xs font-semibold focus:outline-none focus:border-[#70518d] w-full bg-slate-50/30"
+                      />
+                    </div>
+
+                    <div className="flex flex-col gap-1">
+                      <label className="text-[9px] font-bold text-[#795465] uppercase tracking-wider pl-0.5 flex items-center gap-1">
+                        Registro CREFITO
+                      </label>
+                      <input 
+                        type="text"
+                        required
+                        value={crefito}
+                        onChange={(e) => setCrefito(e.target.value)}
+                        placeholder="Ex: 123456-F"
+                        className="h-10 px-3.5 rounded-xl border border-purple-100/40 text-xs font-semibold focus:outline-none focus:border-[#70518d] w-full bg-slate-50/30"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Principal Specialty */}
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[9px] font-bold text-[#795465] uppercase tracking-wider pl-0.5 flex items-center gap-1">
+                      Especialidade Principal
+                    </label>
+                    <select
+                      value={specialty}
+                      onChange={(e) => setSpecialty(e.target.value)}
+                      className="h-10 px-3.5 rounded-xl border border-purple-100/40 text-xs font-semibold focus:outline-none focus:border-[#70518d] w-full bg-slate-50/30 cursor-pointer"
+                    >
+                      <option value="Fisioterapia Pélvica">Fisioterapia Pélvica & Uroginecologia</option>
+                      <option value="Saúde da Mulher">Saúde da Mulher & Obstetrícia</option>
+                      <option value="Pilates Clínico">Pilates Clínico & Reabilitação</option>
+                      <option value="Osteopatia Pélvica">Osteopatia Lombopélvica</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* 2. Education & Professional Credentials Card */}
+                <div className="flex flex-col gap-3.5 bg-white p-4 rounded-2xl border border-purple-100/20 shadow-sm">
+                  <h3 className="text-[10px] font-bold text-[#70518d] uppercase tracking-wider pl-0.5 select-none border-b border-purple-100/10 pb-2 flex items-center gap-1.5">
+                    <span className="material-symbols-outlined text-sm">school</span>
+                    Formação & Atuação Profissional
+                  </h3>
+
+                  {/* Graduação / Formação Principal */}
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[9px] font-bold text-[#795465] uppercase tracking-wider pl-0.5">
+                      Formação / Graduação / Mestrado / Doutorado
+                    </label>
+                    <input 
+                      type="text"
+                      required
+                      value={education}
+                      onChange={(e) => setEducation(e.target.value)}
+                      placeholder="Ex: Graduada em Fisioterapia pela USP • Pós-Graduada pela UNIFESP"
+                      className="h-10 px-3.5 rounded-xl border border-purple-100/40 text-xs font-semibold focus:outline-none focus:border-[#70518d] w-full bg-slate-50/30"
+                    />
+                  </div>
+
+                  {/* Tempo de Atuação */}
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[9px] font-bold text-[#795465] uppercase tracking-wider pl-0.5">
+                      Tempo de Atuação na Área
+                    </label>
+                    <input 
+                      type="text"
+                      required
+                      value={experience}
+                      onChange={(e) => setExperience(e.target.value)}
+                      placeholder="Ex: 8 anos de atuação clínica"
+                      className="h-10 px-3.5 rounded-xl border border-purple-100/40 text-xs font-semibold focus:outline-none focus:border-[#70518d] w-full bg-slate-50/30"
+                    />
+                  </div>
+
+                  {/* Cursos / Certificações */}
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[9px] font-bold text-[#795465] uppercase tracking-wider pl-0.5">
+                      Cursos Extra & Certificações
+                    </label>
+                    <input 
+                      type="text"
+                      value={courses}
+                      onChange={(e) => setCourses(e.target.value)}
+                      placeholder="Ex: Pilates Clínico Avançado, Terapia Manual, Ginástica Hipopressiva"
+                      className="h-10 px-3.5 rounded-xl border border-purple-100/40 text-xs font-semibold focus:outline-none focus:border-[#70518d] w-full bg-slate-50/30"
                     />
                   </div>
                 </div>
 
-                {/* Principal Specialty */}
-                <div className="flex flex-col gap-1.5 bg-white p-4 rounded-2xl border border-purple-100/20 shadow-sm">
-                  <label className="text-[10px] font-bold text-[#70518d] uppercase tracking-wider pl-0.5 flex items-center gap-1">
-                    <Sparkles className="w-3 h-3 text-[#70518d]" />
-                    Especialidade Principal
-                  </label>
-                  <select
-                    value={specialty}
-                    onChange={(e) => setSpecialty(e.target.value)}
-                    className="h-11 px-3.5 rounded-xl border border-purple-100/40 text-xs font-semibold focus:outline-none focus:border-[#70518d] w-full bg-slate-50/50 cursor-pointer shadow-xs"
-                  >
-                    <option value="Fisioterapia Pélvica">Fisioterapia Pélvica & Uroginecologia</option>
-                    <option value="Saúde da Mulher">Saúde da Mulher & Obstetrícia</option>
-                    <option value="Pilates Clínico">Pilates Clínico & Reabilitação</option>
-                    <option value="Osteopatia Pélvica">Osteopatia Lombopélvica</option>
-                  </select>
+                {/* 3. Biography Card */}
+                <div className="flex flex-col gap-3.5 bg-white p-4 rounded-2xl border border-purple-100/20 shadow-sm">
+                  <h3 className="text-[10px] font-bold text-[#70518d] uppercase tracking-wider pl-0.5 select-none border-b border-purple-100/10 pb-2 flex items-center gap-1.5">
+                    <span className="material-symbols-outlined text-sm">description</span>
+                    Apresentação (Bio)
+                  </h3>
+
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[9px] font-bold text-[#795465] uppercase tracking-wider pl-0.5">
+                      Sobre Mim (Aparecerá para as pacientes)
+                    </label>
+                    <textarea 
+                      required
+                      rows={3}
+                      value={bio}
+                      onChange={(e) => setBio(e.target.value)}
+                      placeholder="Fale um pouco sobre você, sua abordagem e como costuma acolher suas pacientes na área de Fisioterapia..."
+                      className="p-3 rounded-xl border border-purple-100/40 text-xs font-semibold focus:outline-none focus:border-[#70518d] w-full resize-none bg-slate-50/30 h-24"
+                    />
+                  </div>
                 </div>
 
-                {/* Avatar Selection Grid */}
+                {/* 4. Avatar Selection Card */}
                 <div className="flex flex-col gap-3 bg-white p-4 rounded-2xl border border-purple-100/20 shadow-sm">
                   <label className="text-[10px] font-bold text-[#70518d] uppercase tracking-wider pl-0.5 select-none">
                     Escolha sua Foto de Perfil
