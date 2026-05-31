@@ -76,6 +76,12 @@ export default function TherapistProntuario() {
   const [prescribedExercises, setPrescribedExercises] = useState<PrescribedExercise[]>([])
   const [saveSuccess, setSaveSuccess] = useState(false)
 
+  // Treatment Plan Config State (for Therapist Histórico Tab)
+  const [totalSessions, setTotalSessions] = useState<number>(8)
+  const [frequencyDays, setFrequencyDays] = useState<string[]>([])
+  const [treatmentPlanNotes, setTreatmentPlanNotes] = useState<string>('')
+  const [planSaveSuccess, setPlanSaveSuccess] = useState<boolean>(false)
+
   // Custom Exercise Builder States
   const [customExercises, setCustomExercises] = useState<PrescribedExercise[]>([])
   const [showCustomModal, setShowCustomModal] = useState(false)
@@ -246,6 +252,32 @@ export default function TherapistProntuario() {
           const selectedPatient = patientList?.find(p => p.id === patient_id)
           if (selectedPatient) {
             setActivePatient(selectedPatient)
+
+            // Load treatment plan configurations
+            try {
+              const { data: planData } = await supabase
+                .from('treatment_plans')
+                .select('*')
+                .eq('patient_id', selectedPatient.id)
+                .maybeSingle()
+
+              if (planData) {
+                setTotalSessions(planData.total_sessions || 8)
+                if (planData.frequency_days) {
+                  const days = planData.frequency_days.split(',').map((d: string) => d.trim()).filter(Boolean)
+                  setFrequencyDays(days)
+                } else {
+                  setFrequencyDays([])
+                }
+                setTreatmentPlanNotes(planData.notes || '')
+              } else {
+                setTotalSessions(8)
+                setFrequencyDays([])
+                setTreatmentPlanNotes('')
+              }
+            } catch (planErr) {
+              console.error('Erro ao buscar plano de tratamento:', planErr)
+            }
             
             // 4. Fetch medical records / evolutions for this patient
             const { data: medRecords } = await supabase
@@ -285,6 +317,9 @@ export default function TherapistProntuario() {
           setRecords([])
           setPrescribedExercises([])
           setCustomExercises(loadedCatalog)
+          setTotalSessions(8)
+          setFrequencyDays([])
+          setTreatmentPlanNotes('')
         }
       } catch (err) {
         console.error('Erro ao carregar dados do prontuário:', err)
@@ -556,6 +591,34 @@ export default function TherapistProntuario() {
     }
   }
 
+  const handleSaveTreatmentPlan = async () => {
+    if (!activePatient || !therapist) return
+    try {
+      setLoading(true)
+      const freqStr = frequencyDays.join(', ')
+      
+      const { error } = await supabase
+        .from('treatment_plans')
+        .upsert({
+          patient_id: activePatient.id,
+          therapist_id: therapist.id,
+          total_sessions: totalSessions,
+          frequency_days: freqStr,
+          notes: treatmentPlanNotes
+        }, { onConflict: 'patient_id' })
+
+      if (error) throw error
+
+      setPlanSaveSuccess(true)
+      setTimeout(() => setPlanSaveSuccess(false), 3000)
+    } catch (err) {
+      alert('Erro ao salvar plano de tratamento clínico')
+      console.error(err)
+    } finally {
+      setLoading(false)
+    }
+  }
+ 
   if (loading && !activePatient && patients.length === 0) {
     return (
       <div className="min-h-screen bg-[#fff7fd] flex items-center justify-center">
@@ -1043,7 +1106,7 @@ export default function TherapistProntuario() {
                         </p>
                       </div>
                     </div>
-
+ 
                     <div className="flex flex-col gap-2.5 text-xs">
                       <div className="flex justify-between">
                         <span className="text-[#795465] font-semibold">Total de Consultas:</span>
@@ -1056,6 +1119,101 @@ export default function TherapistProntuario() {
                         </span>
                       </div>
                     </div>
+                  </div>
+
+                  {/* 2. Clinical Treatment Plan Settings Widget */}
+                  <div className="flex items-center justify-between pl-1 mt-2">
+                    <h3 className="text-xs font-bold text-[#70518d] uppercase tracking-wider">Configuração de Sessões</h3>
+                    <span className="text-[9px] font-bold bg-purple-50 text-[#70518d] px-2 py-0.5 rounded border border-purple-100/20 select-none">
+                      Meu Tratamento
+                    </span>
+                  </div>
+
+                  <div className="bg-white border border-purple-100/20 rounded-2xl p-5 shadow-sm flex flex-col gap-4">
+                    {planSaveSuccess && (
+                      <div className="p-3 bg-green-50 border border-green-200 text-green-600 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm select-none">
+                        <Check className="w-4.5 h-4.5 stroke-[3]" />
+                        <span>Plano de tratamento atualizado com sucesso!</span>
+                      </div>
+                    )}
+
+                    {/* Total Sessions Selector */}
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-[10px] font-bold text-[#70518d] uppercase tracking-wider pl-0.5 select-none">
+                        Total de Sessões Clínicas
+                      </label>
+                      <div className="grid grid-cols-6 gap-1.5">
+                        {[5, 8, 10, 12, 15, 20].map((num) => (
+                          <button
+                            key={num}
+                            type="button"
+                            onClick={() => setTotalSessions(num)}
+                            className={`py-2 rounded-lg border text-xs font-extrabold transition-all active:scale-95 ${
+                              totalSessions === num
+                                ? 'bg-[#70518d] border-transparent text-white shadow-sm'
+                                : 'bg-slate-50 border-purple-100/10 text-[#795465] hover:bg-purple-50/50'
+                            }`}
+                          >
+                            {num}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Frequency Weekdays Checklist */}
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-[10px] font-bold text-[#70518d] uppercase tracking-wider pl-0.5 select-none">
+                        Frequência Semanal Recomendada
+                      </label>
+                      <div className="grid grid-cols-3 gap-2">
+                        {['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'].map((day) => {
+                          const isChecked = frequencyDays.includes(day)
+                          return (
+                            <button
+                              key={day}
+                              type="button"
+                              onClick={() => {
+                                if (isChecked) {
+                                  setFrequencyDays(frequencyDays.filter(d => d !== day))
+                                } else {
+                                  setFrequencyDays([...frequencyDays, day])
+                                }
+                              }}
+                              className={`py-2 px-1 rounded-lg border text-[10px] font-bold transition-all active:scale-95 flex items-center justify-center gap-1 ${
+                                isChecked
+                                  ? 'bg-[#70518d]/10 border-[#70518d] text-[#70518d]'
+                                  : 'bg-white border-purple-100/20 text-[#795465]'
+                              }`}
+                            >
+                              {isChecked && <span className="text-[10px]">✓</span>}
+                              {day}
+                            </button>
+                          )
+                        })}
+                      </div>
+                    </div>
+
+                    {/* Therapist Notes (Confidential) */}
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-[10px] font-bold text-[#70518d] uppercase tracking-wider pl-0.5 flex justify-between select-none">
+                        <span>Notas Clínicas do Tratamento</span>
+                        <span className="text-[8px] text-slate-400 font-semibold normal-case">Visível apenas para clínica</span>
+                      </label>
+                      <textarea
+                        value={treatmentPlanNotes}
+                        onChange={(e) => setTreatmentPlanNotes(e.target.value)}
+                        placeholder="Observações confidenciais, progresso ou foco do tratamento clínico..."
+                        className="p-3 rounded-xl border border-purple-100/40 text-xs font-semibold focus:outline-none focus:border-[#70518d] w-full resize-none h-20"
+                      />
+                    </div>
+
+                    <button
+                      onClick={handleSaveTreatmentPlan}
+                      className="w-full py-3 bg-[#70518d] text-white rounded-full font-bold hover:bg-[#573974] transition-colors shadow-md mt-1 flex items-center justify-center gap-1.5 text-xs active:scale-95"
+                    >
+                      <Save className="w-4 h-4 text-white" />
+                      Salvar Plano Clínico
+                    </button>
                   </div>
                 </section>
               )}

@@ -249,6 +249,17 @@ export default function DashboardPaciente({
               <h3 className="text-xs font-bold text-[#70518d] uppercase tracking-wider">Acesso Rápido</h3>
               
               <div className="grid grid-cols-2 gap-3">
+                {/* Meu Tratamento */}
+                <Link 
+                  href="/dashboard/paciente/meu-tratamento"
+                  className="bg-white p-4 rounded-2xl border border-purple-100/10 shadow-sm flex flex-col items-center justify-center text-center hover:scale-[1.02] active:scale-[0.98] transition-all hover:border-purple-200/50"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-purple-50 text-[#70518d] flex items-center justify-center mb-2.5">
+                    <ClipboardList className="w-5 h-5" />
+                  </div>
+                  <span className="text-xs font-extrabold text-[#1d1b1f]">Meu Tratamento</span>
+                </Link>
+
                 {/* Minha Agenda */}
                 <Link 
                   href="/dashboard/paciente/agenda"
@@ -274,7 +285,7 @@ export default function DashboardPaciente({
                 {/* Meu Perfil */}
                 <Link 
                   href="/dashboard/paciente/perfil"
-                  className="col-span-2 bg-white p-4 rounded-2xl border border-purple-100/10 shadow-sm flex flex-col items-center justify-center text-center hover:scale-[1.02] active:scale-[0.98] transition-all hover:border-purple-200/50"
+                  className="bg-white p-4 rounded-2xl border border-purple-100/10 shadow-sm flex flex-col items-center justify-center text-center hover:scale-[1.02] active:scale-[0.98] transition-all hover:border-purple-200/50"
                 >
                   <div className="w-10 h-10 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center mb-2.5">
                     <User className="w-5 h-5" />

@@ -151,8 +151,25 @@ export default function ExercisePlayer() {
 
   const totalSessions = parseTotalSessions(exercise.frequency)
 
-  const handleComplete = () => {
+  const handleComplete = async () => {
     setIsProcessing(true)
+
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user && currentProgress >= totalSessions) {
+        const { error } = await supabase.from('exercise_completions').insert({
+          patient_id: user.id,
+          exercise_id: exercise.id || id,
+          exercise_name: exercise.name,
+          series_done: exercise.series
+        })
+        if (error) {
+          console.error('Erro ao registrar conclusão no banco:', error)
+        }
+      }
+    } catch (err) {
+      console.error('Erro de autenticação:', err)
+    }
 
     setTimeout(() => {
       setIsProcessing(false)
