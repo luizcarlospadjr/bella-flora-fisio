@@ -40,6 +40,15 @@ export default function TherapistAgenda() {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
   const [actionLoading, setActionLoading] = useState<string | null>(null)
 
+  // Month Calendar states
+  const [showMonthCalendar, setShowMonthCalendar] = useState<boolean>(false)
+  const [calendarViewDate, setCalendarViewDate] = useState<Date>(new Date())
+
+  // Keep calendar view month in sync with selectedDate
+  useEffect(() => {
+    setCalendarViewDate(new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1))
+  }, [selectedDate])
+
   // Load profile and day data
   useEffect(() => {
     async function loadTherapistAndAppointments() {
@@ -131,6 +140,20 @@ export default function TherapistAgenda() {
     }
   }
 
+  const handleSelectCalendarDay = (day: number) => {
+    const newDate = new Date(calendarViewDate.getFullYear(), calendarViewDate.getMonth(), day)
+    setSelectedDate(newDate)
+    setShowMonthCalendar(false)
+  }
+
+  const getDaysInMonth = (year: number, month: number) => {
+    return new Date(year, month + 1, 0).getDate()
+  }
+
+  const getFirstDayOfMonth = (year: number, month: number) => {
+    return new Date(year, month, 1).getDay()
+  }
+
   // Formats selected date nicely: e.g. "31 de Maio, 2026 - Domingo"
   const formatSelectedDateHeader = () => {
     const day = selectedDate.getDate()
@@ -179,6 +202,21 @@ export default function TherapistAgenda() {
   const freeSlotsCount = timeSlots.filter(slot => !getAppointmentForSlot(slot)).length
 
   const formattedInputDate = `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, '0')}-${String(selectedDate.getDate()).padStart(2, '0')}`
+
+  // Calendar calculations
+  const viewYear = calendarViewDate.getFullYear()
+  const viewMonth = calendarViewDate.getMonth()
+  
+  const daysInMonth = getDaysInMonth(viewYear, viewMonth)
+  const firstDayIndex = getFirstDayOfMonth(viewYear, viewMonth)
+  
+  const daysArray: (number | null)[] = []
+  for (let i = 0; i < firstDayIndex; i++) {
+    daysArray.push(null)
+  }
+  for (let d = 1; d <= daysInMonth; d++) {
+    daysArray.push(d)
+  }
 
   return (
     <>
@@ -266,17 +304,98 @@ export default function TherapistAgenda() {
                   </p>
                 </div>
                 
-                <div className="relative flex items-center gap-1.5 bg-slate-50 border border-purple-100/40 px-2.5 py-1.5 rounded-xl cursor-pointer hover:bg-purple-50/40 transition-colors">
-                  <Calendar className="w-3.5 h-3.5 text-[#70518d]" />
-                  <input 
-                    type="date"
-                    value={formattedInputDate}
-                    onChange={handleDateChange}
-                    className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
-                  />
-                  <span className="text-[10px] font-bold text-[#70518d]">Escolher Dia</span>
-                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowMonthCalendar(!showMonthCalendar)}
+                  className={`flex items-center gap-1.5 border px-2.5 py-1.5 rounded-xl cursor-pointer transition-all active:scale-95 font-bold text-[10px] ${
+                    showMonthCalendar 
+                      ? 'bg-[#70518d] border-transparent text-white shadow-sm' 
+                      : 'bg-slate-50 border-purple-100/40 text-[#70518d] hover:bg-purple-50/40'
+                  }`}
+                >
+                  <Calendar className="w-3.5 h-3.5" />
+                  <span>{showMonthCalendar ? 'Fechar Calendário' : 'Escolher Dia'}</span>
+                </button>
               </div>
+
+              {/* Expandable Premium Custom Month Calendar */}
+              {showMonthCalendar && (
+                <div className="mt-3.5 pt-3.5 border-t border-purple-100/10 flex flex-col gap-3.5">
+                  {/* Calendar Month Selector Header */}
+                  <div className="flex items-center justify-between px-1">
+                    <button 
+                      type="button"
+                      onClick={() => {
+                        const prevMonth = new Date(calendarViewDate)
+                        prevMonth.setMonth(calendarViewDate.getMonth() - 1)
+                        setCalendarViewDate(prevMonth)
+                      }}
+                      className="p-1 rounded-full hover:bg-purple-50 text-[#70518d] transition-all flex items-center justify-center border border-purple-100/20 active:scale-90"
+                    >
+                      <span className="material-symbols-outlined text-base">chevron_left</span>
+                    </button>
+                    <span className="text-xs font-extrabold text-[#70518d] uppercase tracking-wider">
+                      {new Intl.DateTimeFormat('pt-BR', { month: 'long', year: 'numeric' }).format(calendarViewDate)}
+                    </span>
+                    <button 
+                      type="button"
+                      onClick={() => {
+                        const nextMonth = new Date(calendarViewDate)
+                        nextMonth.setMonth(calendarViewDate.getMonth() + 1)
+                        setCalendarViewDate(nextMonth)
+                      }}
+                      className="p-1 rounded-full hover:bg-purple-50 text-[#70518d] transition-all flex items-center justify-center border border-purple-100/20 active:scale-90"
+                    >
+                      <span className="material-symbols-outlined text-base">chevron_right</span>
+                    </button>
+                  </div>
+
+                  {/* Calendar Weekday Names */}
+                  <div className="grid grid-cols-7 text-center text-[9px] font-extrabold text-[#795465] uppercase select-none">
+                    <span>Dom</span>
+                    <span>Seg</span>
+                    <span>Ter</span>
+                    <span>Qua</span>
+                    <span>Qui</span>
+                    <span>Sex</span>
+                    <span>Sáb</span>
+                  </div>
+
+                  {/* Calendar Days Grid */}
+                  <div className="grid grid-cols-7 gap-1 text-center text-xs">
+                    {daysArray.map((day, index) => {
+                      if (day === null) {
+                        return <div key={`empty-${index}`} className="h-8"></div>
+                      }
+
+                      const isSelected = selectedDate.getDate() === day &&
+                                         selectedDate.getMonth() === viewMonth &&
+                                         selectedDate.getFullYear() === viewYear
+
+                      const isToday = new Date().getDate() === day &&
+                                      new Date().getMonth() === viewMonth &&
+                                      new Date().getFullYear() === viewYear
+
+                      return (
+                        <button
+                          key={`day-${day}`}
+                          type="button"
+                          onClick={() => handleSelectCalendarDay(day)}
+                          className={`h-8 w-8 rounded-full font-bold flex items-center justify-center mx-auto transition-all active:scale-90 ${
+                            isSelected 
+                              ? 'bg-gradient-to-br from-[#70518d] to-[#573974] text-white shadow-sm'
+                              : isToday
+                              ? 'border-2 border-[#70518d] text-[#70518d] hover:bg-purple-50'
+                              : 'text-[#1d1b1f] hover:bg-purple-50/70'
+                          }`}
+                        >
+                          {day}
+                        </button>
+                      )
+                    })}
+                  </div>
+                </div>
+              )}
             </section>
 
             {/* Daily Summary Metrics - BENTO SECTION */}
