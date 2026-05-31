@@ -333,7 +333,7 @@ export default function TherapistProntuario() {
                 .from('patient_documents')
                 .select('*')
                 .eq('patient_id', selectedPatient.id)
-                .order('created_at', { ascending: false })
+                .order('created_at', { ascending: true })
 
               if (docsData) {
                 setDocuments(docsData)
@@ -746,7 +746,7 @@ export default function TherapistProntuario() {
       if (error) throw error
 
       if (data) {
-        setDocuments([data, ...documents])
+        setDocuments([...documents, data])
         setDocName('')
         setDocUrl('')
         setDocCategory('Exame Complementar')
@@ -1486,213 +1486,221 @@ export default function TherapistProntuario() {
                       </div>
                     )}
 
-                    {/* Document Addition Form */}
-                    <form onSubmit={handleSaveDocument} className="flex flex-col gap-3">
-                      <div className="flex flex-col gap-1">
-                        <label className="text-[10px] font-bold text-[#70518d] uppercase tracking-wider pl-0.5 select-none">
-                          Nome do Documento / Exame
-                        </label>
-                        <input 
-                          type="text"
-                          required
-                          value={docName}
-                          onChange={(e) => setDocName(e.target.value)}
-                          placeholder="Ex: Ultrassonografia Pélvica, Ressonância..."
-                          className="h-10 px-3 rounded-xl border border-purple-100/40 text-xs font-semibold focus:outline-none focus:border-[#70518d] w-full"
-                        />
-                      </div>
+                    {/* Header showing total count */}
+                    <div className="flex justify-between items-center pl-0.5">
+                      <label className="text-[10px] font-bold text-[#70518d] uppercase tracking-wider select-none">
+                        Documentos Cadastrados
+                      </label>
+                      <span className="text-[9px] bg-purple-50 text-[#70518d] px-1.5 py-0.2 rounded border border-purple-100/20 font-bold select-none">
+                        {documents.length} no total
+                      </span>
+                    </div>
 
-                      <div className="flex flex-col gap-1">
-                        <label className="text-[10px] font-bold text-[#70518d] uppercase tracking-wider pl-0.5 select-none">
-                          Link do Documento (Imagem/PDF/Arquivo)
-                        </label>
-                        <input 
-                          type="text"
-                          required
-                          value={docUrl}
-                          onChange={(e) => setDocUrl(e.target.value)}
-                          placeholder="Ex: https://link-exame.com/ultrassonografia.png"
-                          className="h-10 px-3 rounded-xl border border-purple-100/40 text-xs font-semibold focus:outline-none focus:border-[#70518d] w-full"
-                        />
-                      </div>
+                    {/* Dynamic Sub-tab Folders */}
+                    {documents.length > 0 && (
+                      <div className="flex gap-1.5 overflow-x-auto pb-1.5 scrollbar-none font-bold text-[9px] select-none">
+                        {Array.from(new Set(['Todos', ...documents.map(d => d.category)])).filter(Boolean).map((cat) => {
+                          const count = cat === 'Todos' 
+                            ? documents.length 
+                            : documents.filter(d => d.category === cat).length
+                          
+                          const isActive = selectedDocCategoryTab === cat
 
-                      <div className="grid grid-cols-2 gap-3 items-end">
-                        <div className="flex flex-col gap-1">
-                          <label className="text-[10px] font-bold text-[#70518d] uppercase tracking-wider pl-0.5 select-none">
-                            Categoria
-                          </label>
-                          <select
-                            value={docCategory}
-                            onChange={(e) => {
-                              if (e.target.value === '__add_new__') {
-                                setShowCustomCategoryForm(true)
-                                setDocCategory('')
-                              } else {
-                                setShowCustomCategoryForm(false)
-                                setDocCategory(e.target.value)
-                              }
-                            }}
-                            className="h-10 px-3 rounded-xl border border-purple-100/40 text-xs font-semibold focus:outline-none focus:border-[#70518d] bg-white w-full"
-                          >
-                            {getAvailableCategories().map((cat) => (
-                              <option key={cat} value={cat}>{cat}</option>
-                            ))}
-                            <option value="__add_new__">+ Adicionar Nova Categoria...</option>
-                          </select>
-                        </div>
-
-                        <button
-                          type="submit"
-                          className="h-10 bg-[#70518d] text-white rounded-xl font-bold hover:bg-[#573974] transition-colors shadow-sm text-xs active:scale-95 flex items-center justify-center gap-1.5"
-                        >
-                          <Plus className="w-4 h-4" />
-                          Adicionar
-                        </button>
-                      </div>
-
-                      {showCustomCategoryForm && (
-                        <div className="flex flex-col gap-1 bg-[#fff7fd]/60 p-3 rounded-xl border border-purple-100/20 mt-1">
-                          <label className="text-[9px] font-bold text-[#70518d] uppercase tracking-wider pl-0.5 select-none flex justify-between">
-                            <span>Nova Categoria Customizada</span>
+                          return (
                             <button
+                              key={cat}
                               type="button"
-                              onClick={() => {
-                                setShowCustomCategoryForm(false)
-                                setDocCategory('Exame Complementar')
-                                setCustomCategoryInput('')
-                              }}
-                              className="text-red-500 hover:text-red-700 font-extrabold text-[9px] uppercase tracking-normal"
+                              onClick={() => setSelectedDocCategoryTab(cat)}
+                              className={`px-3 py-1.5 rounded-full border whitespace-nowrap transition-all active:scale-95 flex items-center gap-1 ${
+                                isActive
+                                  ? 'bg-[#70518d] border-transparent text-white shadow-sm'
+                                  : 'bg-[#fff7fd]/40 border-purple-100/20 text-[#795465] hover:bg-purple-50'
+                              }`}
                             >
-                              Cancelar
+                              <span className="material-symbols-outlined text-[10px]" style={{ fontVariationSettings: isActive ? "'FILL' 1" : "'FILL' 0" }}>folder</span>
+                              <span>{cat}</span>
+                              <span className={`px-1.5 py-0.2 rounded-full text-[8px] ${
+                                isActive ? 'bg-white/20 text-white' : 'bg-purple-100/50 text-[#70518d]'
+                              }`}>
+                                {count}
+                              </span>
                             </button>
-                          </label>
-                          <div className="flex gap-2 mt-1">
-                            <input 
-                              type="text"
-                              required
-                              value={customCategoryInput}
-                              onChange={(e) => setCustomCategoryInput(e.target.value)}
-                              placeholder="Ex: Hemograma, Raio X, Ultrassom..."
-                              className="h-9 px-3 rounded-lg border border-purple-100/40 text-xs font-semibold focus:outline-none focus:border-[#70518d] bg-white w-full"
-                            />
-                            <button
-                              type="button"
-                              onClick={() => {
-                                if (customCategoryInput.trim()) {
-                                  const cleanCat = customCategoryInput.trim()
-                                  if (!dynamicCategories.includes(cleanCat)) {
-                                    setDynamicCategories([...dynamicCategories, cleanCat])
-                                  }
-                                  setDocCategory(cleanCat)
-                                  setShowCustomCategoryForm(false)
-                                  setCustomCategoryInput('')
-                                } else {
-                                  setShowCustomCategoryForm(false)
-                                  setDocCategory('Exame Complementar')
-                                }
-                              }}
-                              className="px-3.5 h-9 bg-[#70518d] text-white rounded-lg font-bold hover:bg-[#573974] transition-colors text-xs active:scale-95 flex items-center justify-center"
-                            >
-                              Ok
-                            </button>
-                          </div>
-                        </div>
-                      )}
-                    </form>
+                          )
+                        })}
+                      </div>
+                    )}
 
                     {/* Documents List */}
-                    <div className="mt-2.5 pt-3 border-t border-purple-100/10 flex flex-col gap-3">
-                      <div className="flex justify-between items-center pl-0.5">
-                        <label className="text-[10px] font-bold text-[#70518d] uppercase tracking-wider select-none">
-                          Documentos Cadastrados
-                        </label>
-                        <span className="text-[9px] bg-purple-50 text-[#70518d] px-1.5 py-0.2 rounded border border-purple-100/20 font-bold select-none">
-                          {documents.length} no total
-                        </span>
-                      </div>
-
-                      {/* Dynamic Sub-tab Folders */}
-                      {documents.length > 0 && (
-                        <div className="flex gap-1.5 overflow-x-auto pb-1.5 scrollbar-none font-bold text-[9px] select-none">
-                          {Array.from(new Set(['Todos', ...documents.map(d => d.category)])).filter(Boolean).map((cat) => {
-                            const count = cat === 'Todos' 
-                              ? documents.length 
-                              : documents.filter(d => d.category === cat).length
-                            
-                            const isActive = selectedDocCategoryTab === cat
-
-                            return (
-                              <button
-                                key={cat}
-                                type="button"
-                                onClick={() => setSelectedDocCategoryTab(cat)}
-                                className={`px-3 py-1.5 rounded-full border whitespace-nowrap transition-all active:scale-95 flex items-center gap-1 ${
-                                  isActive
-                                    ? 'bg-[#70518d] border-transparent text-white shadow-sm'
-                                    : 'bg-[#fff7fd]/40 border-purple-100/20 text-[#795465] hover:bg-purple-50'
-                                }`}
-                              >
-                                <span className="material-symbols-outlined text-[10px]" style={{ fontVariationSettings: isActive ? "'FILL' 1" : "'FILL' 0" }}>folder</span>
-                                <span>{cat}</span>
-                                <span className={`px-1.5 py-0.2 rounded-full text-[8px] ${
-                                  isActive ? 'bg-white/20 text-white' : 'bg-purple-100/50 text-[#70518d]'
-                                }`}>
-                                  {count}
-                                </span>
-                              </button>
-                            )
-                          })}
-                        </div>
-                      )}
-
+                    <div className="flex flex-col gap-2.5">
                       {documents.length > 0 ? (
-                        <div className="flex flex-col gap-2.5">
-                          {documents
-                            .filter(doc => selectedDocCategoryTab === 'Todos' || doc.category === selectedDocCategoryTab)
-                            .map((doc) => (
-                              <div 
-                                key={doc.id}
-                                className="p-3.5 bg-[#fff7fd]/40 border border-purple-100/20 rounded-xl flex items-center justify-between gap-3 shadow-sm"
-                              >
-                                <div className="min-w-0">
-                                  <h4 className="font-extrabold text-xs text-[#1d1b1f] truncate flex items-center gap-1.5">
-                                    <span className="material-symbols-outlined text-[#70518d] text-sm select-none">description</span>
-                                    {doc.name}
-                                  </h4>
-                                  <p className="text-[9px] text-[#795465] font-semibold mt-0.5 flex items-center gap-2">
-                                    <span className="bg-purple-100/50 text-[#70518d] px-1.5 py-0.2 rounded border border-purple-100/20 text-[8px] uppercase font-bold tracking-wider">{doc.category}</span>
-                                    <span>•</span>
-                                    <span>{formatDate(doc.created_at)}</span>
-                                  </p>
-                                  <a 
-                                    href={doc.file_url} 
-                                    target="_blank" 
-                                    rel="noopener noreferrer"
-                                    className="text-[9px] text-[#70518d] font-bold hover:underline mt-1 inline-flex items-center gap-1"
-                                  >
-                                    Ver Documento Original ↗
-                                  </a>
-                                </div>
-
-                                <button
-                                  onClick={() => handleDeleteDocumentClick(doc)}
-                                  className="p-2 rounded-full hover:bg-red-50 text-slate-400 hover:text-red-600 transition-colors"
-                                  title="Excluir documento de forma segura"
+                        documents
+                          .filter(doc => selectedDocCategoryTab === 'Todos' || doc.category === selectedDocCategoryTab)
+                          .map((doc) => (
+                            <div 
+                              key={doc.id}
+                              className="p-3.5 bg-[#fff7fd]/40 border border-purple-100/20 rounded-xl flex items-center justify-between gap-3 shadow-sm"
+                            >
+                              <div className="min-w-0">
+                                <h4 className="font-extrabold text-xs text-[#1d1b1f] truncate flex items-center gap-1.5">
+                                  <span className="material-symbols-outlined text-[#70518d] text-sm select-none">description</span>
+                                  {doc.name}
+                                </h4>
+                                <p className="text-[9px] text-[#795465] font-semibold mt-0.5 flex items-center gap-2">
+                                  <span className="bg-purple-100/50 text-[#70518d] px-1.5 py-0.2 rounded border border-purple-100/20 text-[8px] uppercase font-bold tracking-wider">{doc.category}</span>
+                                  <span>•</span>
+                                  <span>{formatDate(doc.created_at)}</span>
+                                </p>
+                                <a 
+                                  href={doc.file_url} 
+                                  target="_blank" 
+                                  rel="noopener noreferrer"
+                                  className="text-[9px] text-[#70518d] font-bold hover:underline mt-1 inline-flex items-center gap-1"
                                 >
-                                  <span className="material-symbols-outlined text-base">delete</span>
-                                </button>
+                                  Ver Documento Original ↗
+                                </a>
                               </div>
-                            ))}
-                        </div>
+
+                              <button
+                                onClick={() => handleDeleteDocumentClick(doc)}
+                                className="p-2 rounded-full hover:bg-red-50 text-slate-400 hover:text-red-600 transition-colors"
+                                title="Excluir documento de forma segura"
+                              >
+                                <span className="material-symbols-outlined text-base">delete</span>
+                              </button>
+                            </div>
+                          ))
                       ) : (
                         <div className="py-6 text-center border border-dashed border-purple-100/30 rounded-xl text-slate-400 flex flex-col items-center gap-1.5 select-none">
                           <span className="material-symbols-outlined text-xl">folder_zip</span>
                           <p className="text-[10px] font-bold text-[#1d1b1f]">Nenhum exame cadastrado</p>
                           <p className="text-[8px] text-[#795465] max-w-[180px] leading-normal">
-                            Nenhum documento ou exame complementar cadastrado para esta paciente.
+                            Nenhum documento ou exame complementar cadastrado para esta paciente nesta pasta.
                           </p>
                         </div>
                       )}
+                    </div>
+
+                    {/* New Document Addition Form - ALWAYS visible directly below the list of saved documents */}
+                    <div className="mt-4 pt-4 border-t border-dashed border-purple-100/30">
+                      <div className="flex items-center gap-1.5 mb-3 pl-0.5 select-none">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <h4 className="text-[9px] font-bold text-[#70518d] uppercase tracking-wider">
+                          Adicionar Novo Documento / Exame
+                        </h4>
+                      </div>
+
+                      <form onSubmit={handleSaveDocument} className="flex flex-col gap-3">
+                        <div className="flex flex-col gap-1">
+                          <label className="text-[10px] font-bold text-[#70518d] uppercase tracking-wider pl-0.5 select-none">
+                            Nome do Documento / Exame
+                          </label>
+                          <input 
+                            type="text"
+                            required
+                            value={docName}
+                            onChange={(e) => setDocName(e.target.value)}
+                            placeholder="Ex: Ultrassonografia Pélvica, Ressonância..."
+                            className="h-10 px-3 rounded-xl border border-purple-100/40 text-xs font-semibold focus:outline-none focus:border-[#70518d] w-full bg-white shadow-sm"
+                          />
+                        </div>
+
+                        <div className="flex flex-col gap-1">
+                          <label className="text-[10px] font-bold text-[#70518d] uppercase tracking-wider pl-0.5 select-none">
+                            Link do Documento (Imagem/PDF/Arquivo)
+                          </label>
+                          <input 
+                            type="text"
+                            required
+                            value={docUrl}
+                            onChange={(e) => setDocUrl(e.target.value)}
+                            placeholder="Ex: https://link-exame.com/ultrassonografia.png"
+                            className="h-10 px-3 rounded-xl border border-purple-100/40 text-xs font-semibold focus:outline-none focus:border-[#70518d] w-full bg-white shadow-sm"
+                          />
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-3 items-end">
+                          <div className="flex flex-col gap-1">
+                            <label className="text-[10px] font-bold text-[#70518d] uppercase tracking-wider pl-0.5 select-none">
+                              Categoria
+                            </label>
+                            <select
+                              value={docCategory}
+                              onChange={(e) => {
+                                if (e.target.value === '__add_new__') {
+                                  setShowCustomCategoryForm(true)
+                                  setDocCategory('')
+                                } else {
+                                  setShowCustomCategoryForm(false)
+                                  setDocCategory(e.target.value)
+                                }
+                              }}
+                              className="h-10 px-3 rounded-xl border border-purple-100/40 text-xs font-semibold focus:outline-none focus:border-[#70518d] bg-white w-full shadow-sm"
+                            >
+                              {getAvailableCategories().map((cat) => (
+                                <option key={cat} value={cat}>{cat}</option>
+                              ))}
+                              <option value="__add_new__">+ Adicionar Nova Categoria...</option>
+                            </select>
+                          </div>
+
+                          <button
+                            type="submit"
+                            className="h-10 bg-[#70518d] text-white rounded-xl font-bold hover:bg-[#573974] transition-colors shadow-md text-xs active:scale-95 flex items-center justify-center gap-1.5"
+                          >
+                            <Plus className="w-4 h-4" />
+                            Salvar Exame
+                          </button>
+                        </div>
+
+                        {showCustomCategoryForm && (
+                          <div className="flex flex-col gap-1 bg-[#fff7fd]/60 p-3 rounded-xl border border-purple-100/20 mt-1">
+                            <label className="text-[9px] font-bold text-[#70518d] uppercase tracking-wider pl-0.5 select-none flex justify-between">
+                              <span>Nova Categoria Customizada</span>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setShowCustomCategoryForm(false)
+                                  setDocCategory('Exame Complementar')
+                                  setCustomCategoryInput('')
+                                }}
+                                className="text-red-500 hover:text-red-700 font-extrabold text-[9px] uppercase tracking-normal"
+                              >
+                                Cancelar
+                              </button>
+                            </label>
+                            <div className="flex gap-2 mt-1">
+                              <input 
+                                type="text"
+                                required
+                                value={customCategoryInput}
+                                onChange={(e) => setCustomCategoryInput(e.target.value)}
+                                placeholder="Ex: Hemograma, Raio X, Ultrassom..."
+                                className="h-9 px-3 rounded-lg border border-purple-100/40 text-xs font-semibold focus:outline-none focus:border-[#70518d] bg-white w-full"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  if (customCategoryInput.trim()) {
+                                    const cleanCat = customCategoryInput.trim()
+                                    if (!dynamicCategories.includes(cleanCat)) {
+                                      setDynamicCategories([...dynamicCategories, cleanCat])
+                                    }
+                                    setDocCategory(cleanCat)
+                                    setShowCustomCategoryForm(false)
+                                    setCustomCategoryInput('')
+                                  } else {
+                                    setShowCustomCategoryForm(false)
+                                    setDocCategory('Exame Complementar')
+                                  }
+                                }}
+                                className="px-3.5 h-9 bg-[#70518d] text-white rounded-lg font-bold hover:bg-[#573974] transition-colors text-xs active:scale-95 flex items-center justify-center"
+                              >
+                                Ok
+                              </button>
+                            </div>
+                          </div>
+                        )}
+                      </form>
                     </div>
                   </div>
                 </section>
