@@ -314,7 +314,7 @@ export default function TherapistAgenda() {
                   }`}
                 >
                   <Calendar className="w-3.5 h-3.5" />
-                  <span>{showMonthCalendar ? 'Fechar Calendário' : 'Escolher Dia'}</span>
+                  <span>Escolher Dia</span>
                 </button>
               </div>
 
