@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { Loader2, Mic, ArrowLeft, Video, Phone, Send, Plus, Sparkles, ChevronRight, MessageSquare, Users, Check } from 'lucide-react'
 import { supabase } from '../../../lib/supabaseClient'
+import { useToast } from '../../../components/Toast'
 
 interface Message {
   id: string
@@ -25,6 +26,7 @@ interface Patient {
 
 export default function TherapistChat() {
   const router = useRouter()
+  const { showError } = useToast()
   
   const [loading, setLoading] = useState(true)
   const [therapistProfile, setTherapistProfile] = useState<any>(null)
@@ -325,7 +327,7 @@ export default function TherapistChat() {
       }
     } catch (err: any) {
       console.error('Erro ao enviar mensagem:', err)
-      alert(`Erro ao enviar mensagem: ${err.message}`)
+      showError(`Erro ao enviar mensagem: ${err.message}`)
     }
   }
 

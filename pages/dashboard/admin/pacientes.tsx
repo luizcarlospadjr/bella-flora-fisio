@@ -3,6 +3,7 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { Search, Edit2, Check, X, ShieldAlert, ArrowLeft, Users, ArrowRightLeft, Loader2 } from 'lucide-react'
 import { supabase } from '../../../lib/supabaseClient'
+import { useToast } from '../../../components/Toast'
 
 interface Patient {
   id: string
@@ -82,6 +83,7 @@ const mockPatients: Patient[] = [
 
 export default function AdminPatients() {
   const [patients, setPatients] = useState<Patient[]>([])
+  const { showSuccess, showError, showWarning } = useToast()
   const [therapistsList, setTherapistsList] = useState<TherapistOption[]>([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
@@ -207,7 +209,7 @@ export default function AdminPatients() {
 
       if (isTransfer) {
         if (!justification.trim()) {
-          alert('Por favor, informe a justificativa para a transferência ética do paciente.')
+          showWarning('Por favor, informe a justificativa para a transferência ética do paciente.')
           return
         }
 
@@ -263,7 +265,7 @@ export default function AdminPatients() {
               : p
           ))
         }
-        alert('Solicitação de transferência ética enviada com sucesso ao fisioterapeuta responsável!')
+        showSuccess('Solicitação de transferência ética enviada com sucesso ao fisioterapeuta responsável!')
       } else {
         // Direct assignment (patient has no previous therapist, or therapist was cleared, or same therapist)
         if (!isMock) {
@@ -300,7 +302,7 @@ export default function AdminPatients() {
       setJustification('')
     } catch (err) {
       console.error('Erro ao salvar alterações do paciente:', err)
-      alert('Erro ao salvar alterações do paciente.')
+      showError('Erro ao salvar alterações do paciente.')
     }
   }
 

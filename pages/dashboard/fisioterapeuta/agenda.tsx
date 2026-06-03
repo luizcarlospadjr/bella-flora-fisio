@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { Loader2, ArrowLeft, Calendar, Clock, Check, X, User, Sparkles, Phone, MessageSquare, AlertTriangle, CheckCircle2, ChevronRight, RefreshCw, ClipboardList } from 'lucide-react'
 import { supabase } from '../../../lib/supabaseClient'
+import { useToast } from '../../../components/Toast'
 
 interface Patient {
   id: string
@@ -31,6 +32,7 @@ const timeSlots = ['08:00', '09:30', '14:00', '16:30', '18:00']
 
 export default function TherapistAgenda() {
   const router = useRouter()
+  const { showError } = useToast()
   
   const [loading, setLoading] = useState(true)
   const [therapist, setTherapist] = useState<any>(null)
@@ -116,7 +118,7 @@ export default function TherapistAgenda() {
       )
     } catch (err) {
       console.error('Erro ao atualizar status da consulta:', err)
-      alert('Erro ao atualizar o status do atendimento. Tente novamente.')
+      showError('Erro ao atualizar o status do atendimento. Tente novamente.')
     } finally {
       setActionLoading(null)
     }

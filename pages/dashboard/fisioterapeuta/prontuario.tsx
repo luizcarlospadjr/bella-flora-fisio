@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { Loader2, ArrowLeft, Search, Plus, Save, MessageSquare, Award, Clock, Sparkles, X, ChevronRight, Check, Users } from 'lucide-react'
 import { supabase } from '../../../lib/supabaseClient'
+import { useToast } from '../../../components/Toast'
 
 interface PrescribedExercise {
   id: string
@@ -41,6 +42,7 @@ interface PatientProfile {
 
 export default function TherapistProntuario() {
   const router = useRouter()
+  const { showSuccess, showError, showWarning } = useToast()
   const { patient_id } = router.query
 
   const [loading, setLoading] = useState(true)
@@ -447,7 +449,7 @@ export default function TherapistProntuario() {
       router.push(`/dashboard/fisioterapeuta/prontuario?patient_id=${patientId}`)
     } catch (err) {
       console.error('Erro ao vincular paciente:', err)
-      alert('Erro ao vincular paciente. Tente novamente.')
+      showError('Erro ao vincular paciente. Tente novamente.')
     } finally {
       setLinkingId(null)
     }
@@ -487,7 +489,7 @@ export default function TherapistProntuario() {
         setShowAddModal(false)
       }
     } catch (err) {
-      alert('Erro ao salvar evolução')
+      showError('Erro ao salvar evolução')
       console.error(err)
     } finally {
       setLoading(false)
@@ -518,7 +520,7 @@ export default function TherapistProntuario() {
       setRecords(records.map(r => r.id === id ? { ...r, evolution_notes: editText, afa_score: editAfa } : r))
       setEditingRecordId(null)
     } catch (err) {
-      alert('Erro ao salvar edições')
+      showError('Erro ao salvar edições')
       console.error(err)
     } finally {
       setLoading(false)
@@ -661,7 +663,7 @@ export default function TherapistProntuario() {
       setSaveSuccess(true)
       setTimeout(() => setSaveSuccess(false), 3000)
     } catch (err) {
-      alert('Erro ao salvar plano de exercícios')
+      showError('Erro ao salvar plano de exercícios')
       console.error(err)
     } finally {
       setLoading(false)
@@ -689,7 +691,7 @@ export default function TherapistProntuario() {
       setPlanSaveSuccess(true)
       setTimeout(() => setPlanSaveSuccess(false), 3000)
     } catch (err) {
-      alert('Erro ao salvar plano de tratamento clínico')
+      showError('Erro ao salvar plano de tratamento clínico')
       console.error(err)
     } finally {
       setLoading(false)
@@ -715,7 +717,7 @@ export default function TherapistProntuario() {
       setHistorySaveSuccess(true)
       setTimeout(() => setHistorySaveSuccess(false), 3000)
     } catch (err) {
-      alert('Erro ao salvar histórico clínico')
+      showError('Erro ao salvar histórico clínico')
       console.error(err)
     } finally {
       setLoading(false)
@@ -762,7 +764,7 @@ export default function TherapistProntuario() {
         setTimeout(() => setDocSaveSuccess(false), 3000)
       }
     } catch (err) {
-      alert('Erro ao salvar documento complementar')
+      showError('Erro ao salvar documento complementar')
       console.error(err)
     } finally {
       setLoading(false)
@@ -786,7 +788,7 @@ export default function TherapistProntuario() {
       })
 
       if (authError) {
-        alert('Senha incorreta! Não foi possível excluir o documento de forma segura.')
+        showError('Senha incorreta! Não foi possível excluir o documento de forma segura.')
         setIsDeletingDoc(false)
         return
       }
@@ -802,9 +804,9 @@ export default function TherapistProntuario() {
       setShowDeleteConfirmModal(false)
       setDocToDelete(null)
       setConfirmPassword('')
-      alert('Documento complementar excluído com sucesso!')
+      showSuccess('Documento complementar excluído com sucesso!')
     } catch (err) {
-      alert('Erro ao excluir documento complementar')
+      showError('Erro ao excluir documento complementar')
       console.error(err)
     } finally {
       setIsDeletingDoc(false)
@@ -828,7 +830,7 @@ export default function TherapistProntuario() {
       })
 
       if (authError) {
-        alert('Senha incorreta! Não foi possível excluir a evolução de forma segura.')
+        showError('Senha incorreta! Não foi possível excluir a evolução de forma segura.')
         setIsDeletingRecord(false)
         return
       }
@@ -845,9 +847,9 @@ export default function TherapistProntuario() {
       setRecordToDelete(null)
       setConfirmRecordPassword('')
       setEditingRecordId(null)
-      alert('Evolução clínica excluída com sucesso!')
+      showSuccess('Evolução clínica excluída com sucesso!')
     } catch (err) {
-      alert('Erro ao excluir evolução clínica')
+      showError('Erro ao excluir evolução clínica')
       console.error(err)
     } finally {
       setIsDeletingRecord(false)

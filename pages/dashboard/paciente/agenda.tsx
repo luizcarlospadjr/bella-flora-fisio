@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { ArrowLeft, ChevronLeft, ChevronRight, Loader2, Sparkles, Check, ShieldAlert } from 'lucide-react'
 import { supabase } from '../../../lib/supabaseClient'
+import { useToast } from '../../../components/Toast'
 
 interface TherapistProfile {
   id: string
@@ -27,6 +28,7 @@ const timeSlots = ['08:00', '09:30', '14:00', '16:30', '18:00']
 
 export default function PatientAgenda() {
   const router = useRouter()
+  const { showError } = useToast()
   const [currentUser, setCurrentUser] = useState<any>(null)
   const [therapists, setTherapists] = useState<TherapistProfile[]>([])
   const [selectedTherapist, setSelectedTherapist] = useState<TherapistProfile | null>(null)
@@ -290,7 +292,7 @@ export default function PatientAgenda() {
 
     } catch (err) {
       console.error('Erro ao salvar agendamento:', err)
-      alert('Ocorreu um erro ao realizar seu agendamento. Por favor, tente novamente.')
+      showError('Ocorreu um erro ao realizar seu agendamento. Por favor, tente novamente.')
       setSubmitting(false)
     }
   }

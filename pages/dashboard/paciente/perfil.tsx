@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { ArrowLeft, Loader2, Save, User, Phone, Mail, Award, Sparkles, Check } from 'lucide-react'
 import { supabase } from '../../../lib/supabaseClient'
+import { useToast } from '../../../components/Toast'
 
 const PRESET_AVATARS = [
   '/assets/img/mariana_silva.png',
@@ -15,6 +16,7 @@ const PRESET_AVATARS = [
 
 export default function PatientProfilePage() {
   const router = useRouter()
+  const { showError } = useToast()
   const [currentUser, setCurrentUser] = useState<any>(null)
   const [profile, setProfile] = useState<any>(null)
   
@@ -90,7 +92,7 @@ export default function PatientProfilePage() {
 
     } catch (err) {
       console.error('Erro ao salvar perfil:', err)
-      alert('Ocorreu um erro ao atualizar seu perfil. Por favor, tente novamente.')
+      showError('Ocorreu um erro ao atualizar seu perfil. Por favor, tente novamente.')
     } finally {
       setSaving(false)
     }

@@ -68,9 +68,11 @@ const mockTherapists: Therapist[] = [
 ]
 
 import { supabase } from '../../../lib/supabaseClient'
+import { useToast } from '../../../components/Toast'
 
 export default function AdminTherapists() {
   const [therapists, setTherapists] = useState<Therapist[]>(mockTherapists)
+  const { showError } = useToast()
   const [searchQuery, setSearchQuery] = useState('')
   const [showAddModal, setShowAddModal] = useState(false)
   const [showEditModal, setShowEditModal] = useState(false)
@@ -278,7 +280,7 @@ export default function AdminTherapists() {
       setActiveTherapist(null)
     } catch (err) {
       console.error("Erro ao atualizar terapeuta:", err)
-      alert("Erro ao salvar alterações do terapeuta.")
+      showError("Erro ao salvar alterações do terapeuta.")
     }
   }
 

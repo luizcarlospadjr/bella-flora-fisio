@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { ClipboardList, Calendar, Users, MessageSquare, LogOut, Loader2, Sparkles, Plus, ChevronRight, Check, X } from 'lucide-react'
 import { supabase } from '../../lib/supabaseClient'
+import { useToast } from '../../components/Toast'
 
 export default function TherapistDashboard() {
   const router = useRouter()
@@ -14,6 +15,7 @@ export default function TherapistDashboard() {
   const [prescriptionsCount, setPrescriptionsCount] = useState(0)
   const [unreadCount, setUnreadCount] = useState(0)
   const [pendingTransfers, setPendingTransfers] = useState<any[]>([])
+  const { showSuccess, showError, showWarning } = useToast()
 
   useEffect(() => {
     let messagesSub: any = null
@@ -181,7 +183,7 @@ export default function TherapistDashboard() {
   const handleApproveTransfer = async (transferId: string, patientId: string, targetTherapistId: string) => {
     try {
       if (transferId.startsWith('tx_mock_')) {
-        alert('Transferência simulada aprovada com sucesso!')
+        showSuccess('Transferência simulada aprovada com sucesso!')
         setPendingTransfers(prev => prev.filter(t => t.id !== transferId))
         setPatientsCount(prev => Math.max(0, prev - 1))
         return
@@ -203,21 +205,21 @@ export default function TherapistDashboard() {
 
       if (profileError) throw profileError
 
-      alert('Transferência aprovada com sucesso!')
+      showSuccess('Transferência aprovada com sucesso!')
 
       // Remove from list and update metrics
       setPendingTransfers(prev => prev.filter(t => t.id !== transferId))
       setPatientsCount(prev => Math.max(0, prev - 1))
     } catch (err) {
       console.error('Erro ao aprovar transferência:', err)
-      alert('Ocorreu um erro ao aprovar a transferência.')
+      showError('Ocorreu um erro ao aprovar a transferência.')
     }
   }
 
   const handleRejectTransfer = async (transferId: string) => {
     try {
       if (transferId.startsWith('tx_mock_')) {
-        alert('Transferência simulada recusada.')
+        showWarning('Transferência simulada recusada.')
         setPendingTransfers(prev => prev.filter(t => t.id !== transferId))
         return
       }
@@ -230,13 +232,13 @@ export default function TherapistDashboard() {
 
       if (txError) throw txError
 
-      alert('Transferência recusada.')
+      showWarning('Transferência recusada.')
 
       // Remove from list
       setPendingTransfers(prev => prev.filter(t => t.id !== transferId))
     } catch (err) {
       console.error('Erro ao recusar transferência:', err)
-      alert('Ocorreu um erro ao recusar a transferência.')
+      showError('Ocorreu um erro ao recusar a transferência.')
     }
   }
 
