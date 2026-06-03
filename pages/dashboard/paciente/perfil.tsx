@@ -319,7 +319,7 @@ export default function PatientProfilePage() {
               className="flex flex-col items-center justify-center text-[#795465] hover:text-[#70518d] shrink-0"
             >
               <span className="material-symbols-outlined text-lg mb-1">medical_services</span>
-              <span className="text-[9px] font-semibold">Tratamento</span>
+              <span className="text-[9px] font-semibold">Rotina em Casa</span>
             </Link>
             
             <Link 

@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
-import { Search, Edit2, Check, X, ShieldAlert, ArrowLeft, Users, ArrowRightLeft } from 'lucide-react'
+import { Search, Edit2, Check, X, ShieldAlert, ArrowLeft, Users, ArrowRightLeft, Loader2 } from 'lucide-react'
+import { supabase } from '../../../lib/supabaseClient'
 
 interface Patient {
   id: string
@@ -11,6 +12,12 @@ interface Patient {
   therapistId: string
   therapistName: string
   registrationDate: string
+  pendingTransfer?: {
+    id: string
+    targetTherapistId: string
+    targetTherapistName: string
+    justification: string
+  }
 }
 
 interface TherapistOption {
@@ -74,7 +81,9 @@ const mockPatients: Patient[] = [
 ]
 
 export default function AdminPatients() {
-  const [patients, setPatients] = useState<Patient[]>(mockPatients)
+  const [patients, setPatients] = useState<Patient[]>([])
+  const [therapistsList, setTherapistsList] = useState<TherapistOption[]>([])
+  const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
   const [showEditModal, setShowEditModal] = useState(false)
   const [activePatient, setActivePatient] = useState<Patient | null>(null)
@@ -84,6 +93,88 @@ export default function AdminPatients() {
   const [editPhone, setEditPhone] = useState('')
   const [editStatus, setEditStatus] = useState<'active' | 'discharged' | 'inactive'>('active')
   const [editTherapistId, setEditTherapistId] = useState('')
+  const [justification, setJustification] = useState('')
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        setLoading(true)
+        
+        // 1. Fetch real therapists
+        const { data: dbTherapists, error: therError } = await supabase
+          .from('profiles')
+          .select('id, full_name')
+          .eq('role', 'therapist')
+
+        if (therError) throw therError
+
+        const realTherapists: TherapistOption[] = (dbTherapists || []).map(t => ({
+          id: t.id,
+          name: t.full_name || 'Fisioterapeuta Sem Nome'
+        }))
+
+        const mergedTherapists = [
+          ...realTherapists,
+          ...activeTherapists.filter(mt => !realTherapists.some(rt => rt.id === mt.id || rt.name.toLowerCase() === mt.name.toLowerCase()))
+        ]
+        setTherapistsList(mergedTherapists)
+
+        // 2. Fetch pending transfer requests
+        const { data: dbTransfers } = await supabase
+          .from('transfer_requests')
+          .select('*')
+          .eq('status', 'pending')
+
+        // 3. Fetch real patients
+        const { data: dbProfiles, error: patError } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('role', 'patient')
+
+        if (patError) throw patError
+
+        const dbPatients: Patient[] = (dbProfiles || []).map(p => {
+          const therapist = mergedTherapists.find(t => t.id === p.therapist_id)
+          const pendingTransfer = (dbTransfers || []).find(t => t.patient_id === p.id)
+          
+          let mappedPending = undefined
+          if (pendingTransfer) {
+            const targetTherapistName = mergedTherapists.find(t => t.id === pendingTransfer.target_therapist_id)?.name || 'Fisioterapeuta'
+            mappedPending = {
+              id: pendingTransfer.id,
+              targetTherapistId: pendingTransfer.target_therapist_id,
+              targetTherapistName,
+              justification: pendingTransfer.justification
+            }
+          }
+
+          return {
+            id: p.id,
+            name: p.full_name || 'Paciente Novo',
+            phone: p.phone || 'Sem celular',
+            status: (p.status === 'discharged' || p.status === 'inactive') ? p.status : 'active',
+            therapistId: p.therapist_id || '',
+            therapistName: therapist ? therapist.name : 'Sem Fisioterapeuta',
+            registrationDate: p.created_at ? new Date(p.created_at).toLocaleDateString('pt-BR') : 'Recém-criado',
+            pendingTransfer: mappedPending
+          }
+        })
+
+        // Merge patients, avoiding duplicates with mock patients
+        const filteredMock = mockPatients.filter(mp => 
+          !dbPatients.some(dp => dp.name.toLowerCase() === mp.name.toLowerCase() || dp.id === mp.id)
+        )
+
+        setPatients([...dbPatients, ...filteredMock])
+      } catch (err) {
+        console.error('Erro ao buscar dados do painel:', err)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadData()
+  }, [])
 
   const filteredPatients = patients.filter(p => 
     p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -96,30 +187,121 @@ export default function AdminPatients() {
     setEditPhone(patient.phone)
     setEditStatus(patient.status)
     setEditTherapistId(patient.therapistId)
+    setJustification('')
     setShowEditModal(true)
   }
 
-  const handleEditPatient = (e: React.FormEvent) => {
+  const handleEditPatient = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!activePatient || !editName.trim()) return
 
-    const therapistName = activeTherapists.find(t => t.id === editTherapistId)?.name || 'Sem Terapeuta'
+    const therapistName = editTherapistId
+      ? (therapistsList.find(t => t.id === editTherapistId)?.name || 'Sem Fisioterapeuta')
+      : 'Sem Fisioterapeuta'
 
-    setPatients(patients.map(p => 
-      p.id === activePatient.id
-        ? {
-            ...p,
-            name: editName.trim(),
-            phone: editPhone.trim(),
-            status: editStatus,
-            therapistId: editTherapistId,
-            therapistName
-          }
-        : p
-    ))
+    // Check if it's an ethical transfer
+    const isTransfer = activePatient.therapistId && editTherapistId && activePatient.therapistId !== editTherapistId
 
-    setShowEditModal(false)
-    setActivePatient(null)
+    try {
+      const isMock = activePatient.id.startsWith('pat_')
+
+      if (isTransfer) {
+        if (!justification.trim()) {
+          alert('Por favor, informe a justificativa para a transferência ética do paciente.')
+          return
+        }
+
+        if (!isMock) {
+          // Insert transfer request in Supabase
+          const { data: insertData, error: txError } = await supabase
+            .from('transfer_requests')
+            .insert({
+              patient_id: activePatient.id,
+              current_therapist_id: activePatient.therapistId,
+              target_therapist_id: editTherapistId,
+              justification: justification.trim(),
+              status: 'pending'
+            })
+            .select()
+            .single()
+
+          if (txError) throw txError
+
+          // Update local state to show pending transfer in the UI
+          setPatients(patients.map(p => 
+            p.id === activePatient.id
+              ? {
+                  ...p,
+                  name: editName.trim(),
+                  phone: editPhone.trim(),
+                  status: editStatus,
+                  pendingTransfer: {
+                    id: insertData.id,
+                    targetTherapistId: editTherapistId,
+                    targetTherapistName: therapistName,
+                    justification: justification.trim()
+                  }
+                }
+              : p
+          ))
+        } else {
+          // Mock patient local sync
+          setPatients(patients.map(p => 
+            p.id === activePatient.id
+              ? {
+                  ...p,
+                  name: editName.trim(),
+                  phone: editPhone.trim(),
+                  status: editStatus,
+                  pendingTransfer: {
+                    id: 'tx_mock_' + Date.now(),
+                    targetTherapistId: editTherapistId,
+                    targetTherapistName: therapistName,
+                    justification: justification.trim()
+                  }
+                }
+              : p
+          ))
+        }
+        alert('Solicitação de transferência ética enviada com sucesso ao fisioterapeuta responsável!')
+      } else {
+        // Direct assignment (patient has no previous therapist, or therapist was cleared, or same therapist)
+        if (!isMock) {
+          const { error } = await supabase
+            .from('profiles')
+            .update({
+              full_name: editName.trim(),
+              phone: editPhone.trim(),
+              status: editStatus,
+              therapist_id: editTherapistId || null
+            })
+            .eq('id', activePatient.id)
+
+          if (error) throw error
+        }
+
+        setPatients(patients.map(p => 
+          p.id === activePatient.id
+            ? {
+                ...p,
+                name: editName.trim(),
+                phone: editPhone.trim(),
+                status: editStatus,
+                therapistId: editTherapistId,
+                therapistName,
+                pendingTransfer: undefined
+              }
+            : p
+        ))
+      }
+
+      setShowEditModal(false)
+      setActivePatient(null)
+      setJustification('')
+    } catch (err) {
+      console.error('Erro ao salvar alterações do paciente:', err)
+      alert('Erro ao salvar alterações do paciente.')
+    }
   }
 
   return (
@@ -171,76 +353,100 @@ export default function AdminPatients() {
               />
             </div>
 
-            {/* Patients list grid */}
             <div className="space-y-3.5">
-              {filteredPatients.map(pat => (
-                <div
-                  key={pat.id}
-                  className={`p-4 bg-white border rounded-2xl shadow-sm transition-all relative flex flex-col gap-3 ${
-                    pat.status === 'discharged'
-                      ? 'border-emerald-100 bg-emerald-50/5'
-                      : pat.status === 'inactive'
-                      ? 'border-red-50 bg-red-50/5 opacity-80'
-                      : 'border-purple-100/20 hover:border-[#70518d]/30'
-                  }`}
-                >
-                  <div className="flex justify-between items-start">
-                    <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-full bg-purple-50 text-[#70518d] font-bold text-xs flex items-center justify-center">
-                        {pat.name[0]}
-                      </div>
-                      <div>
-                        <h4 className="font-extrabold text-[#1d1b1f] text-sm flex items-center gap-1.5 flex-wrap">
-                          {pat.name}
-                          {pat.status === 'discharged' ? (
-                            <span className="inline-flex items-center px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-100 font-bold text-[8px] uppercase tracking-wider">
-                              Alta Médica
-                            </span>
-                          ) : pat.status === 'inactive' ? (
-                            <span className="inline-flex items-center px-1.5 py-0.5 rounded bg-red-50 text-red-600 border border-red-100 font-bold text-[8px] uppercase tracking-wider">
-                              Inativo
-                            </span>
-                          ) : (
-                            <span className="inline-flex items-center px-1.5 py-0.5 rounded bg-purple-50 text-[#70518d] border border-purple-100/30 font-bold text-[8px] uppercase tracking-wider">
-                              Ativo
-                            </span>
-                          )}
-                        </h4>
-                        <p className="text-[10px] text-[#795465] font-semibold">Contato: {pat.phone}</p>
-                      </div>
-                    </div>
-
-                    <button
-                      onClick={() => openEditModal(pat)}
-                      className="p-2 rounded-full hover:bg-purple-50 text-[#795465] hover:text-[#70518d] transition-colors"
+              {loading ? (
+                <div className="text-center py-12 bg-white border border-purple-100/20 rounded-2xl flex flex-col items-center justify-center gap-2.5">
+                  <Loader2 className="w-7 h-7 animate-spin text-[#70518d]" />
+                  <p className="text-[11px] font-bold text-[#795465]">Buscando pacientes...</p>
+                </div>
+              ) : (
+                <>
+                  {filteredPatients.map(pat => (
+                    <div
+                      key={pat.id}
+                      className={`p-4 bg-white border rounded-2xl shadow-sm transition-all relative flex flex-col gap-3 ${
+                        pat.status === 'discharged'
+                          ? 'border-emerald-100 bg-emerald-50/5'
+                          : pat.status === 'inactive'
+                          ? 'border-red-50 bg-red-50/5 opacity-80'
+                          : 'border-purple-100/20 hover:border-[#70518d]/30'
+                      }`}
                     >
-                      <Edit2 className="w-4 h-4" />
-                    </button>
-                  </div>
+                      <div className="flex justify-between items-start">
+                        <div className="flex items-center gap-2">
+                          <div className="w-8 h-8 rounded-full bg-purple-50 text-[#70518d] font-bold text-xs flex items-center justify-center">
+                            {pat.name[0]}
+                          </div>
+                          <div>
+                            <h4 className="font-extrabold text-[#1d1b1f] text-sm flex items-center gap-1.5 flex-wrap">
+                              {pat.name}
+                              {pat.status === 'discharged' ? (
+                                <span className="inline-flex items-center px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-100 font-bold text-[8px] uppercase tracking-wider">
+                                  Alta Médica
+                                </span>
+                              ) : pat.status === 'inactive' ? (
+                                <span className="inline-flex items-center px-1.5 py-0.5 rounded bg-red-50 text-red-600 border border-red-100 font-bold text-[8px] uppercase tracking-wider">
+                                  Inativo
+                                </span>
+                              ) : (
+                                <span className="inline-flex items-center px-1.5 py-0.5 rounded bg-purple-50 text-[#70518d] border border-purple-100/30 font-bold text-[8px] uppercase tracking-wider">
+                                  Ativo
+                                </span>
+                              )}
+                            </h4>
+                            <p className="text-[10px] text-[#795465] font-semibold">Contato: {pat.phone}</p>
+                          </div>
+                        </div>
 
-                  {/* Therapist assignment and metadata */}
-                  <div className="flex flex-col gap-2 border-t border-purple-100/10 pt-3 text-[10px] text-[#4b454e]">
-                    <div className="flex justify-between items-center">
-                      <span className="text-[#795465] font-semibold">Fisioterapeuta Responsável:</span>
-                      <span className="font-bold text-[#70518d] flex items-center gap-1 bg-[#70518d]/5 px-2 py-0.5 rounded border border-[#70518d]/10">
-                        <Users className="w-3.5 h-3.5 shrink-0" />
-                        {pat.therapistName}
-                      </span>
+                        <button
+                          onClick={() => openEditModal(pat)}
+                          className="p-2 rounded-full hover:bg-purple-50 text-[#795465] hover:text-[#70518d] transition-colors"
+                        >
+                          <Edit2 className="w-4 h-4" />
+                        </button>
+                      </div>
+
+                      {/* Therapist assignment and metadata */}
+                      <div className="flex flex-col gap-2 border-t border-purple-100/10 pt-3 text-[10px] text-[#4b454e]">
+                        <div className="flex justify-between items-center">
+                          <span className="text-[#795465] font-semibold">Fisioterapeuta Responsável:</span>
+                          <span className="font-bold text-[#70518d] flex items-center gap-1 bg-[#70518d]/5 px-2 py-0.5 rounded border border-[#70518d]/10">
+                            <Users className="w-3.5 h-3.5 shrink-0" />
+                            {pat.therapistName}
+                          </span>
+                        </div>
+
+                        <div className="flex justify-between items-center text-[9px] text-[#795465] font-semibold pt-1">
+                          <span>Data de Ingressão:</span>
+                          <span>{pat.registrationDate}</span>
+                        </div>
+
+                        {/* Pending Transfer Alert */}
+                        {pat.pendingTransfer && (
+                          <div className="mt-2 p-2.5 bg-amber-50/50 border border-amber-100 rounded-xl flex flex-col gap-1 text-[9px] text-amber-800 animate-pulse">
+                            <div className="flex items-center gap-1 font-bold">
+                              <span className="material-symbols-outlined text-[12px] leading-none">hourglass_empty</span>
+                              Transferência Ética Solicitada
+                            </div>
+                            <p className="font-semibold text-amber-900 leading-snug">
+                              Aguardando consentimento da {pat.therapistName} para transferir para a <strong>{pat.pendingTransfer.targetTherapistName}</strong>.
+                            </p>
+                            <p className="italic text-[8px] bg-white/70 p-1.5 rounded border border-amber-100/50 mt-0.5 text-amber-800">
+                              Justificativa: "{pat.pendingTransfer.justification}"
+                            </p>
+                          </div>
+                        )}
+                      </div>
                     </div>
+                  ))}
 
-                    <div className="flex justify-between items-center text-[9px] text-[#795465] font-semibold pt-1">
-                      <span>Data de Ingressão:</span>
-                      <span>{pat.registrationDate}</span>
+                  {filteredPatients.length === 0 && (
+                    <div className="text-center py-10 bg-white border border-purple-100/20 rounded-2xl">
+                      <ShieldAlert className="w-8 h-8 mx-auto text-[#795465] opacity-50 mb-2" />
+                      <p className="text-xs font-semibold text-[#795465]">Nenhum paciente encontrado.</p>
                     </div>
-                  </div>
-                </div>
-              ))}
-
-              {filteredPatients.length === 0 && (
-                <div className="text-center py-10 bg-white border border-purple-100/20 rounded-2xl">
-                  <ShieldAlert className="w-8 h-8 mx-auto text-[#795465] opacity-50 mb-2" />
-                  <p className="text-xs font-semibold text-[#795465]">Nenhum paciente encontrado.</p>
-                </div>
+                  )}
+                </>
               )}
             </div>
           </main>
@@ -289,11 +495,30 @@ export default function AdminPatients() {
                       onChange={e => setEditTherapistId(e.target.value)}
                       className="w-full h-10 px-3 border border-purple-100/30 rounded-xl text-xs bg-white focus:outline-none focus:border-[#70518d]"
                     >
-                      {activeTherapists.map(t => (
+                      <option value="">Sem Fisioterapeuta</option>
+                      {therapistsList.map(t => (
                         <option key={t.id} value={t.id}>{t.name}</option>
                       ))}
                     </select>
                   </div>
+
+                  {/* Ethical Transfer Justification Field */}
+                  {activePatient && activePatient.therapistId && editTherapistId && activePatient.therapistId !== editTherapistId && (
+                    <div className="space-y-1 bg-amber-50/30 p-3 rounded-xl border border-amber-100/40 animate-in fade-in slide-in-from-top-1 duration-150">
+                      <label className="text-[9px] font-bold text-amber-700 uppercase block flex items-center gap-1">
+                        <ShieldAlert className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                        Justificativa de Transferência Ética *
+                      </label>
+                      <textarea
+                        required
+                        value={justification}
+                        onChange={e => setJustification(e.target.value)}
+                        placeholder="Explique o motivo de transferir o paciente de seu terapeuta atual (obrigatório)..."
+                        rows={2}
+                        className="w-full p-2.5 border border-amber-200/50 rounded-xl text-xs focus:outline-none focus:border-amber-500 bg-white placeholder-amber-700/30 text-[#1d1b1f] font-medium resize-none"
+                      />
+                    </div>
+                  )}
 
                   {/* Patient Status selection */}
                   <div className="space-y-2 border-t border-purple-100/10 pt-3">

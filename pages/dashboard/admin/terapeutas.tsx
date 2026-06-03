@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 import { Plus, Search, Edit2, Check, X, ShieldAlert, ArrowLeft, Loader2, Sparkles } from 'lucide-react'
@@ -13,6 +13,11 @@ interface Therapist {
   commission: string
   status: 'active' | 'suspended'
   scale: string
+  specialty?: string
+  education?: string
+  experience?: string
+  courses?: string
+  bio?: string
 }
 
 const mockTherapists: Therapist[] = [
@@ -62,12 +67,16 @@ const mockTherapists: Therapist[] = [
   }
 ]
 
+import { supabase } from '../../../lib/supabaseClient'
+
 export default function AdminTherapists() {
   const [therapists, setTherapists] = useState<Therapist[]>(mockTherapists)
   const [searchQuery, setSearchQuery] = useState('')
   const [showAddModal, setShowAddModal] = useState(false)
   const [showEditModal, setShowEditModal] = useState(false)
   const [activeTherapist, setActiveTherapist] = useState<Therapist | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [expandedTherapistId, setExpandedTherapistId] = useState<string | null>(null)
 
   // Add Form States
   const [newName, setNewName] = useState('')
@@ -85,13 +94,76 @@ export default function AdminTherapists() {
   const [editCommission, setEditCommission] = useState('')
   const [editScale, setEditScale] = useState('')
   const [editStatus, setEditStatus] = useState<'active' | 'suspended'>('active')
+  const [editSpecialty, setEditSpecialty] = useState('')
+  const [editEducation, setEditEducation] = useState('')
+  const [editExperience, setEditExperience] = useState('')
+  const [editCourses, setEditCourses] = useState('')
+  const [editBio, setEditBio] = useState('')
+
+  // Load therapists from database
+  useEffect(() => {
+    async function loadTherapists() {
+      try {
+        setLoading(true)
+        const { data: dbProfiles, error } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('role', 'therapist')
+
+        if (error) throw error
+
+        // Count patients grouped by therapist
+        const { data: patientsList } = await supabase
+          .from('profiles')
+          .select('id, therapist_id')
+          .eq('role', 'patient')
+
+        const therapistPatientsMap: Record<string, number> = {}
+        patientsList?.forEach(p => {
+          if (p.therapist_id) {
+            therapistPatientsMap[p.therapist_id] = (therapistPatientsMap[p.therapist_id] || 0) + 1
+          }
+        })
+
+        const dbTherapists: Therapist[] = (dbProfiles || []).map(p => ({
+          id: p.id,
+          name: p.full_name || 'Fisioterapeuta',
+          crefito: p.crefito || 'Pendente',
+          phone: p.phone || 'Sem celular',
+          email: p.email || (p.full_name ? `${p.full_name.toLowerCase().replace(/\s+/g, '')}@bellaflora.com.br` : 'contato@bellaflora.com.br'),
+          patientsCount: therapistPatientsMap[p.id] || 0,
+          commission: p.commission || '50%',
+          status: p.status || 'active',
+          scale: p.scale || 'Seg à Sex - 08h às 17h',
+          specialty: p.specialty || '',
+          education: p.education || '',
+          experience: p.experience || '',
+          courses: p.courses || '',
+          bio: p.bio || ''
+        }))
+
+        // Merge, excluding mock therapists that match database therapists' names
+        const filteredMock = mockTherapists.filter(mt => 
+          !dbTherapists.some(dt => dt.name.toLowerCase() === mt.name.toLowerCase() || dt.id === mt.id)
+        )
+
+        setTherapists([...dbTherapists, ...filteredMock])
+      } catch (err) {
+        console.error('Erro ao buscar terapeutas:', err)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadTherapists()
+  }, [])
 
   const filteredTherapists = therapists.filter(t => 
     t.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     t.crefito.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
-  const handleAddTherapist = (e: React.FormEvent) => {
+  const handleAddTherapist = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!newName.trim() || !newCrefito.trim()) return
 
@@ -104,7 +176,12 @@ export default function AdminTherapists() {
       patientsCount: 0,
       commission: newCommission,
       status: 'active',
-      scale: newScale
+      scale: newScale,
+      specialty: '',
+      education: '',
+      experience: '',
+      courses: '',
+      bio: ''
     }
 
     setTherapists([...therapists, newTher])
@@ -128,30 +205,81 @@ export default function AdminTherapists() {
     setEditCommission(therapist.commission)
     setEditScale(therapist.scale)
     setEditStatus(therapist.status)
+    setEditSpecialty(therapist.specialty || '')
+    setEditEducation(therapist.education || '')
+    setEditExperience(therapist.experience || '')
+    setEditCourses(therapist.courses || '')
+    setEditBio(therapist.bio || '')
     setShowEditModal(true)
   }
 
-  const handleEditTherapist = (e: React.FormEvent) => {
+  const handleEditTherapist = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!activeTherapist || !editName.trim()) return
 
-    setTherapists(therapists.map(t => 
-      t.id === activeTherapist.id 
-        ? {
-            ...t,
-            name: editName.trim(),
+    try {
+      const isMock = activeTherapist.id.startsWith('ther_')
+
+      if (!isMock) {
+        // Try updating all fields
+        const { error } = await supabase
+          .from('profiles')
+          .update({
+            full_name: editName.trim(),
             crefito: editCrefito.trim(),
             phone: editPhone.trim(),
-            email: editEmail.trim(),
-            commission: editCommission,
-            scale: editScale,
-            status: editStatus
-          }
-        : t
-    ))
+            commission: editCommission.trim(),
+            scale: editScale.trim(),
+            status: editStatus,
+            specialty: editSpecialty.trim(),
+            education: editEducation.trim(),
+            experience: editExperience.trim(),
+            courses: editCourses.trim(),
+            bio: editBio.trim()
+          })
+          .eq('id', activeTherapist.id)
 
-    setShowEditModal(false)
-    setActiveTherapist(null)
+        if (error) {
+          console.warn("Failed to update custom fields, falling back to standard ones:", error)
+          // Fallback update without custom columns
+          const { error: fallbackError } = await supabase
+            .from('profiles')
+            .update({
+              full_name: editName.trim(),
+              phone: editPhone.trim()
+            })
+            .eq('id', activeTherapist.id)
+
+          if (fallbackError) throw fallbackError
+        }
+      }
+
+      setTherapists(therapists.map(t => 
+        t.id === activeTherapist.id 
+          ? {
+              ...t,
+              name: editName.trim(),
+              crefito: editCrefito.trim(),
+              phone: editPhone.trim(),
+              email: editEmail.trim(),
+              commission: editCommission,
+              scale: editScale,
+              status: editStatus,
+              specialty: editSpecialty.trim(),
+              education: editEducation.trim(),
+              experience: editExperience.trim(),
+              courses: editCourses.trim(),
+              bio: editBio.trim()
+            }
+          : t
+      ))
+
+      setShowEditModal(false)
+      setActiveTherapist(null)
+    } catch (err) {
+      console.error("Erro ao atualizar terapeuta:", err)
+      alert("Erro ao salvar alterações do terapeuta.")
+    }
   }
 
   return (
@@ -213,70 +341,117 @@ export default function AdminTherapists() {
 
             {/* Therapists List */}
             <div className="space-y-3.5">
-              {filteredTherapists.map(ther => (
-                <div
-                  key={ther.id}
-                  className={`p-4 bg-white border rounded-2xl shadow-sm transition-all relative flex flex-col gap-3 ${
-                    ther.status === 'suspended' 
-                      ? 'border-red-100 bg-red-50/10' 
-                      : 'border-purple-100/20 hover:border-[#70518d]/30'
-                  }`}
-                >
-                  {/* Status Indicator */}
-                  <div className="flex justify-between items-start">
-                    <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-full bg-purple-50 text-[#70518d] font-bold text-xs flex items-center justify-center">
-                        {ther.name.split(' ').pop()?.[0]}
+              {loading ? (
+                <div className="text-center py-12 bg-white border border-purple-100/20 rounded-2xl flex flex-col items-center justify-center gap-2.5">
+                  <Loader2 className="w-7 h-7 animate-spin text-[#70518d]" />
+                  <p className="text-[11px] font-bold text-[#795465]">Buscando terapeutas...</p>
+                </div>
+              ) : (
+                filteredTherapists.map(ther => (
+                  <div
+                    key={ther.id}
+                    className={`p-4 bg-white border rounded-2xl shadow-sm transition-all relative flex flex-col gap-3 ${
+                      ther.status === 'suspended' 
+                        ? 'border-red-100 bg-red-50/10' 
+                        : 'border-purple-100/20 hover:border-[#70518d]/30'
+                    }`}
+                  >
+                    {/* Status Indicator */}
+                    <div className="flex justify-between items-start">
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-full bg-purple-50 text-[#70518d] font-bold text-xs flex items-center justify-center">
+                          {ther.name.split(' ').pop()?.[0]}
+                        </div>
+                        <div>
+                          <h4 className="font-extrabold text-[#1d1b1f] text-sm flex items-center gap-1.5">
+                            {ther.name}
+                            {ther.status === 'suspended' && (
+                              <span className="inline-flex items-center px-1.5 py-0.5 rounded bg-red-50 text-red-600 border border-red-100 font-bold text-[8px] uppercase tracking-wider">
+                                Suspenso
+                              </span>
+                            )}
+                          </h4>
+                          <p className="text-[10px] text-[#795465] font-semibold">CREFITO: {ther.crefito}</p>
+                        </div>
+                      </div>
+                      
+                      {/* Action Button: Edit */}
+                      <button
+                        onClick={() => openEditModal(ther)}
+                        className="p-2 rounded-full hover:bg-purple-50 text-[#795465] hover:text-[#70518d] transition-colors"
+                      >
+                        <Edit2 className="w-4 h-4" />
+                      </button>
+                    </div>
+
+                    {/* Info Grid */}
+                    <div className="grid grid-cols-2 gap-y-2.5 gap-x-2 border-t border-purple-100/10 pt-3 text-[10px] text-[#4b454e]">
+                      <div>
+                        <span className="text-[#795465] font-semibold block mb-0.5">Contato:</span>
+                        <span className="font-bold text-[#1d1b1f]">{ther.phone}</span>
                       </div>
                       <div>
-                        <h4 className="font-extrabold text-[#1d1b1f] text-sm flex items-center gap-1.5">
-                          {ther.name}
-                          {ther.status === 'suspended' && (
-                            <span className="inline-flex items-center px-1.5 py-0.5 rounded bg-red-50 text-red-600 border border-red-100 font-bold text-[8px] uppercase tracking-wider">
-                              Suspenso
-                            </span>
-                          )}
-                        </h4>
-                        <p className="text-[10px] text-[#795465] font-semibold">CREFITO: {ther.crefito}</p>
+                        <span className="text-[#795465] font-semibold block mb-0.5">Comissão/Repasse:</span>
+                        <span className="font-bold text-[#1d1b1f]">{ther.commission}</span>
+                      </div>
+                      <div className="col-span-2">
+                        <span className="text-[#795465] font-semibold block mb-0.5">Escala / Turno:</span>
+                        <span className="font-bold text-[#1d1b1f]">{ther.scale}</span>
                       </div>
                     </div>
-                    
-                    {/* Action Button: Edit */}
-                    <button
-                      onClick={() => openEditModal(ther)}
-                      className="p-2 rounded-full hover:bg-purple-50 text-[#795465] hover:text-[#70518d] transition-colors"
-                    >
-                      <Edit2 className="w-4 h-4" />
-                    </button>
-                  </div>
 
-                  {/* Info Grid */}
-                  <div className="grid grid-cols-2 gap-y-2.5 gap-x-2 border-t border-purple-100/10 pt-3 text-[10px] text-[#4b454e]">
-                    <div>
-                      <span className="text-[#795465] font-semibold block mb-0.5">Contato:</span>
-                      <span className="font-bold text-[#1d1b1f]">{ther.phone}</span>
+                    {/* Patients active metric */}
+                    <div className="flex justify-between items-center bg-purple-50/30 p-2.5 rounded-xl border border-purple-100/10 text-[10px]">
+                      <span className="text-[#795465] font-bold">Pacientes vinculados:</span>
+                      <span className="font-extrabold text-[#70518d] bg-white px-2 py-0.5 rounded-md border border-purple-100/20">
+                        {ther.patientsCount} pacientes
+                      </span>
                     </div>
-                    <div>
-                      <span className="text-[#795465] font-semibold block mb-0.5">Comissão/Repasse:</span>
-                      <span className="font-bold text-[#1d1b1f]">{ther.commission}</span>
-                    </div>
-                    <div className="col-span-2">
-                      <span className="text-[#795465] font-semibold block mb-0.5">Escala / Turno:</span>
-                      <span className="font-bold text-[#1d1b1f]">{ther.scale}</span>
+
+                    {/* Collapsible Professional Profile */}
+                    <div className="border-t border-purple-100/10 pt-2 flex flex-col gap-2">
+                      <button
+                        onClick={() => setExpandedTherapistId(expandedTherapistId === ther.id ? null : ther.id)}
+                        className="text-[10px] font-bold text-[#70518d] hover:text-[#573974] flex items-center justify-between py-1 transition-colors"
+                      >
+                        <span>{expandedTherapistId === ther.id ? 'Ocultar Perfil Profissional' : 'Ver Perfil Profissional'}</span>
+                        <span className="material-symbols-outlined text-[16px] leading-none">
+                          {expandedTherapistId === ther.id ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}
+                        </span>
+                      </button>
+
+                      {expandedTherapistId === ther.id && (
+                        <div className="bg-[#70518d]/5 p-3 rounded-xl border border-[#70518d]/10 text-[10px] space-y-2.5 animate-in fade-in slide-in-from-top-1 duration-150">
+                          <div>
+                            <span className="text-[#795465] font-semibold block mb-0.5">Especialidade:</span>
+                            <span className="font-bold text-[#1d1b1f]">{ther.specialty || 'Não informada'}</span>
+                          </div>
+                          <div>
+                            <span className="text-[#795465] font-semibold block mb-0.5">Formação Acadêmica:</span>
+                            <span className="font-bold text-[#1d1b1f]">{ther.education || 'Não informada'}</span>
+                          </div>
+                          <div>
+                            <span className="text-[#795465] font-semibold block mb-0.5">Tempo de Atuação / Experiência:</span>
+                            <span className="font-bold text-[#1d1b1f]">{ther.experience || 'Não informada'}</span>
+                          </div>
+                          <div>
+                            <span className="text-[#795465] font-semibold block mb-0.5">Cursos e Certificações:</span>
+                            <span className="font-bold text-[#1d1b1f]">{ther.courses || 'Nenhum curso cadastrado'}</span>
+                          </div>
+                          <div>
+                            <span className="text-[#795465] font-semibold block mb-0.5">Biografia / Sobre:</span>
+                            <span className="font-medium text-[#4b454e] italic block bg-white p-2 rounded-lg border border-purple-100/10">
+                              {ther.bio || 'Sem biografia disponível.'}
+                            </span>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
+                ))
+              )}
 
-                  {/* Patients active metric */}
-                  <div className="flex justify-between items-center bg-purple-50/30 p-2.5 rounded-xl border border-purple-100/10 text-[10px]">
-                    <span className="text-[#795465] font-bold">Pacientes vinculados:</span>
-                    <span className="font-extrabold text-[#70518d] bg-white px-2 py-0.5 rounded-md border border-purple-100/20">
-                      {ther.patientsCount} pacientes
-                    </span>
-                  </div>
-                </div>
-              ))}
-
-              {filteredTherapists.length === 0 && (
+              {!loading && filteredTherapists.length === 0 && (
                 <div className="text-center py-10 bg-white border border-purple-100/20 rounded-2xl">
                   <ShieldAlert className="w-8 h-8 mx-auto text-[#795465] opacity-50 mb-2" />
                   <p className="text-xs font-semibold text-[#795465]">Nenhuma terapeuta encontrada.</p>
@@ -381,7 +556,7 @@ export default function AdminTherapists() {
           {/* Edit Therapist Modal */}
           {showEditModal && activeTherapist && (
             <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-              <div className="w-full max-w-sm bg-white rounded-3xl p-6 border border-purple-100/20 shadow-xl flex flex-col gap-4 animate-in fade-in zoom-in-95 duration-150">
+              <div className="w-full max-w-sm bg-white rounded-3xl p-6 border border-purple-100/20 shadow-xl flex flex-col gap-4 animate-in fade-in zoom-in-95 duration-150 max-h-[90vh] overflow-y-auto">
                 <div className="flex justify-between items-center pb-2 border-b border-purple-100/10">
                   <h3 className="font-extrabold text-sm text-[#70518d]">Editar Fisioterapeuta</h3>
                   <button onClick={() => { setShowEditModal(false); setActiveTherapist(null); }} className="text-[#795465] hover:text-[#70518d]">
@@ -450,6 +625,67 @@ export default function AdminTherapists() {
                         value={editScale}
                         onChange={e => setEditScale(e.target.value)}
                         className="w-full h-10 px-3 border border-purple-100/30 rounded-xl text-xs focus:outline-none focus:border-[#70518d]"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Perfil Profissional */}
+                  <div className="space-y-3.5 border-t border-purple-100/10 pt-3">
+                    <h4 className="text-[10px] font-extrabold text-[#70518d] uppercase tracking-wider">Perfil Profissional</h4>
+                    
+                    <div className="space-y-1">
+                      <label className="text-[9px] font-bold text-[#795465] uppercase block">Especialidade principal</label>
+                      <input
+                        type="text"
+                        value={editSpecialty}
+                        onChange={e => setEditSpecialty(e.target.value)}
+                        placeholder="Ex: Fisioterapia Pélvica"
+                        className="w-full h-10 px-3 border border-purple-100/30 rounded-xl text-xs focus:outline-none focus:border-[#70518d]"
+                      />
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-[9px] font-bold text-[#795465] uppercase block">Formação Acadêmica</label>
+                      <input
+                        type="text"
+                        value={editEducation}
+                        onChange={e => setEditEducation(e.target.value)}
+                        placeholder="Ex: Bacharelado, Pós-graduação"
+                        className="w-full h-10 px-3 border border-purple-100/30 rounded-xl text-xs focus:outline-none focus:border-[#70518d]"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="space-y-1">
+                        <label className="text-[9px] font-bold text-[#795465] uppercase block">Tempo de Atuação</label>
+                        <input
+                          type="text"
+                          value={editExperience}
+                          onChange={e => setEditExperience(e.target.value)}
+                          placeholder="Ex: 5 anos"
+                          className="w-full h-10 px-3 border border-purple-100/30 rounded-xl text-xs focus:outline-none focus:border-[#70518d]"
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-[9px] font-bold text-[#795465] uppercase block">Cursos / Certificados</label>
+                        <input
+                          type="text"
+                          value={editCourses}
+                          onChange={e => setEditCourses(e.target.value)}
+                          placeholder="Ex: Pilates, Reabilitação"
+                          className="w-full h-10 px-3 border border-purple-100/30 rounded-xl text-xs focus:outline-none focus:border-[#70518d]"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-[9px] font-bold text-[#795465] uppercase block">Biografia / Sobre</label>
+                      <textarea
+                        value={editBio}
+                        onChange={e => setEditBio(e.target.value)}
+                        placeholder="Escreva uma breve biografia da profissional..."
+                        rows={3}
+                        className="w-full p-3 border border-purple-100/30 rounded-xl text-xs focus:outline-none focus:border-[#70518d] resize-none"
                       />
                     </div>
                   </div>

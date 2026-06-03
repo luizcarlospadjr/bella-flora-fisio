@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { ClipboardList, Calendar, Users, MessageSquare, LogOut, Loader2, Sparkles, Plus, ChevronRight } from 'lucide-react'
+import { ClipboardList, Calendar, Users, MessageSquare, LogOut, Loader2, Sparkles, Plus, ChevronRight, Check, X } from 'lucide-react'
 import { supabase } from '../../lib/supabaseClient'
 
 export default function TherapistDashboard() {
@@ -13,6 +13,7 @@ export default function TherapistDashboard() {
   const [sessionsCount, setSessionsCount] = useState(0)
   const [prescriptionsCount, setPrescriptionsCount] = useState(0)
   const [unreadCount, setUnreadCount] = useState(0)
+  const [pendingTransfers, setPendingTransfers] = useState<any[]>([])
 
   useEffect(() => {
     let messagesSub: any = null
@@ -128,6 +129,41 @@ export default function TherapistDashboard() {
         }
 
         setProfile(userProfile)
+
+        // Load pending transfer requests for the current therapist
+        try {
+          const { data: dbTransfers, error: transError } = await supabase
+            .from('transfer_requests')
+            .select('*')
+            .eq('current_therapist_id', user.id)
+            .eq('status', 'pending')
+
+          if (dbTransfers && dbTransfers.length > 0) {
+            // Fetch names for patients and target therapists
+            const patientIds = dbTransfers.map((t: any) => t.patient_id)
+            const targetIds = dbTransfers.map((t: any) => t.target_therapist_id)
+            const allUserIds = Array.from(new Set([...patientIds, ...targetIds]))
+
+            const { data: userNames } = await supabase
+              .from('profiles')
+              .select('id, full_name')
+              .in('id', allUserIds)
+
+            const nameMap = new Map((userNames || []).map((u: any) => [u.id, u.full_name]))
+
+            const mappedTransfers = dbTransfers.map((t: any) => ({
+              ...t,
+              patientName: nameMap.get(t.patient_id) || 'Paciente',
+              targetTherapistName: nameMap.get(t.target_therapist_id) || 'Fisioterapeuta'
+            }))
+
+            setPendingTransfers(mappedTransfers)
+          } else {
+            setPendingTransfers([])
+          }
+        } catch (transErr) {
+          console.error('Erro ao buscar solicitações de transferência:', transErr)
+        }
       } else {
         router.push('/escolha-perfil')
       }
@@ -140,6 +176,68 @@ export default function TherapistDashboard() {
   const handleLogout = async () => {
     await supabase.auth.signOut()
     router.push('/login')
+  }
+
+  const handleApproveTransfer = async (transferId: string, patientId: string, targetTherapistId: string) => {
+    try {
+      if (transferId.startsWith('tx_mock_')) {
+        alert('Transferência simulada aprovada com sucesso!')
+        setPendingTransfers(prev => prev.filter(t => t.id !== transferId))
+        setPatientsCount(prev => Math.max(0, prev - 1))
+        return
+      }
+
+      // 1. Update transfer request status to 'approved'
+      const { error: txError } = await supabase
+        .from('transfer_requests')
+        .update({ status: 'approved' })
+        .eq('id', transferId)
+
+      if (txError) throw txError
+
+      // 2. Update patient's therapist_id in profiles
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .update({ therapist_id: targetTherapistId })
+        .eq('id', patientId)
+
+      if (profileError) throw profileError
+
+      alert('Transferência aprovada com sucesso!')
+
+      // Remove from list and update metrics
+      setPendingTransfers(prev => prev.filter(t => t.id !== transferId))
+      setPatientsCount(prev => Math.max(0, prev - 1))
+    } catch (err) {
+      console.error('Erro ao aprovar transferência:', err)
+      alert('Ocorreu um erro ao aprovar a transferência.')
+    }
+  }
+
+  const handleRejectTransfer = async (transferId: string) => {
+    try {
+      if (transferId.startsWith('tx_mock_')) {
+        alert('Transferência simulada recusada.')
+        setPendingTransfers(prev => prev.filter(t => t.id !== transferId))
+        return
+      }
+
+      // Update transfer request status to 'rejected'
+      const { error: txError } = await supabase
+        .from('transfer_requests')
+        .update({ status: 'rejected' })
+        .eq('id', transferId)
+
+      if (txError) throw txError
+
+      alert('Transferência recusada.')
+
+      // Remove from list
+      setPendingTransfers(prev => prev.filter(t => t.id !== transferId))
+    } catch (err) {
+      console.error('Erro ao recusar transferência:', err)
+      alert('Ocorreu um erro ao recusar a transferência.')
+    }
   }
 
   if (loading) {
@@ -204,7 +302,7 @@ export default function TherapistDashboard() {
               <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
               <div className="relative z-10">
                 <div className="inline-flex items-center px-2 py-0.5 bg-white/20 rounded-full text-[9px] font-bold text-purple-100 mb-2.5 backdrop-blur-sm">
-                  <Sparkles className="w-3 h-3 mr-1" />
+                  <Sparkles className="w-3.5 h-3.5 mr-1" />
                   SESSÃO CLÍNICA ATIVA
                 </div>
                 <h2 className="font-extrabold text-lg leading-tight">Dra. {profile?.full_name || 'Fisioterapeuta'}</h2>
@@ -213,6 +311,57 @@ export default function TherapistDashboard() {
                 </p>
               </div>
             </section>
+
+            {/* Solicitações de Transferência Pendentes */}
+            {pendingTransfers.length > 0 && (
+              <section className="flex flex-col gap-3">
+                <h3 className="text-xs font-bold text-[#b45309] uppercase tracking-wider pl-1 flex items-center gap-1">
+                  <span className="material-symbols-outlined text-sm animate-pulse text-amber-600">warning</span>
+                  Consentimento de Transferência Pendente
+                </h3>
+                {pendingTransfers.map((transfer) => (
+                  <div 
+                    key={transfer.id}
+                    className="bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200/60 p-4 rounded-2xl shadow-sm flex flex-col gap-3 relative overflow-hidden"
+                  >
+                    <div className="absolute top-0 right-0 w-24 h-24 bg-amber-100/30 rounded-full blur-xl pointer-events-none"></div>
+                    <div className="flex items-start justify-between relative z-10">
+                      <div>
+                        <h4 className="font-bold text-amber-950 text-sm">{transfer.patientName}</h4>
+                        <p className="text-[10px] text-amber-800 font-semibold mt-0.5">
+                          Solicitação de transferência para <span className="font-bold">{transfer.targetTherapistName}</span>
+                        </p>
+                      </div>
+                      <span className="inline-flex items-center px-2 py-0.5 rounded bg-amber-100 text-amber-800 border border-amber-200 font-bold text-[8px] uppercase tracking-wider">
+                        Pendente
+                      </span>
+                    </div>
+
+                    <div className="bg-white/60 backdrop-blur-sm rounded-xl p-3 border border-amber-200/30 text-[11px] text-amber-900 leading-relaxed font-medium">
+                      <span className="font-bold text-amber-950 block mb-0.5">Justificativa da Gestão:</span>
+                      "{transfer.justification}"
+                    </div>
+
+                    <div className="flex gap-2.5 mt-1 relative z-10">
+                      <button
+                        onClick={() => handleApproveTransfer(transfer.id, transfer.patient_id, transfer.target_therapist_id)}
+                        className="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-sm hover:shadow transition-all active:scale-[0.97]"
+                      >
+                        <Check className="w-3.5 h-3.5" />
+                        Autorizar
+                      </button>
+                      <button
+                        onClick={() => handleRejectTransfer(transfer.id)}
+                        className="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 bg-red-50 hover:bg-red-100 border border-red-200 text-red-700 text-xs font-bold rounded-xl transition-all active:scale-[0.97]"
+                      >
+                        <X className="w-3.5 h-3.5" />
+                        Recusar
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </section>
+            )}
 
             {/* Quick Metrics Grid */}
             <section className="grid grid-cols-3 gap-3">

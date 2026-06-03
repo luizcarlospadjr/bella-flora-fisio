@@ -30,7 +30,17 @@ CREATE TABLE IF NOT EXISTS public.profiles (
     role user_role NOT NULL DEFAULT 'patient',
     full_name TEXT,
     phone TEXT,
+    email TEXT,
     avatar_url TEXT,
+    crefito TEXT,
+    specialty TEXT,
+    education TEXT,
+    experience TEXT,
+    courses TEXT,
+    bio TEXT,
+    commission TEXT,
+    status TEXT DEFAULT 'active',
+    scale TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
@@ -154,11 +164,12 @@ CREATE POLICY "Permitir marcar mensagens recebidas como lidas"
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
 BEGIN
-    INSERT INTO public.profiles (id, full_name, phone, avatar_url, role)
+    INSERT INTO public.profiles (id, full_name, phone, email, avatar_url, role)
     VALUES (
         new.id,
         COALESCE(new.raw_user_meta_data->>'full_name', new.email),
         new.raw_user_meta_data->>'phone',
+        new.email,
         new.raw_user_meta_data->>'avatar_url',
         COALESCE((new.raw_user_meta_data->>'role')::user_role, 'patient'::user_role)
     );
